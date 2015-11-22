@@ -61,7 +61,15 @@ body,div,p,span{
 	position:fixed;
 	right:0px;
 	top:0px;
-	padding:4px;
+	margin:8px;
+}
+.fktsicon{
+	padding: 4px 4px 4px 4px;
+	border: solid 1px #aaaaaa;
+}
+.fktsicon:hover{
+	border: solid 1px #000000;
+	cursor: pointer;
 }
 .molink:hover{
 	cursor:pointer;
@@ -167,7 +175,7 @@ body,div,p,span{
 .todoline{
 	border-radius: 15px;
 	background-color:#ffff88;
-	width:480px;
+	width:640px;
 	padding:16px;
 	box-shadow: 4px 4px 8px grey;
 }

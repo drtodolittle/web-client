@@ -6,61 +6,39 @@
       "userpass": "d4061b1486fe2da19dd578e8d970f7eb"
     }
   ],
-  "tasks": [
-    {
-      "subject": "Was!",
-      "completed": false,
-      "id": 20
-    },
+  "todos": [
     {
       "id": 21,
-      "subject": "Neu!",
-      "completed": true
+      "topic": "Neu!",
+      "done": true,
+      "createdate": "2009-01-01T12:00:00+01:00",
+      "donedate": "2009-01-01T12:00:00+01:00"
     },
     {
-      "subject": "Tataaa!",
-      "completed": true,
-      "id": 22
+      "id": 22,
+      "topic": "Urga.",
+      "done": false,
+      "createdate": "2009-01-01T12:00:00+01:00",
+      "donedate": "2009-01-01T12:00:00+01:00"
     },
     {
-      "subject": "BaDummTzzz!",
-      "completed": false,
-      "id": 23
+      "topic": "Bla.",
+      "done": false,
+      "id": 23,
+      "createdate": "2009-01-01T12:00:00+01:00",
+      "donedate": "2009-01-01T12:00:00+01:00"
     },
     {
-      "subject": "Check!",
-      "completed": false,
+      "topic": "Pnfff!",
+      "done": false,
+      "id": 24,
+      "createdate": "2009-01-01T12:00:00+01:00",
+      "donedate": "2009-01-01T12:00:00+01:00"
+    },
+    {
+      "topic": "Und?",
+      "done": false,
       "id": 25
-    },
-    {
-      "id": 26,
-      "subject": "Nr.26",
-      "completed": true
-    },
-    {
-      "id": 28,
-      "subject": "Nr.28",
-      "completed": false
-    },
-    {
-      "id": 29,
-      "subject": "Und nun?",
-      "completed": true
-    },
-    {
-      "id": 30,
-      "subject": "Die Nr. 30",
-      "completed": false
-    },
-    {
-      "subject": "Pnfff!",
-      "completed": false,
-      "id": 31
-    },
-    {
-      "subject": "Mmmm?!",
-      "completed": false,
-      "id": 32
     }
   ]
 }

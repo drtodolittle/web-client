@@ -2,17 +2,14 @@
 <html lang="de">
 
 <head>
-    <!-- <meta charset="utf-8"> -->
+	<title>DrToDoLittle</title>
 	<meta charset="iso-8859-1">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-	<title>drtodolittle web prototype</title>
-	<!-- <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1"></meta> -->
 	<link rel="stylesheet" media="all" type="text/css" href="css/tdstyle.css" />
-	    <!-- Bootstrap -->
+	<!-- Bootstrap -->
     <!-- Latest compiled and minified CSS -->
 	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" integrity="sha384-1q8mTJOASx8j1Au+a5WDVnPi2lkFfwwEAa8hDDdjZlpLegxhjVME1fgjWPGmkzs7" crossorigin="anonymous">
-
 </head>
 
 <body ng-app="tdapp" ng-controller="MainCtrl" ng-keydown="mainKeydown($event);">
@@ -38,9 +35,8 @@ impressum *** helge schneider, laarkamp 45, 44866 bochum, tel:02327563694, email
 
 <!-- Functions -->
 <div ng-show="s_list==1" class="fkts">
-<span ng-click="newtodo();"><img class="fktsicon" src="images/plus-2x.png" alt="add"></img></span>
-<br>
-<span ng-click="dologout();"><img class="fktsicon" src="images/account-logout-2x.png" alt="logout"></img></span>
+<div ng-click="newtodo();" class="fktsiconwrap"><img class="fktsicon" src="images/plus-2x.png" alt="add"></img></div>
+<div ng-click="dologout();" class="fktsiconwrap"><img class="fktsicon" src="images/account-logout-2x.png" alt="logout"></img></div>
 </div>
 
 <!-- Log -->

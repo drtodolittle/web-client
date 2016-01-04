@@ -14,7 +14,7 @@ tdapp.config(function($authProvider) {
   Server ----------------------------------------
 */
 //var server = "http://localhost:3000/todos";
-var server = "http://localhost:8181/api/todos";
+var server = "http://www.drtodolittle.de/api/todos";
 
 /*
   Help functions ----------------------------------------

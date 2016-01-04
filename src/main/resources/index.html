@@ -19,8 +19,8 @@
 <div ng-show="s_login==1" class="login fnt16">
 		<div class="fnt32">DrToDoLittle</div>
 		<div>&nbsp;</div>
-		<input id="liusername" type="text" ng-model="liusername" name="liusername" placeholder="username" class="liuser fnt16" ng-keydown="loginKeydown($event);" tabindex=1></input>
-		<input type="password" ng-model="lipass" name="lipass" placeholder="password" class="lipass fnt16" ng-keydown="loginKeydown($event);" tabindex=2></input>
+		<input id="liusername" type="text" ng-model="user.email" name="liusername" placeholder="username" class="liuser fnt16" ng-keydown="loginKeydown($event);" tabindex=1></input>
+		<input type="password" ng-model="user.password" name="lipass" placeholder="password" class="lipass fnt16" ng-keydown="loginKeydown($event);" tabindex=2></input>
 		<div class="libut fnt16" ng-click="dologin();" tabindex=3 ng-keydown="loginKeydown($event);">Login</div>
 		<div>&nbsp;</div>
 		<div class="fnt12">or</div>
@@ -29,7 +29,7 @@
 		<div class="flash">{{errormsg}}</div>
 </div>
 <div ng-show="s_login==1" class="impressum">
-impressum *** helge schneider, laarkamp 45, 44866 bochum, tel:02327563694, email:snaidah(at)gmx(punkt)de *** die inhalte dieser homepage wurden von mir mit größter sorgfalt erstellt. fehler oder unklarheiten können dennoch nicht ausgeschlossen werden. für die richtigkeit, vollständigkeit und aktualität der inhalte übernehme ich also keine gewähr. auch behalte ich mir vor, teile des inhaltes oder das gesamte angebot zu verändert, zu ergänzen oder zu löschen. des weiteren hafte ich nicht für eventuelle schäden, die direkt oder indirekt durch die nutzung der bereitgestellten inhalte und/oder verlinkten weibseiten verursacht werden. für die verlinkten webseiten sind deren anbieter und/oder betreiber verantwortlich. eine kontinuierliche inhaltliche kontrolle der verlinkten webseiten ist ohne konkrete anhaltspunkte einer möglichen rechtsverletzung nicht zumutbar. bei bekanntwerden von rechtsverletzungen werde ich derartige links auf dieser homepage umgehend entfernen. die von mir erstellten inhalte und arbeiten auf dieser homepage unterliegen dem urheberrecht. die vervielfältigung, bearbeitung, verbreitung und jede sonstige art der verwertung außerhalb des urheberrechtes bedürfen meiner schriftlichen zustimmung. sollte ich irgendwo (unbeabsichtigt) gegen die rechte dritter verstossen, bitte ich dies zu entschuldigen und mir per email mitzuteilen. ich werde dann umgehend die entsprechenden inhalte bzw. daten löschen. der nutzung der im rahmen der impressumspflicht veröffentlichten kontaktdaten durch dritte (bspw. zur übersendung von nicht ausdrücklich angeforderter werbung und/oder informationsmaterialien) wird hiermit ausdrücklich widersprochen. diese homepage ist eine rein private homepage, sie dient keiner kommerziellen nutzung.
+impressum *** helge schneider, laarkamp 45, 44866 bochum, tel:02327563694, email:snaidah(at)gmx(punkt)de *** die inhalte dieser homepage wurden von mir mit grï¿½ï¿½ter sorgfalt erstellt. fehler oder unklarheiten kï¿½nnen dennoch nicht ausgeschlossen werden. fï¿½r die richtigkeit, vollstï¿½ndigkeit und aktualitï¿½t der inhalte ï¿½bernehme ich also keine gewï¿½hr. auch behalte ich mir vor, teile des inhaltes oder das gesamte angebot zu verï¿½ndert, zu ergï¿½nzen oder zu lï¿½schen. des weiteren hafte ich nicht fï¿½r eventuelle schï¿½den, die direkt oder indirekt durch die nutzung der bereitgestellten inhalte und/oder verlinkten weibseiten verursacht werden. fï¿½r die verlinkten webseiten sind deren anbieter und/oder betreiber verantwortlich. eine kontinuierliche inhaltliche kontrolle der verlinkten webseiten ist ohne konkrete anhaltspunkte einer mï¿½glichen rechtsverletzung nicht zumutbar. bei bekanntwerden von rechtsverletzungen werde ich derartige links auf dieser homepage umgehend entfernen. die von mir erstellten inhalte und arbeiten auf dieser homepage unterliegen dem urheberrecht. die vervielfï¿½ltigung, bearbeitung, verbreitung und jede sonstige art der verwertung auï¿½erhalb des urheberrechtes bedï¿½rfen meiner schriftlichen zustimmung. sollte ich irgendwo (unbeabsichtigt) gegen die rechte dritter verstossen, bitte ich dies zu entschuldigen und mir per email mitzuteilen. ich werde dann umgehend die entsprechenden inhalte bzw. daten lï¿½schen. der nutzung der im rahmen der impressumspflicht verï¿½ffentlichten kontaktdaten durch dritte (bspw. zur ï¿½bersendung von nicht ausdrï¿½cklich angeforderter werbung und/oder informationsmaterialien) wird hiermit ausdrï¿½cklich widersprochen. diese homepage ist eine rein private homepage, sie dient keiner kommerziellen nutzung.
 </div>
 </center>
 
@@ -87,7 +87,7 @@ impressum *** helge schneider, laarkamp 45, 44866 bochum, tel:02327563694, email
 			<td class="todofkts">
 				<span class="mo" ng-click="togDone(todo);">
 					<span ng-if="todo.done==false"><img src="images/checkbox_unchecked.png"/></span>
-					<span ng-if="todo.done==true"><img src="images/checkbox.png"/></span>				
+					<span ng-if="todo.done==true"><img src="images/checkbox.png"/></span>
 				</span>
 				<span class="mo" ng-click="deltodo(todo);"><img src="images/del.png"/></span>
 			</td>

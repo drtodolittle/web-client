@@ -3,13 +3,18 @@
 	tdapp.js
 
 */
-var tdapp = angular.module("tdapp",[]);
+var tdapp = angular.module("tdapp",['satellizer']);
+
+tdapp.config(function($authProvider) {
+	$authProvider.baseUrl='/api/todos/';
+	$authProvider.loginUrl='login';
+})
 
 /*
   Server ----------------------------------------
 */
 //var server = "http://localhost:3000/todos";
-var server = "http://www.drtodolittle.de/api/todos";
+var server = "http://localhost:8181/api/todos";
 
 /*
   Help functions ----------------------------------------
@@ -28,12 +33,12 @@ function fkts_tsHr(x){
 /*
   Factory ----------------------------------------
 */
-tdapp.factory("Fact",function(){		
+tdapp.factory("Fact",function(){
 
 	// Logging
 
 	var log = [];
-	
+
 	function _log(logtxt){
 		log.push(logtxt);
 		if(log.length>32){
@@ -44,19 +49,19 @@ tdapp.factory("Fact",function(){
 	function _getLog(){
 		return log;
 	}
-	
+
 	for(i=0;i<32;i++){
 		_log("");
 	}
-	
+
 	// Todos
-	
+
 	var todos = [];
 
 	function _getTodos(){
 		return todos;
 	}
-	
+
 	function _setTodos(todolist){
 		todos = todolist;
 	}
@@ -66,7 +71,7 @@ tdapp.factory("Fact",function(){
 			todos.pop();
 		}
 	}
-	
+
 	function _getTodoById(id){
 		var ret = undefined;
 		todos.forEach(function(obj){
@@ -76,14 +81,14 @@ tdapp.factory("Fact",function(){
 		});
 		return ret;
 	}
-	
+
 	function _addTodoObj(obj){
 		todos.unshift(obj);
 	}
-	
+
 	function _delTodo(item){
 		var idx = todos.indexOf(item)
-		todos.splice(idx,1);		
+		todos.splice(idx,1);
 	}
 
 	function _togDone(item){
@@ -97,7 +102,7 @@ tdapp.factory("Fact",function(){
 	}
 
 	// Returns
-	
+
 	return{
 		log : _log,
 		getLog : _getLog,
@@ -109,13 +114,13 @@ tdapp.factory("Fact",function(){
 		delTodo : _delTodo,
 		togDone : _togDone,
 	};
-		
+
 });
 
 /*
   Main controller ----------------------------------------
 */
-tdapp.controller("MainCtrl",function($scope,$timeout,$interval,$http,Fact){
+tdapp.controller("MainCtrl",function($scope,$timeout,$interval,$http,Fact,$auth){
 
 	// Init
 
@@ -128,10 +133,10 @@ tdapp.controller("MainCtrl",function($scope,$timeout,$interval,$http,Fact){
 	$scope.s_add = 0;
 
 	// Communication with server
-	
+
 	function errorCallback(response) {
 		Fact.log("Error!");
-		Fact.log("Check browser console for details.");				
+		Fact.log("Check browser console for details.");
 		console.log(JSON.stringify(response));
 	}
 
@@ -167,7 +172,7 @@ tdapp.controller("MainCtrl",function($scope,$timeout,$interval,$http,Fact){
 			,
 			function(response) {
 				Fact.log("Error!");
-				Fact.log("Check browser console for details.");				
+				Fact.log("Check browser console for details.");
 				console.log(JSON.stringify(response));
 				$scope.errormsg="Server not available!";
 				$scope.dologout();
@@ -191,7 +196,7 @@ tdapp.controller("MainCtrl",function($scope,$timeout,$interval,$http,Fact){
 			,
 			errorCallback
 		);
-	}	
+	}
 
 	function puttodo(obj){
 		Fact.log("Sending request (put) to server...");
@@ -207,7 +212,7 @@ tdapp.controller("MainCtrl",function($scope,$timeout,$interval,$http,Fact){
 			,
 			errorCallback
 		);
-	}	
+	}
 
 	function deletetodo(obj){
 		Fact.log("Sending request (delete) to server...");
@@ -223,7 +228,7 @@ tdapp.controller("MainCtrl",function($scope,$timeout,$interval,$http,Fact){
 			,
 			errorCallback
 		);
-	}	
+	}
 
 	function donetodo(obj){
 		Fact.log("Sending request (get; todo is done) to server...");
@@ -238,7 +243,7 @@ tdapp.controller("MainCtrl",function($scope,$timeout,$interval,$http,Fact){
 			errorCallback
 		);
 	}
-	
+
 	// Keyboard functions
 
 	$scope.mainKeydown = function(e){
@@ -250,10 +255,10 @@ tdapp.controller("MainCtrl",function($scope,$timeout,$interval,$http,Fact){
 				$timeout(function(){
 					document.getElementById("todotxta").focus();
 				},128);
-				Fact.log("NewTodo-Dialog.");				
-			}	
+				Fact.log("NewTodo-Dialog.");
+			}
 		}
-	}	
+	}
 
 	$scope.newtodoKeydown = function(e){
 		var k = e.keyCode;
@@ -269,9 +274,9 @@ tdapp.controller("MainCtrl",function($scope,$timeout,$interval,$http,Fact){
 			posttodo(newtodo);
 			Fact.addTodoObj(newtodo);
 			window.scrollTo(0,0);
-		} else 
+		} else
 		if(k==27){//esc
-			e.preventDefault();			
+			e.preventDefault();
 			$scope.newtodotxt = "";
 			$scope.s_add = 0;
 			$scope.s_list = 1;
@@ -287,17 +292,17 @@ tdapp.controller("MainCtrl",function($scope,$timeout,$interval,$http,Fact){
 		if(k==13 || k==27 || k==107){//ret,esc,+
 			e.preventDefault();
 			Fact.log("Change Todo (id:"+id+").");
-			var currentTodo = document.getElementById("todoid"+id); 
+			var currentTodo = document.getElementById("todoid"+id);
 			currentTodo.blur();
 			Fact.log("Todo unfocused.");
-			
+
 			var obj = Fact.getTodoById(id);
 			if(obj!=undefined){
 				Fact.log("Done.");
 				Fact.log("Updating data on server.");
 				obj.topic = currentTodo.innerHTML;
 				puttodo(obj);
-				Fact.log("Todo (id:"+id+") updated.");			
+				Fact.log("Todo (id:"+id+") updated.");
 			} else {
 				Fact.log("Error.");
 			}
@@ -311,14 +316,14 @@ tdapp.controller("MainCtrl",function($scope,$timeout,$interval,$http,Fact){
 			$scope.dologin();
 		}
 	}
-	
+
 	// Todo functions
-	
+
 	$scope.seltodoline = function(id){
 		document.getElementById("todoid"+id).focus();
 		Fact.log("Todo focused.");
-	}	
-	
+	}
+
 	$scope.deltodo = function(obj){
 		//Just some animated testings (wip)
 		obj.opac = 1;
@@ -331,11 +336,11 @@ tdapp.controller("MainCtrl",function($scope,$timeout,$interval,$http,Fact){
 				obj.deleted = true;
 				deletetodo(obj);
 				//Fact.delTodo(obj);
-				Fact.log("ToDo deleted.");			
+				Fact.log("ToDo deleted.");
 			}
 		},32,32);
 		if(Fact.getTodos().length==0){
-			Fact.log("Todo-List is empty.");			
+			Fact.log("Todo-List is empty.");
 		}
 	}
 
@@ -352,9 +357,9 @@ tdapp.controller("MainCtrl",function($scope,$timeout,$interval,$http,Fact){
 		},128);
 		Fact.log("New Todo-Dialog.");
 	}
-	
+
 	// Login functions
-			
+
 	function logout(){
 		$scope.s_login = 0;
 		$scope.s_list = 0;
@@ -373,26 +378,32 @@ tdapp.controller("MainCtrl",function($scope,$timeout,$interval,$http,Fact){
 	$scope.dologout = logout;
 
 	function login(){
-		if($scope.liusername=="gast" && md5($scope.lipass)=="d4061b1486fe2da19dd578e8d970f7eb"){
-			Fact.log("Logged in.");		
-			$scope.errormsg = "";
-			$scope.s_login = 0;
-			$scope.gettodos();
-		} else {
-			$scope.errormsg = "Username/Password-Error!";
-			$scope.dologout();
-		}
+
+		$auth.login($scope.user)
+			.then(function() {
+				Fact.log('You have successfully signed in!');
+				Fact.log("Logged in.");
+				errormsg = "";
+				s_login = 0;
+
+				gettodos();
+			})
+			.catch(function(error) {
+				Fact.log(error.data.message);
+			});
+
+
 	}
 	$scope.dologin = login;
-	
+
 	// Finish
-	
+
 	Fact.log("Client Log-System ready.");
-	
+
 	document.getElementById("liusername").focus();
-	
+
 	if($scope.s_list==1){
 		$scope.gettodos();
 	}
-	
+
 });

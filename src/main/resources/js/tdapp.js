@@ -379,15 +379,17 @@ tdapp.controller("MainCtrl",function($scope,$timeout,$interval,$http,Fact,$auth)
 
 	function login(){
 		$auth.login($scope.user)
-			.then(function() {
+			.then(function(){
 				Fact.log('You have successfully signed in!');
 				Fact.log("Logged in.");
 				$scope.errormsg = "";
 				$scope.s_login = 0;
 				gettodos();
 			})
-			.catch(function(error) {
-				Fact.log(error.data.message);
+			.catch(function(error){
+				$scope.errormsg = "Login-Error.";
+				$scope.dologout();
+				// Fact.log(error.data.message);
 			});
 	}
 	$scope.dologin = login;

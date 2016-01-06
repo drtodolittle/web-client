@@ -8,6 +8,15 @@ var tdapp = angular.module("tdapp",['satellizer']);
 tdapp.config(function($authProvider) {
 	$authProvider.baseUrl='/api/todos/';
 	$authProvider.loginUrl='login';
+
+	// Satellizer
+	$authProvider.twitter({
+		url: 'http://127.0.0.1:3000/auth/twitter', // Satellizer server component on localhost
+		authorizationEndpoint: 'https://api.twitter.com/oauth/authenticate',
+		redirectUri: window.location.origin,
+		type: '1.0',
+		popupOptions: { width: 495, height: 645 }
+	});	
 })
 
 /*
@@ -244,6 +253,12 @@ tdapp.controller("MainCtrl",function($scope,$timeout,$interval,$http,Fact,$auth)
 		);
 	}
 
+	// Satellizer
+	
+	$scope.authenticate = function(provider){
+		$auth.authenticate(provider);
+	};
+		
 	// Keyboard functions
 
 	$scope.mainKeydown = function(e){

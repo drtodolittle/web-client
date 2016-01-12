@@ -16,14 +16,14 @@ tdapp.config(function($authProvider) {
 		redirectUri: window.location.origin,
 		type: '1.0',
 		popupOptions: { width: 495, height: 645 }
-	});	
+	});
 })
 
 /*
   Server ----------------------------------------
 */
 //var server = "http://localhost:3000/todos";
-var server = "http://www.drtodolittle.de/api/todos";
+var server = window.location.protocol + "/api/todos";
 
 /*
   Help functions ----------------------------------------
@@ -254,11 +254,11 @@ tdapp.controller("MainCtrl",function($scope,$timeout,$interval,$http,Fact,$auth)
 	}
 
 	// Satellizer
-	
+
 	$scope.authenticate = function(provider){
 		$auth.authenticate(provider);
 	};
-		
+
 	// Keyboard functions
 
 	$scope.mainKeydown = function(e){

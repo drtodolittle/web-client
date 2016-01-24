@@ -13,7 +13,7 @@
 </head>
 
 <body ng-app="tdapp" ng-controller="MainCtrl" ng-keydown="mainKeydown($event);">
-
+<div ng-model="user.id">{{user.id}}</span></div>
 <!-- Login -->
 <center>
 <div ng-show="s_login==1" class="login fnt16">
@@ -116,8 +116,10 @@ impressum *** helge schneider, laarkamp 45, 44866 bochum, tel:02327563694, email
     <!-- Latest compiled and minified JavaScript -->
 	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js" integrity="sha384-0mSbJDEHialfmuBBQP6A4Qrprq5OVfW37PRR3j5ELqxss1yVqOtnepnHVP9aJ7xS" crossorigin="anonymous"></script>
 	<script src="js/satellizer.js"></script>
+	<script src="js/jwt-decode.min.js"></script>
 	<script src="js/md5.js"></script>
 	<script src="js/tdapp.js"></script>
+	
 
 <!-- Google analytics -->
 <script>

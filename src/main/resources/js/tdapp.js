@@ -11,12 +11,14 @@ tdapp.config(function($authProvider) {
 
 	// Satellizer
 	$authProvider.twitter({
-		url: 'http://127.0.0.1:3000/auth/twitter', // Satellizer server component on localhost
+		url: 'http://127.0.0.1:5000/auth/twitter', // Satellizer server component on localhost
 		authorizationEndpoint: 'https://api.twitter.com/oauth/authenticate',
 		redirectUri: window.location.origin,
 		type: '1.0',
 		popupOptions: { width: 495, height: 645 }
 	});
+	$authProvider.httpInterceptor = false,
+	$authProvider.withCredentials = false;
 })
 
 /*
@@ -236,7 +238,14 @@ tdapp.controller("MainCtrl",function($scope,$timeout,$interval,$http,$auth,TDMgr
 	// Satellizer
 
 	$scope.authenticate = function(provider){
-		$auth.authenticate(provider);
+		$auth.authenticate(provider)
+		.then(function(res){
+			if($auth.isAuthenticated){
+				var dtok = jwt_decode(res.data.token);
+				$scope.user = {};
+				$scope.user.id = dtok.sub;
+			}
+		});
 	};
 
 	// Keyboard functions
@@ -404,6 +413,7 @@ tdapp.controller("MainCtrl",function($scope,$timeout,$interval,$http,$auth,TDMgr
 			});
 	}
 	function locallogin(){ // No basic authentication (for communication with localhost)
+
 		server = localserver;
 		$scope.errormsg = "";
 		$scope.s_login = 0;

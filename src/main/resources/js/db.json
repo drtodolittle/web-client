@@ -6,7 +6,7 @@
       "userpass": "d4061b1486fe2da19dd578e8d970f7eb"
     }
   ],
-  "todos": [
+  "api/todos": [
     {
       "id": 21,
       "topic": "Neu!",
@@ -34,11 +34,6 @@
       "id": 24,
       "createdate": "2009-01-01T12:00:00+01:00",
       "donedate": "2009-01-01T12:00:00+01:00"
-    },
-    {
-      "topic": "Und?",
-      "done": false,
-      "id": 25
     }
   ]
 }

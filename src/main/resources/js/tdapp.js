@@ -22,7 +22,7 @@ tdapp.config(function($authProvider) {
 /*
   Server ----------------------------------------
 */
-//var server = "http://localhost:3000/todos";
+var localserver = "http://localhost:3000/api/todos"; // JSON-Server ressource on localhost 
 var server = window.location.protocol + "/api/todos";
 
 /*
@@ -407,7 +407,13 @@ tdapp.controller("MainCtrl",function($scope,$timeout,$interval,$http,Fact,$auth)
 				// Fact.log(error.data.message);
 			});
 	}
-	$scope.dologin = login;
+	function locallogin(){ // No basic authentication (for communication with localhost)
+		server = localserver;
+		$scope.errormsg = "";
+		$scope.s_login = 0;
+		gettodos();
+	}
+	$scope.dologin = login; // Change to "locallogin" for working against localhost
 
 	// Finish
 

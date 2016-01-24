@@ -17,8 +17,10 @@ tdapp.config(function($authProvider) {
 		type: '1.0',
 		popupOptions: { width: 495, height: 645 }
 	});
+	/*
 	$authProvider.httpInterceptor = false,
 	$authProvider.withCredentials = false;
+	*/
 })
 
 /*

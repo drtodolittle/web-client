@@ -26,23 +26,9 @@ var localserver = "http://localhost:3000/api/todos"; // JSON-Server ressource on
 var server = window.location.protocol + "/api/todos";
 
 /*
-  Help functions ----------------------------------------
-*/
-function fkts_tsHr(x){
-	var ts = new Date(x);
-	var dd = ts.getDate();if(dd<10) dd = "0"+dd;
-	var mm = ts.getMonth()+1;if(mm<10) mm = "0"+mm; //+1 because jan is 0
-	var yyyy = ts.getFullYear();
-	var h = ts.getHours();if(h<10) h = "0"+h;
-	var m = ts.getMinutes();if(m<10) m = "0"+m;
-	var s = ts.getSeconds();if(s<10) s = "0"+s;
-	return dd+"."+mm+"."+yyyy+" / "+h+":"+m+":"+s;
-}
-
-/*
   Factory ----------------------------------------
 */
-tdapp.factory("Fact",function(){
+tdapp.factory("TDMgr",function(){
 
 	// Logging
 
@@ -129,12 +115,12 @@ tdapp.factory("Fact",function(){
 /*
   Main controller ----------------------------------------
 */
-tdapp.controller("MainCtrl",function($scope,$timeout,$interval,$http,Fact,$auth){
+tdapp.controller("MainCtrl",function($scope,$timeout,$interval,$http,$auth,TDMgr){
 
 	// Init
 
-	$scope.todos = Fact.getTodos();
-	$scope.log = Fact.getLog();
+	$scope.todos = TDMgr.getTodos();
+	$scope.log = TDMgr.getLog();
 
 	$scope.s_login = 1;
 	$scope.s_working = 0;
@@ -144,13 +130,13 @@ tdapp.controller("MainCtrl",function($scope,$timeout,$interval,$http,Fact,$auth)
 	// Communication with server
 
 	function errorCallback(response) {
-		Fact.log("Error!");
-		Fact.log("Check browser console for details.");
+		TDMgr.log("Error!");
+		TDMgr.log("Check browser console for details.");
 		console.log(JSON.stringify(response));
 	}
 
 	function gettodos(){
-		Fact.log("Sending request (get) to server...");
+		TDMgr.log("Sending request (get) to server...");
 		$scope.s_working = 1;
 		$scope.s_list = 0;
 		$http({
@@ -158,30 +144,24 @@ tdapp.controller("MainCtrl",function($scope,$timeout,$interval,$http,Fact,$auth)
 			url: server
 		}).then(
 			function successCallback(response) {
-				Fact.log("Done.");
-				Fact.log("Updating local Todo-List.");
+				TDMgr.log("Done.");
+				TDMgr.log("Updating local Todo-List.");
 				response.data.forEach(function(o){
-					Fact.addTodoObj({
-						"id":o.id,
-						"topic":o.topic,
-						"done":o.done,
-						"donedate":o.donedate,
-						"createdate":o.createdate
-					});
+					TDMgr.addTodoObj(o);
 				});
-				Fact.log("Done.");
+				TDMgr.log("Done.");
 				$timeout(function(){
 					$scope.s_list = 1;
 					$scope.s_working = 0;
 				},1000);
 				$timeout(function(){
-					document.getElementById("searchf").focus();
+					document.getElementById("todotxtaconst").focus();
 				},1128);
 			}
 			,
 			function(response) {
-				Fact.log("Error!");
-				Fact.log("Check browser console for details.");
+				TDMgr.log("Error!");
+				TDMgr.log("Check browser console for details.");
 				console.log(JSON.stringify(response));
 				$scope.errormsg="Server not available!";
 				$scope.dologout();
@@ -191,7 +171,7 @@ tdapp.controller("MainCtrl",function($scope,$timeout,$interval,$http,Fact,$auth)
 	$scope.gettodos = gettodos;
 
 	function posttodo(obj){
-		Fact.log("Sending request (post) to server...");
+		TDMgr.log("Sending request (post) to server...");
 		$http({
 			method:"post",
 			url: server,
@@ -199,7 +179,7 @@ tdapp.controller("MainCtrl",function($scope,$timeout,$interval,$http,Fact,$auth)
 			data: obj
 		}).then(
 			function successCallback(response) {
-				Fact.log("Done.");
+				TDMgr.log("Done.");
 				obj.id=response.data.id;
 			}
 			,
@@ -208,7 +188,7 @@ tdapp.controller("MainCtrl",function($scope,$timeout,$interval,$http,Fact,$auth)
 	}
 
 	function puttodo(obj){
-		Fact.log("Sending request (put) to server...");
+		TDMgr.log("Sending request (put) to server...");
 		$http({
 			method:"put",
 			url: server+"/"+obj.id,
@@ -216,7 +196,7 @@ tdapp.controller("MainCtrl",function($scope,$timeout,$interval,$http,Fact,$auth)
 			data: obj
 		}).then(
 			function successCallback(response) {
-				Fact.log("Done.");
+				TDMgr.log("Done.");
 			}
 			,
 			errorCallback
@@ -224,7 +204,7 @@ tdapp.controller("MainCtrl",function($scope,$timeout,$interval,$http,Fact,$auth)
 	}
 
 	function deletetodo(obj){
-		Fact.log("Sending request (delete) to server...");
+		TDMgr.log("Sending request (delete) to server...");
 		$http({
 			method:"delete",
 			url: server+"/"+obj.id,
@@ -232,7 +212,7 @@ tdapp.controller("MainCtrl",function($scope,$timeout,$interval,$http,Fact,$auth)
 			data: obj
 		}).then(
 			function successCallback(response) {
-				Fact.log("Done.");
+				TDMgr.log("Done.");
 			}
 			,
 			errorCallback
@@ -240,13 +220,13 @@ tdapp.controller("MainCtrl",function($scope,$timeout,$interval,$http,Fact,$auth)
 	}
 
 	function donetodo(obj){
-		Fact.log("Sending request (get; todo is done) to server...");
+		TDMgr.log("Sending request (get; todo is done) to server...");
 		$http({
 			method:"get",
 			url: server+"/"+obj.id+"/done",
 		}).then(
 			function successCallback(response) {
-				Fact.log("Done.");
+				TDMgr.log("Done.");
 			}
 			,
 			errorCallback
@@ -270,7 +250,7 @@ tdapp.controller("MainCtrl",function($scope,$timeout,$interval,$http,Fact,$auth)
 				$timeout(function(){
 					document.getElementById("todotxta").focus();
 				},128);
-				Fact.log("NewTodo-Dialog.");
+				TDMgr.log("NewTodo-Dialog.");
 			}
 		}
 	}
@@ -279,23 +259,25 @@ tdapp.controller("MainCtrl",function($scope,$timeout,$interval,$http,Fact,$auth)
 		var k = e.keyCode;
 		if(k==13){//ret
 			e.preventDefault();
-			var newtodo = {
-				"topic":$scope.newtodotxt,
-				"done":false
-			};
-			$scope.newtodotxt = "";
-			$scope.s_add = 0;
-			$scope.s_list = 1;
-			posttodo(newtodo);
-			Fact.addTodoObj(newtodo);
-			window.scrollTo(0,0);
+			if($scope.newtodotxt!=""){
+				var newtodo = {};
+				newtodo.topic=$scope.newtodotxt;
+				newtodo.done=false;
+				$scope.newtodotxt = "";
+				posttodo(newtodo);
+				TDMgr.addTodoObj(newtodo);
+				window.scrollTo(0,0);
+				document.getElementById("todotxtaconst").focus();
+				$scope.s_add = 0;
+			}
 		} else
 		if(k==27){//esc
 			e.preventDefault();
 			$scope.newtodotxt = "";
 			$scope.s_add = 0;
 			$scope.s_list = 1;
-			Fact.log("Todo not added.");
+			TDMgr.log("Todo not added.");
+			document.getElementById("todotxtaconst").focus();
 		} else
 		if(k==9){//tab
 			e.preventDefault();
@@ -306,20 +288,20 @@ tdapp.controller("MainCtrl",function($scope,$timeout,$interval,$http,Fact,$auth)
 		var k = e.keyCode;
 		if(k==13 || k==27 || k==107){//ret,esc,+
 			e.preventDefault();
-			Fact.log("Change Todo (id:"+id+").");
+			TDMgr.log("Change Todo (id:"+id+").");
 			var currentTodo = document.getElementById("todoid"+id);
 			currentTodo.blur();
-			Fact.log("Todo unfocused.");
+			TDMgr.log("Todo unfocused.");
 
-			var obj = Fact.getTodoById(id);
+			var obj = TDMgr.getTodoById(id);
 			if(obj!=undefined){
-				Fact.log("Done.");
-				Fact.log("Updating data on server.");
+				TDMgr.log("Done.");
+				TDMgr.log("Updating data on server.");
 				obj.topic = currentTodo.innerHTML;
 				puttodo(obj);
-				Fact.log("Todo (id:"+id+") updated.");
+				TDMgr.log("Todo (id:"+id+") updated.");
 			} else {
-				Fact.log("Error.");
+				TDMgr.log("Error.");
 			}
 		}
 	}
@@ -336,7 +318,7 @@ tdapp.controller("MainCtrl",function($scope,$timeout,$interval,$http,Fact,$auth)
 
 	$scope.seltodoline = function(id){
 		document.getElementById("todoid"+id).focus();
-		Fact.log("Todo focused.");
+		TDMgr.log("Todo focused.");
 	}
 
 	$scope.deltodo = function(obj){
@@ -350,19 +332,19 @@ tdapp.controller("MainCtrl",function($scope,$timeout,$interval,$http,Fact,$auth)
 			if(obj.opac<=0 && !obj.deleted){
 				obj.deleted = true;
 				deletetodo(obj);
-				//Fact.delTodo(obj);
-				Fact.log("ToDo deleted.");
+				//TDMgr.delTodo(obj);
+				TDMgr.log("ToDo deleted.");
 			}
 		},32,32);
-		if(Fact.getTodos().length==0){
-			Fact.log("Todo-List is empty.");
+		if(TDMgr.getTodos().length==0){
+			TDMgr.log("Todo-List is empty.");
 		}
 	}
 
 	$scope.togDone = function(obj){
-		Fact.togDone(obj);
+		TDMgr.togDone(obj);
 		donetodo(obj);
-		Fact.log("Todo-Flag changed.");
+		TDMgr.log("Todo-Flag changed.");
 	}
 
 	$scope.newtodo = function(){
@@ -370,9 +352,23 @@ tdapp.controller("MainCtrl",function($scope,$timeout,$interval,$http,Fact,$auth)
 		$timeout(function(){
 			document.getElementById("todotxta").focus();
 		},128);
-		Fact.log("New Todo-Dialog.");
+		TDMgr.log("New Todo-Dialog.");
 	}
 
+	$scope.newtodofromconst = function(){
+		if($scope.newtodotxt!=undefined){
+			if($scope.newtodotxt!=""){
+				var newtodo = {};
+				newtodo.topic=$scope.newtodotxt;
+				newtodo.done=false;
+				$scope.newtodotxt = "";
+				posttodo(newtodo);
+				TDMgr.addTodoObj(newtodo);
+				window.scrollTo(0,0);
+			}
+		}
+	}
+	
 	// Login functions
 
 	function logout(){
@@ -380,7 +376,7 @@ tdapp.controller("MainCtrl",function($scope,$timeout,$interval,$http,Fact,$auth)
 		$scope.s_list = 0;
 		$scope.s_add = 0;
 		$scope.s_working = 1;
-		Fact.clearTodos();
+		TDMgr.clearTodos();
 		$timeout(function(){
 			$scope.s_working = 0;
 			$scope.s_login = 1;
@@ -388,15 +384,15 @@ tdapp.controller("MainCtrl",function($scope,$timeout,$interval,$http,Fact,$auth)
 		$timeout(function(){
 			document.getElementById("liusername").focus();
 		},1128);
-		Fact.log("Logged out.");
+		TDMgr.log("Logged out.");
 	}
 	$scope.dologout = logout;
 
 	function login(){
 		$auth.login($scope.user)
 			.then(function(){
-				Fact.log('You have successfully signed in!');
-				Fact.log("Logged in.");
+				TDMgr.log('You have successfully signed in!');
+				TDMgr.log("Logged in.");
 				$scope.errormsg = "";
 				$scope.s_login = 0;
 				gettodos();
@@ -404,7 +400,7 @@ tdapp.controller("MainCtrl",function($scope,$timeout,$interval,$http,Fact,$auth)
 			.catch(function(error){
 				$scope.errormsg = "Login-Error.";
 				$scope.dologout();
-				// Fact.log(error.data.message);
+				// TDMgr.log(error.data.message);
 			});
 	}
 	function locallogin(){ // No basic authentication (for communication with localhost)
@@ -417,7 +413,7 @@ tdapp.controller("MainCtrl",function($scope,$timeout,$interval,$http,Fact,$auth)
 
 	// Finish
 
-	Fact.log("Client Log-System ready.");
+	TDMgr.log("Client Log-System ready.");
 
 	document.getElementById("liusername").focus();
 

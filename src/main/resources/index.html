@@ -46,11 +46,20 @@ impressum *** helge schneider, laarkamp 45, 44866 bochum, tel:02327563694, email
 	</div>
 </div>
 
-<!-- Header/Search -->
+<!-- Old Header/Search
 <center>
 <div ng-show="s_list==1" id="header" class="fnt32 header">ToDoS</div>
 <div ng-show="s_list==1">
 		<input id="searchf" type="text" ng-model="search" name="search" placeholder="search" class="search fnt16" taborder=1></input>
+</div>
+</center>
+-->
+
+<!-- New Header/AddConst -->
+<center>
+<div ng-show="s_list==1" id="header" class="fnt32 header">ToDoS</div>
+<div ng-show="s_list==1">
+		<textarea id="todotxtaconst" ng-model="newtodotxt" ng-keydown="newtodoKeydown($event);" class="todota2 fnt16" placeholder="New ToDo..."></textarea>
 </div>
 </center>
 
@@ -63,9 +72,9 @@ impressum *** helge schneider, laarkamp 45, 44866 bochum, tel:02327563694, email
 <center>
 <div ng-show="s_add==1" class="newtodo">
 	<center>
-		<div class="fnt16 mb8 tal">NewToDo</div>
+		<div class="fnt16 mb8 tal">New ToDo...</div>
 		<div>
-		<textarea id="todotxta" ng-model="newtodotxt" ng-keydown="newtodoKeydown($event);" class="todota fnt16"></textarea>
+			<textarea id="todotxta" ng-model="newtodotxt" ng-keydown="newtodoKeydown($event);" class="todota fnt16"></textarea>
 		</div>
 		<div>&nbsp;</div>
 	</center>

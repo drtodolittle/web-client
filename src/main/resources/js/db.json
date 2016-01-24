@@ -8,13 +8,6 @@
   ],
   "api/todos": [
     {
-      "id": 21,
-      "topic": "Neu!",
-      "done": true,
-      "createdate": "2009-01-01T12:00:00+01:00",
-      "donedate": "2009-01-01T12:00:00+01:00"
-    },
-    {
       "id": 22,
       "topic": "Urga.",
       "done": false,
@@ -34,6 +27,16 @@
       "id": 24,
       "createdate": "2009-01-01T12:00:00+01:00",
       "donedate": "2009-01-01T12:00:00+01:00"
+    },
+    {
+      "topic": "Gut!",
+      "done": false,
+      "id": 26
+    },
+    {
+      "topic": "Bla. Blup. Urga. Tröt!",
+      "done": false,
+      "id": 27
     }
   ]
 }

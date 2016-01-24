@@ -208,6 +208,13 @@ body,div,p,span{
 	height:64px;
 	padding:4px;
 }
+.todota2{
+	width: 256px;
+	padding: 6px;
+	margin-bottom:40px;
+	border:solid 1px;
+	border-color: #aaaaaa;
+}
 .mo:hover{
 	cursor:pointer;
 }

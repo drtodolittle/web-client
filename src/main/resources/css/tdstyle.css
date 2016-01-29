@@ -31,7 +31,9 @@ body,div,p,span{
 	font-family:arial;
 	font-size:48px;
 }
-
+.fntshadow{
+	text-shadow: 4px 4px #888888;
+}
 /*
   Margins ----------------------------------------
 */
@@ -85,12 +87,11 @@ body,div,p,span{
 	padding:8px;
 }
 .working{
-	position:fixed;
-	left:25%;
-	top:32px;	
-	width:50%;
+	width:256px;
 	background-color:#aaaaaa;
+	color:#000000;
 	padding:32px;
+	margin-top:24px;
 	border:solid 1px;
 	box-shadow: 4px 4px 8px grey;
 }
@@ -136,13 +137,14 @@ body,div,p,span{
 	width:320px;
 	background-color:#aaaaaa;
 	padding:32px;
-	margin-top:32px;
-	//text-align:left;
+	margin-top:24px;
+	/* text-align:left; */
 	box-shadow: 4px 4px 8px grey;
 	border:solid 1px;
 }
 .liuser{
-	background-color:#dddddd;
+	background-color:#cccccc;
+	color:#000000;
 	resize:none;
 	width:16em;
 	height:32px;
@@ -150,7 +152,8 @@ body,div,p,span{
 	margin:4px;
 }
 .lipass{
-	background-color:#dddddd;
+	background-color:#cccccc;
+	color:#000000;
 	resize:none;
 	width:16em;
 	height:32px;
@@ -165,7 +168,7 @@ body,div,p,span{
 }
 .libut:hover{
 	cursor:pointer;
-	background-color:#dddddd;
+	background-color:#cccccc;
 }
 
 /*
@@ -190,28 +193,12 @@ body,div,p,span{
 .todofkts{
 	vertical-align:top;
 }
-.newtodo{
-	position:fixed;
-	width:50%;
-	left:25%;
-	top:32px;
-	padding:16px;
-	background-color:#aaaaaa;
-	box-shadow: 4px 4px 8px grey;
-	border:solid 1px;
-}
 .todota{
-	position:relative;
-	background-color:#dddddd;
-	resize:none;
-	width:90%;
-	height:64px;
-	padding:4px;
-}
-.todota2{
-	width: 256px;
+	width: 320px;
+	height: 36px;
 	padding: 6px;
-	margin-bottom:40px;
+	margin-top:24px;
+	margin-bottom:8px;
 	border:solid 1px;
 	border-color: #aaaaaa;
 }

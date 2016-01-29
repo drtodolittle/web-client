@@ -8,8 +8,8 @@ var tdapp = angular.module("tdapp",['satellizer']);
 tdapp.config(function($authProvider) {
 	$authProvider.baseUrl='/api/todos/';
 	$authProvider.loginUrl='login';
-
 	// Satellizer
+	/*
 	$authProvider.twitter({
 		url: 'http://127.0.0.1:5000/auth/twitter', // Satellizer server component on localhost
 		authorizationEndpoint: 'https://api.twitter.com/oauth/authenticate',
@@ -17,7 +17,6 @@ tdapp.config(function($authProvider) {
 		type: '1.0',
 		popupOptions: { width: 495, height: 645 }
 	});
-	/*
 	$authProvider.httpInterceptor = false,
 	$authProvider.withCredentials = false;
 	*/
@@ -30,117 +29,92 @@ var localserver = "http://localhost:3000/api/todos"; // JSON-Server ressource on
 var server = window.location.protocol + "/api/todos";
 
 /*
-  Factory ----------------------------------------
+  Factories ----------------------------------------
 */
-tdapp.factory("TDMgr",function(){
-
-	// Logging
-
-	var log = [];
-
-	function _log(logtxt){
-		log.push(logtxt);
-		if(log.length>32){
-			log.shift();
+tdapp.factory("CLogger",function(){ // ClientLogger
+	service = {};
+	service.logs = [];
+	service.log = function(logtxt){
+		service.logs.push(logtxt);
+		if(service.logs.length>32){
+			service.logs.shift();
 		}
 	}
-
-	function _getLog(){
-		return log;
+	service.getLog = function(){
+		return service.logs;
 	}
-
 	for(i=0;i<32;i++){
-		_log("");
+		service.log("");
 	}
+	return service;	
+});
 
-	// Todos
-
-	var todos = [];
-
-	function _getTodos(){
-		return todos;
+tdapp.factory("TDMgr",function(){ // ToDoManager
+	var service = {};
+	service.todos = [];
+	service.getTodos = function(){
+		return service.todos;
 	}
-
-	function _setTodos(todolist){
-		todos = todolist;
+	service.setTodos = function(todolist){
+		service.todos = todolist;
 	}
-
-	function _clearTodos(){
-		while(todos.length>0){
-			todos.pop();
+	service.clearTodos = function(){
+		while(service.todos.length>0){
+			service.todos.pop();
 		}
 	}
-
-	function _getTodoById(id){
+	service.getTodoById = function(id){
 		var ret = undefined;
-		todos.forEach(function(obj){
+		service.todos.forEach(function(obj){
 			if(obj.id==id){
 				ret = obj;
 			}
 		});
 		return ret;
 	}
-
-	function _addTodoObj(obj){
-		todos.unshift(obj);
+	service.addTodoObj = function(obj){
+		service.todos.unshift(obj);
 	}
-
-	function _delTodo(item){
-		var idx = todos.indexOf(item)
-		todos.splice(idx,1);
+	service.delTodo = function(item){
+		var idx = service.todos.indexOf(item)
+		service.todos.splice(idx,1);
 	}
-
-	function _togDone(item){
-		var idx = todos.indexOf(item);
-		var todo = todos[idx];
+	service.togDone = function(item){
+		var idx = service.todos.indexOf(item);
+		var todo = service.todos[idx];
 		if(todo.done){
 			todo.done = false;
 		} else {
 			todo.done = true;
 		}
 	}
-
-	// Returns
-
-	return{
-		log : _log,
-		getLog : _getLog,
-		getTodos : _getTodos,
-		setTodos : _setTodos,
-		clearTodos : _clearTodos,
-		getTodoById : _getTodoById,
-		addTodoObj : _addTodoObj,
-		delTodo : _delTodo,
-		togDone : _togDone,
-	};
-
+	return service;
 });
 
 /*
   Main controller ----------------------------------------
 */
-tdapp.controller("MainCtrl",function($scope,$timeout,$interval,$http,$auth,TDMgr){
+tdapp.controller("MainCtrl",function($scope,$timeout,$interval,$http,$auth,TDMgr,CLogger){
 
 	// Init
 
 	$scope.todos = TDMgr.getTodos();
-	$scope.log = TDMgr.getLog();
+	$scope.log = CLogger.getLog();
 
 	$scope.s_login = 1;
 	$scope.s_working = 0;
 	$scope.s_list = 0;
-	$scope.s_add = 0;
 
 	// Communication with server
 
 	function errorCallback(response) {
-		TDMgr.log("Error!");
-		TDMgr.log("Check browser console for details.");
+		CLogger.log("Error!");
+		CLogger.log("Check browser console for details.");
 		console.log(JSON.stringify(response));
 	}
 
 	function gettodos(){
-		TDMgr.log("Sending request (get) to server...");
+		CLogger.log("Sending request (get) to server...");
 		$scope.s_working = 1;
 		$scope.s_list = 0;
 		$http({
@@ -148,24 +122,24 @@ tdapp.controller("MainCtrl",function($scope,$timeout,$interval,$http,$auth,TDMgr
 			url: server
 		}).then(
 			function successCallback(response) {
-				TDMgr.log("Done.");
-				TDMgr.log("Updating local Todo-List.");
+				CLogger.log("Done.");
+				CLogger.log("Updating local Todo-List.");
 				response.data.forEach(function(o){
 					TDMgr.addTodoObj(o);
 				});
-				TDMgr.log("Done.");
+				CLogger.log("Done.");
 				$timeout(function(){
 					$scope.s_list = 1;
 					$scope.s_working = 0;
 				},1000);
 				$timeout(function(){
-					document.getElementById("todotxtaconst").focus();
+					document.getElementById("todotxta").focus();
 				},1128);
 			}
 			,
 			function(response) {
-				TDMgr.log("Error!");
-				TDMgr.log("Check browser console for details.");
+				CLogger.log("Error!");
+				CLogger.log("Check browser console for details.");
 				console.log(JSON.stringify(response));
 				$scope.errormsg="Server not available!";
 				$scope.dologout();
@@ -175,7 +149,7 @@ tdapp.controller("MainCtrl",function($scope,$timeout,$interval,$http,$auth,TDMgr
 	$scope.gettodos = gettodos;
 
 	function posttodo(obj){
-		TDMgr.log("Sending request (post) to server...");
+		CLogger.log("Sending request (post) to server...");
 		$http({
 			method:"post",
 			url: server,
@@ -183,7 +157,7 @@ tdapp.controller("MainCtrl",function($scope,$timeout,$interval,$http,$auth,TDMgr
 			data: obj
 		}).then(
 			function successCallback(response) {
-				TDMgr.log("Done.");
+				CLogger.log("Done.");
 				obj.id=response.data.id;
 			}
 			,
@@ -192,7 +166,7 @@ tdapp.controller("MainCtrl",function($scope,$timeout,$interval,$http,$auth,TDMgr
 	}
 
 	function puttodo(obj){
-		TDMgr.log("Sending request (put) to server...");
+		CLogger.log("Sending request (put) to server...");
 		$http({
 			method:"put",
 			url: server+"/"+obj.id,
@@ -200,7 +174,7 @@ tdapp.controller("MainCtrl",function($scope,$timeout,$interval,$http,$auth,TDMgr
 			data: obj
 		}).then(
 			function successCallback(response) {
-				TDMgr.log("Done.");
+				CLogger.log("Done.");
 			}
 			,
 			errorCallback
@@ -208,7 +182,7 @@ tdapp.controller("MainCtrl",function($scope,$timeout,$interval,$http,$auth,TDMgr
 	}
 
 	function deletetodo(obj){
-		TDMgr.log("Sending request (delete) to server...");
+		CLogger.log("Sending request (delete) to server...");
 		$http({
 			method:"delete",
 			url: server+"/"+obj.id,
@@ -216,7 +190,7 @@ tdapp.controller("MainCtrl",function($scope,$timeout,$interval,$http,$auth,TDMgr
 			data: obj
 		}).then(
 			function successCallback(response) {
-				TDMgr.log("Done.");
+				CLogger.log("Done.");
 			}
 			,
 			errorCallback
@@ -224,13 +198,13 @@ tdapp.controller("MainCtrl",function($scope,$timeout,$interval,$http,$auth,TDMgr
 	}
 
 	function donetodo(obj){
-		TDMgr.log("Sending request (get; todo is done) to server...");
+		CLogger.log("Sending request (get; todo is done) to server...");
 		$http({
 			method:"get",
 			url: server+"/"+obj.id+"/done",
 		}).then(
 			function successCallback(response) {
-				TDMgr.log("Done.");
+				CLogger.log("Done.");
 			}
 			,
 			errorCallback
@@ -253,16 +227,11 @@ tdapp.controller("MainCtrl",function($scope,$timeout,$interval,$http,$auth,TDMgr
 	// Keyboard functions
 
 	$scope.mainKeydown = function(e){
-		if($scope.s_login==0){
-			var k = e.keyCode;
-			if(k==107){//+ on numpad
-				e.preventDefault();
-				$scope.s_add = 1;
-				$timeout(function(){
-					document.getElementById("todotxta").focus();
-				},128);
-				TDMgr.log("NewTodo-Dialog.");
-			}
+		var k = e.keyCode;
+		if(k==27){//esc
+			e.preventDefault();
+			CLogger.log("Commit logout.");
+			$scope.dologout();
 		}
 	}
 
@@ -278,17 +247,8 @@ tdapp.controller("MainCtrl",function($scope,$timeout,$interval,$http,$auth,TDMgr
 				posttodo(newtodo);
 				TDMgr.addTodoObj(newtodo);
 				window.scrollTo(0,0);
-				document.getElementById("todotxtaconst").focus();
-				$scope.s_add = 0;
+				document.getElementById("todotxta").focus();
 			}
-		} else
-		if(k==27){//esc
-			e.preventDefault();
-			$scope.newtodotxt = "";
-			$scope.s_add = 0;
-			$scope.s_list = 1;
-			TDMgr.log("Todo not added.");
-			document.getElementById("todotxtaconst").focus();
 		} else
 		if(k==9){//tab
 			e.preventDefault();
@@ -297,22 +257,21 @@ tdapp.controller("MainCtrl",function($scope,$timeout,$interval,$http,$auth,TDMgr
 
 	$scope.todolineKeydown = function(e,id){
 		var k = e.keyCode;
-		if(k==13 || k==27 || k==107){//ret,esc,+
+		if(k==13){//ret
 			e.preventDefault();
-			TDMgr.log("Change Todo (id:"+id+").");
+			CLogger.log("Change Todo (id:"+id+").");
 			var currentTodo = document.getElementById("todoid"+id);
 			currentTodo.blur();
-			TDMgr.log("Todo unfocused.");
-
+			CLogger.log("Todo unfocused.");
 			var obj = TDMgr.getTodoById(id);
 			if(obj!=undefined){
-				TDMgr.log("Done.");
-				TDMgr.log("Updating data on server.");
+				CLogger.log("Done.");
+				CLogger.log("Updating data on server.");
 				obj.topic = currentTodo.innerHTML;
 				puttodo(obj);
-				TDMgr.log("Todo (id:"+id+") updated.");
+				CLogger.log("Todo (id:"+id+") updated.");
 			} else {
-				TDMgr.log("Error.");
+				CLogger.log("Error.");
 			}
 		}
 	}
@@ -329,7 +288,7 @@ tdapp.controller("MainCtrl",function($scope,$timeout,$interval,$http,$auth,TDMgr
 
 	$scope.seltodoline = function(id){
 		document.getElementById("todoid"+id).focus();
-		TDMgr.log("Todo focused.");
+		CLogger.log("Todo focused.");
 	}
 
 	$scope.deltodo = function(obj){
@@ -344,26 +303,18 @@ tdapp.controller("MainCtrl",function($scope,$timeout,$interval,$http,$auth,TDMgr
 				obj.deleted = true;
 				deletetodo(obj);
 				//TDMgr.delTodo(obj);
-				TDMgr.log("ToDo deleted.");
+				CLogger.log("ToDo deleted.");
 			}
 		},32,32);
 		if(TDMgr.getTodos().length==0){
-			TDMgr.log("Todo-List is empty.");
+			CLogger.log("Todo-List is empty.");
 		}
 	}
 
 	$scope.togDone = function(obj){
 		TDMgr.togDone(obj);
 		donetodo(obj);
-		TDMgr.log("Todo-Flag changed.");
-	}
-
-	$scope.newtodo = function(){
-		$scope.s_add = 1;
-		$timeout(function(){
-			document.getElementById("todotxta").focus();
-		},128);
-		TDMgr.log("New Todo-Dialog.");
+		CLogger.log("Todo-Flag changed.");
 	}
 
 	$scope.newtodofromconst = function(){
@@ -380,12 +331,11 @@ tdapp.controller("MainCtrl",function($scope,$timeout,$interval,$http,$auth,TDMgr
 		}
 	}
 	
-	// Login functions
+	// Login & Logout functions
 
 	function logout(){
 		$scope.s_login = 0;
 		$scope.s_list = 0;
-		$scope.s_add = 0;
 		$scope.s_working = 1;
 		TDMgr.clearTodos();
 		$timeout(function(){
@@ -395,15 +345,15 @@ tdapp.controller("MainCtrl",function($scope,$timeout,$interval,$http,$auth,TDMgr
 		$timeout(function(){
 			document.getElementById("liusername").focus();
 		},1128);
-		TDMgr.log("Logged out.");
+		CLogger.log("Logged out.");
 	}
 	$scope.dologout = logout;
 
 	function login(){
+		CLogger.log("Commit login.");
 		$auth.login($scope.user)
 			.then(function(){
-				TDMgr.log('You have successfully signed in!');
-				TDMgr.log("Logged in.");
+				CLogger.log("Logged in.");
 				$scope.errormsg = "";
 				$scope.s_login = 0;
 				gettodos();
@@ -411,21 +361,19 @@ tdapp.controller("MainCtrl",function($scope,$timeout,$interval,$http,$auth,TDMgr
 			.catch(function(error){
 				$scope.errormsg = "Login-Error.";
 				$scope.dologout();
-				// TDMgr.log(error.data.message);
 			});
 	}
 	function locallogin(){ // No basic authentication (for communication with localhost)
-
+		CLogger.log("Commit login");
 		server = localserver;
 		$scope.errormsg = "";
 		$scope.s_login = 0;
+		CLogger.log("Logged in.");
 		gettodos();
 	}
 	$scope.dologin = login; // Change to "locallogin" for working against localhost
 
 	// Finish
-
-	TDMgr.log("Client Log-System ready.");
 
 	document.getElementById("liusername").focus();
 
@@ -433,4 +381,6 @@ tdapp.controller("MainCtrl",function($scope,$timeout,$interval,$http,$auth,TDMgr
 		$scope.gettodos();
 	}
 
+	CLogger.log("System ready.");
+	
 });

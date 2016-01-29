@@ -133,7 +133,11 @@ tdapp.controller("MainCtrl",function($scope,$timeout,$interval,$http,$auth,TDMgr
 					$scope.s_working = 0;
 				},1000);
 				$timeout(function(){
-					document.getElementById("todotxta").focus();
+					if(typeof window.orientation == 'undefined'){ // Workaround
+						CLogger.log("Desktop browser detected.");
+						CLogger.log("Focus New-Todo-Inputfield.");
+						document.getElementById("todotxta").focus();
+					}
 				},1128);
 			}
 			,

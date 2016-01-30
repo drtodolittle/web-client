@@ -64,6 +64,7 @@ body,div,p,span{
 	right:0px;
 	top:0px;
 	margin:8px;
+	visibility: hidden;
 }
 .fktsicon{
 	padding: 4px 4px 4px 4px;
@@ -94,6 +95,7 @@ body,div,p,span{
 	margin-top:24px;
 	border:solid 1px;
 	box-shadow: 4px 4px 8px grey;
+	visibility: hidden;
 }
 .search{
 	background: url(../images/magnifying-glass-2x.png) no-repeat 230px 10px;
@@ -102,6 +104,7 @@ body,div,p,span{
 	margin-bottom:40px;
 	border:solid 1px;
 	border-color: #aaaaaa;
+	visibility: hidden;
 }
 .impressum{
 	margin:32px;
@@ -128,6 +131,7 @@ body,div,p,span{
 	-webkit-animation: flash 1s linear infinite;
 	-moz-animation: flash 1s linear infinite;
 	animation: flash 1s linear infinite;
+	visibility: hidden;
 }
 
 /*
@@ -178,6 +182,7 @@ body,div,p,span{
 	background-color:#ffffff;
 	border-spacing: 16px;
 	border-collapse: separate;
+	visibility: hidden;
 }
 .todoline{
 	border-radius: 16px;
@@ -201,6 +206,7 @@ body,div,p,span{
 	margin-bottom:8px;
 	border:solid 1px;
 	border-color: #aaaaaa;
+	visibility: hidden;
 }
 .mo:hover{
 	cursor:pointer;

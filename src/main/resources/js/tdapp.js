@@ -33,15 +33,15 @@ var server = window.location.protocol + "/api/todos";
 */
 tdapp.factory("CLogger",function(){ // ClientLogger
 	service = {};
-	service.logs = [];
+	service._log = [];
 	service.log = function(logtxt){
-		service.logs.push(logtxt);
-		if(service.logs.length>32){
-			service.logs.shift();
+		service._log.push(logtxt);
+		if(service._log.length>32){
+			service._log.shift();
 		}
 	}
 	service.getLog = function(){
-		return service.logs;
+		return service._log;
 	}
 	for(i=0;i<32;i++){
 		service.log("");
@@ -136,7 +136,7 @@ tdapp.controller("MainCtrl",function($scope,$timeout,$interval,$http,$auth,TDMgr
 					if(typeof window.orientation == 'undefined'){ // Workaround
 						CLogger.log("Desktop browser detected.");
 						CLogger.log("Focus New-Todo-Inputfield.");
-						document.getElementById("todotxta").focus();
+						$("#todotxta").focus();
 					}
 				},1128);
 			}
@@ -251,7 +251,7 @@ tdapp.controller("MainCtrl",function($scope,$timeout,$interval,$http,$auth,TDMgr
 				posttodo(newtodo);
 				TDMgr.addTodoObj(newtodo);
 				window.scrollTo(0,0);
-				document.getElementById("todotxta").focus();
+				$("#todotxta").focus();
 			}
 		} else
 		if(k==9){//tab
@@ -264,14 +264,14 @@ tdapp.controller("MainCtrl",function($scope,$timeout,$interval,$http,$auth,TDMgr
 		if(k==13){//ret
 			e.preventDefault();
 			CLogger.log("Change Todo (id:"+id+").");
-			var currentTodo = document.getElementById("todoid"+id);
+			var currentTodo = $('#todoid'+id);
 			currentTodo.blur();
 			CLogger.log("Todo unfocused.");
 			var obj = TDMgr.getTodoById(id);
 			if(obj!=undefined){
 				CLogger.log("Done.");
 				CLogger.log("Updating data on server.");
-				obj.topic = currentTodo.innerHTML;
+				obj.topic = currentTodo.html();
 				puttodo(obj);
 				CLogger.log("Todo (id:"+id+") updated.");
 			} else {
@@ -291,7 +291,7 @@ tdapp.controller("MainCtrl",function($scope,$timeout,$interval,$http,$auth,TDMgr
 	// Todo functions
 
 	$scope.seltodoline = function(id){
-		document.getElementById("todoid"+id).focus();
+		$("#todoid"+id).focus();
 		CLogger.log("Todo focused.");
 	}
 
@@ -300,14 +300,17 @@ tdapp.controller("MainCtrl",function($scope,$timeout,$interval,$http,$auth,TDMgr
 		obj.opac = 1;
 		obj.del = false;
 		$interval(function(){
-			var x = document.getElementById("todox"+obj.id);
+			var x = $("#todox"+obj.id);
 			obj.opac = obj.opac - 0.05;
-			x.style.opacity = obj.opac;
+			x.css("opacity",obj.opac);
 			if(obj.opac<=0 && !obj.deleted){
 				obj.deleted = true;
 				deletetodo(obj);
-				//TDMgr.delTodo(obj);
+				TDMgr.delTodo(obj);
 				CLogger.log("ToDo deleted.");
+				$timeout(function(){
+					$("#todotxta").focus();
+				},128);
 			}
 		},32,32);
 		if(TDMgr.getTodos().length==0){
@@ -347,7 +350,7 @@ tdapp.controller("MainCtrl",function($scope,$timeout,$interval,$http,$auth,TDMgr
 			$scope.s_login = 1;
 		},1000);
 		$timeout(function(){
-			document.getElementById("liusername").focus();
+			$("#liusername").focus();
 		},1128);
 		CLogger.log("Logged out.");
 	}
@@ -368,7 +371,7 @@ tdapp.controller("MainCtrl",function($scope,$timeout,$interval,$http,$auth,TDMgr
 			});
 	}
 	function locallogin(){ // No basic authentication (for communication with localhost)
-		CLogger.log("Commit login");
+		CLogger.log("Commit login.");
 		server = localserver;
 		$scope.errormsg = "";
 		$scope.s_login = 0;
@@ -379,12 +382,12 @@ tdapp.controller("MainCtrl",function($scope,$timeout,$interval,$http,$auth,TDMgr
 
 	// Finish
 
-	document.getElementById("liusername").focus();
-
-	if($scope.s_list==1){
-		$scope.gettodos();
-	}
-
-	CLogger.log("System ready.");
+	$(".flash").css("visibility","visible");
+	$(".working").css("visibility","visible");	
+	$(".fkts").css("visibility","visible");
+	$(".todota").css("visibility","visible");
+	$(".todotab").css("visibility","visible");
+	$("#liusername").focus()
 	
+	CLogger.log("System ready.");
 });

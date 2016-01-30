@@ -22,13 +22,6 @@
       "donedate": "2009-01-01T12:00:00+01:00"
     },
     {
-      "topic": "Pnfff.",
-      "done": false,
-      "id": 24,
-      "createdate": "2009-01-01T12:00:00+01:00",
-      "donedate": "2009-01-01T12:00:00+01:00"
-    },
-    {
       "topic": "Logout with ESC.",
       "done": false,
       "id": 30

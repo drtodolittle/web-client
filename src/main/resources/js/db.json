@@ -8,23 +8,24 @@
   ],
   "api/todos": [
     {
-      "id": 22,
       "topic": "Urga.",
       "done": false,
-      "createdate": "2009-01-01T12:00:00+01:00",
-      "donedate": "2009-01-01T12:00:00+01:00"
+      "id": 22
     },
     {
       "topic": "Bla.",
       "done": false,
-      "id": 23,
-      "createdate": "2009-01-01T12:00:00+01:00",
-      "donedate": "2009-01-01T12:00:00+01:00"
+      "id": 31
     },
     {
-      "topic": "Logout with ESC.",
+      "topic": "Blupp.",
       "done": false,
-      "id": 30
+      "id": 32
+    },
+    {
+      "topic": "Logout with ESC...",
+      "done": false,
+      "id": 34
     }
   ]
 }

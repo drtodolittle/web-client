@@ -113,6 +113,13 @@ body,div,p,span{
 	font-family:arial;
 	font-size:10px;
 }
+.footer{
+	margin:8px;
+	color:#888888;
+	text-align:center;
+	font-family:arial;
+	font-size:10px;
+}
 
 /*
   Error ----------------------------------------
@@ -203,7 +210,7 @@ body,div,p,span{
 	height: 36px;
 	padding: 6px;
 	margin-top:24px;
-	margin-bottom:8px;
+	margin-bottom:24px;
 	border:solid 1px;
 	border-color: #aaaaaa;
 	visibility: hidden;

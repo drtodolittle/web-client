@@ -295,6 +295,13 @@ tdapp.controller("MainCtrl",function($scope,$timeout,$interval,$http,$auth,TDMgr
 		CLogger.log("Todo focused.");
 	}
 
+	$scope.deltodonow = function(obj){
+		obj.deleted = true;
+		deletetodo(obj);
+		TDMgr.delTodo(obj);
+		CLogger.log("ToDo deleted.");	
+	}
+	
 	$scope.deltodo = function(obj){
 		//Just some animated testings (wip)
 		obj.opac = 1;
@@ -378,7 +385,7 @@ tdapp.controller("MainCtrl",function($scope,$timeout,$interval,$http,$auth,TDMgr
 		CLogger.log("Logged in.");
 		gettodos();
 	}
-	$scope.dologin = login; // Change to "locallogin" for working against localhost
+	$scope.dologin = locallogin; // Change to "locallogin" for working against localhost
 
 	// Finish
 

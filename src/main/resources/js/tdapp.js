@@ -385,7 +385,7 @@ tdapp.controller("MainCtrl",function($scope,$timeout,$interval,$http,$auth,TDMgr
 		CLogger.log("Logged in.");
 		gettodos();
 	}
-	$scope.dologin = locallogin; // Change to "locallogin" for working against localhost
+	$scope.dologin = login; // Change to "locallogin" for working against localhost
 
 	// Finish
 

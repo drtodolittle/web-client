@@ -357,6 +357,7 @@ tdapp.controller("MainCtrl",function($scope,$timeout,$interval,$http,$auth,$cook
 	// Login & Logout functions
 
 	function logout(){
+		$cookies.remove(cookiename);
 		$scope.s_login = 0;
 		$scope.s_list = 0;
 		$scope.s_working = 1;
@@ -377,7 +378,6 @@ tdapp.controller("MainCtrl",function($scope,$timeout,$interval,$http,$auth,$cook
 		$auth.login($scope.user)
 			.then(function(response){
 				$cookies.put(cookiename,response.data.token);
-				console.log("Set cookie "+cookiename+" to "+response.data.token);
 				CLogger.log("Logged in.");
 				$scope.errormsg = "";
 				$scope.s_login = 0;
@@ -410,24 +410,14 @@ tdapp.controller("MainCtrl",function($scope,$timeout,$interval,$http,$auth,$cook
 	CLogger.log("System ready.");
 	
 	// Do login if cookie/token is available (WIP)
-	console.log("Checking token-based access to backend...");
+	
 	var token = $cookies.get(cookiename);
 	if (token!=undefined){
 		setHTTPDefaulHeader(token);
-		$http({
-			method:"get",
-			url: server
-		}).then(
-			function successCallback(response) {
-				console.log("Token-based access to backend is possible");
-			}
-			,
-			function(response) {
-				console.log("Token-based access to backend is not possible");
-			}
-		);
-	} else {
-		console.log("No token available.");
+		CLogger.log("Automatic login.");
+		$scope.errormsg = "";
+		$scope.s_login = 0;
+		gettodos();		
 	}
 
 });

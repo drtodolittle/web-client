@@ -377,6 +377,7 @@ tdapp.controller("MainCtrl",function($scope,$timeout,$interval,$http,$auth,$cook
 		$auth.login($scope.user)
 			.then(function(response){
 				$cookies.put(cookiename,response.data.token);
+				console.log("Set cookie "+cookiename+" to "+response.data.token);
 				CLogger.log("Logged in.");
 				$scope.errormsg = "";
 				$scope.s_login = 0;

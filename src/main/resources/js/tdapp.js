@@ -113,7 +113,7 @@ tdapp.controller("MainCtrl",function($scope,$timeout,$interval,$http,$auth,$cook
 	// Communication with server
 
 	function setHTTPDefaulHeader(token){
-		$http.defaults.headers.common['Authorization'] = "Basic " + token;
+		$http.defaults.headers.common.Authorization = "Bearer " + token;
 	}
 	
 	function errorCallback(response) {
@@ -375,6 +375,7 @@ tdapp.controller("MainCtrl",function($scope,$timeout,$interval,$http,$auth,$cook
 
 	function login(){
 		CLogger.log("Commit login.");
+		console.log("Header: "+$http.defaults.headers.common.Authorization);
 		$auth.login($scope.user)
 			.then(function(response){
 				$cookies.put(cookiename,response.data.token);

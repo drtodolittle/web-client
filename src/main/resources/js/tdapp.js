@@ -96,6 +96,25 @@ tdapp.factory("TDMgr",function(){ // ToDoManager
 	return service;
 });
 
+tdapp.factory("Backend",function($http){ // ClientLogger
+	service = {};
+	service.getTodos = function(){
+		$http({
+			method:"get",
+			url: server
+		}).then(
+			function successCallback(response) {
+				return response;
+			}
+			,
+			function(response) {
+				return response;
+			}
+		);
+	}
+	return service;	
+});
+
 /*
   Main controller ----------------------------------------
 */
@@ -112,12 +131,10 @@ tdapp.controller("MainCtrl",function($scope,$timeout,$interval,$http,$auth,$cook
 
 	// Communication with server
 
-	/*
 	function doModifyHeader(token){
 		$http.defaults.headers.common['Authorization'] = "Basic " + token;
-		$httpProvider.defaults.headers.common['Authorization'] = 'Basic ' + token;
+		// $httpProvider.defaults.headers.common['Authorization'] = 'Basic ' + token;
 	}
-	*/
 	
 	function errorCallback(response) {
 		CLogger.log("Error!");
@@ -360,7 +377,7 @@ tdapp.controller("MainCtrl",function($scope,$timeout,$interval,$http,$auth,$cook
 	// Login & Logout functions
 
 	function logout(){
-		// $cookies.remove(cookiename);
+		$cookies.remove(cookiename);
 		$scope.s_login = 0;
 		$scope.s_list = 0;
 		$scope.s_working = 1;
@@ -380,7 +397,7 @@ tdapp.controller("MainCtrl",function($scope,$timeout,$interval,$http,$auth,$cook
 		CLogger.log("Commit login.");
 		$auth.login($scope.user)
 			.then(function(response){
-				// $cookies.put(cookiename,response.data.token);
+				$cookies.put(cookiename,response.data.token);
 				CLogger.log("Logged in.");
 				$scope.errormsg = "";
 				$scope.s_login = 0;
@@ -413,7 +430,6 @@ tdapp.controller("MainCtrl",function($scope,$timeout,$interval,$http,$auth,$cook
 	CLogger.log("System ready.");
 	
 	// Do login if cookie/token is available (WIP)
-	/*
 	var token = $cookies.get(cookiename);
 	if (token!=undefined){
 		doModifyHeader(token);
@@ -422,5 +438,4 @@ tdapp.controller("MainCtrl",function($scope,$timeout,$interval,$http,$auth,$cook
 		$scope.s_login = 0;
 		gettodos();		
 	}
-	*/
 });

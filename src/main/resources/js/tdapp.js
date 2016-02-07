@@ -3,7 +3,7 @@
 	tdapp.js
 
 */
-var tdapp = angular.module("tdapp",['satellizer']);
+var tdapp = angular.module("tdapp",['satellizer','ngCookies']);
 
 tdapp.config(function($authProvider) {
 	$authProvider.baseUrl='/api/todos/';
@@ -27,6 +27,11 @@ tdapp.config(function($authProvider) {
 */
 var localserver = "http://localhost:3000/api/todos"; // JSON-Server ressource on localhost 
 var server = window.location.protocol + "/api/todos";
+
+/*
+  Misc ----------------------------------------
+*/
+var cookiename = "derdr";
 
 /*
   Factories ----------------------------------------
@@ -94,7 +99,7 @@ tdapp.factory("TDMgr",function(){ // ToDoManager
 /*
   Main controller ----------------------------------------
 */
-tdapp.controller("MainCtrl",function($scope,$timeout,$interval,$http,$auth,TDMgr,CLogger){
+tdapp.controller("MainCtrl",function($scope,$timeout,$interval,$http,$auth,$cookies,TDMgr,CLogger){
 
 	// Init
 
@@ -107,6 +112,10 @@ tdapp.controller("MainCtrl",function($scope,$timeout,$interval,$http,$auth,TDMgr
 
 	// Communication with server
 
+	function setHTTPDefaulHeader(token){
+		$http.defaults.headers.common['auth-token'] = token;
+	}
+	
 	function errorCallback(response) {
 		CLogger.log("Error!");
 		CLogger.log("Check browser console for details.");
@@ -366,7 +375,8 @@ tdapp.controller("MainCtrl",function($scope,$timeout,$interval,$http,$auth,TDMgr
 	function login(){
 		CLogger.log("Commit login.");
 		$auth.login($scope.user)
-			.then(function(){
+			.then(function(response){
+				$cookies.put(cookiename,response.token);
 				CLogger.log("Logged in.");
 				$scope.errormsg = "";
 				$scope.s_login = 0;
@@ -388,7 +398,7 @@ tdapp.controller("MainCtrl",function($scope,$timeout,$interval,$http,$auth,TDMgr
 	$scope.dologin = login; // Change to "locallogin" for working against localhost
 
 	// Finish
-
+	
 	$(".flash").css("visibility","visible");
 	$(".working").css("visibility","visible");	
 	$(".fkts").css("visibility","visible");
@@ -397,4 +407,26 @@ tdapp.controller("MainCtrl",function($scope,$timeout,$interval,$http,$auth,TDMgr
 	$("#liusername").focus()
 	
 	CLogger.log("System ready.");
+	
+	// Do login if cookie/token is available (WIP)
+	console.log("Checking token-based access to backend...");
+	var token = $cookies.get(cookiename);
+	if (token!=undefined){
+		setHTTPDefaulHeader(token);
+		$http({
+			method:"get",
+			url: server
+		}).then(
+			function successCallback(response) {
+				console.log("Token-based access to backend is possible");
+			}
+			,
+			function(response) {
+				console.log("Token-based access to backend is not possible");
+			}
+		);
+	} else {
+		console.log("No token available.");
+	}
+
 });

@@ -113,7 +113,7 @@ tdapp.controller("MainCtrl",function($scope,$timeout,$interval,$http,$auth,$cook
 	// Communication with server
 
 	function setHTTPDefaulHeader(token){
-		$http.defaults.headers.common['auth-token'] = token;
+		$http.defaults.headers.common['Authorization'] = "Basic " + token;
 	}
 	
 	function errorCallback(response) {

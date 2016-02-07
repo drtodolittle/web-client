@@ -112,7 +112,7 @@ tdapp.controller("MainCtrl",function($scope,$timeout,$interval,$http,$auth,$cook
 
 	// Communication with server
 
-	function setHTTPDefaulHeader(token){
+	function doModifyHeader(token){
 		$http.defaults.headers.common['Authorization'] = "Basic " + token;
 	}
 	
@@ -375,7 +375,6 @@ tdapp.controller("MainCtrl",function($scope,$timeout,$interval,$http,$auth,$cook
 
 	function login(){
 		CLogger.log("Commit login.");
-		console.log("Header: "+$http.defaults.headers.common['Authorization']);
 		$auth.login($scope.user)
 			.then(function(response){
 				$cookies.put(cookiename,response.data.token);
@@ -411,14 +410,14 @@ tdapp.controller("MainCtrl",function($scope,$timeout,$interval,$http,$auth,$cook
 	CLogger.log("System ready.");
 	
 	// Do login if cookie/token is available (WIP)
-	
+	/*
 	var token = $cookies.get(cookiename);
 	if (token!=undefined){
-		setHTTPDefaulHeader(token);
+		doModifyHeader(token);
 		CLogger.log("Automatic login.");
 		$scope.errormsg = "";
 		$scope.s_login = 0;
 		gettodos();		
 	}
-
+	*/
 });

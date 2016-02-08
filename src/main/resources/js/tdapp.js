@@ -32,7 +32,7 @@ var cookiename = "derdr";
 */
 var localserver = "http://localhost:3000/api/todos"; // JSON-Server ressource on localhost 
 var server = window.location.protocol + "/api/todos";
-
+var userservice = window.location.protocol + "/api/users";
 /*
   Factories ----------------------------------------
 */
@@ -103,6 +103,7 @@ tdapp.factory("TDMgr",function(){ // ToDoManager
   Services ----------------------------------------
 */
 tdapp.service('Backend',function($http,$timeout,CLogger,TDMgr){
+	
 	var _scope;
 	this.setScope = function(scope){
 		_scope = scope;
@@ -389,6 +390,26 @@ tdapp.controller("MainCtrl",function($scope,$timeout,$interval,$http,$auth,$cook
 				$scope.dologout();
 			});
 	}
+	
+	function register() {
+		CLogger.log("Commit register.");
+		$http({
+			method:"post",
+			url: userservice,
+			header: "application/json",
+			data: $scope.user
+		}).then(
+			function successCallback(res) {
+				CLogger.log("Done.");
+			}
+			,
+			function errorCallback(res){
+				CLogger.log("Error! Check console for details.");
+				console.log(JSON.stringify(res));			
+			}
+		);
+	}
+	
 	function locallogin(){ // No basic authentication (for communication with localhost)
 		CLogger.log("Commit login.");
 		server = localserver;
@@ -398,7 +419,7 @@ tdapp.controller("MainCtrl",function($scope,$timeout,$interval,$http,$auth,$cook
 		Backend.getTodos();
 	}
 	$scope.dologin = login; // Change to "locallogin" for working against localhost
-
+	$scope.doRegister = register;
 	// Finish
 	
 	$(".flash").css("visibility","visible");

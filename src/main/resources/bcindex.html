@@ -26,7 +26,7 @@
 <!-- Login -->
 <center>
 <div ng-show="s_login==1" class="login fnt16">
-		<div class="fnt32 fntshadow"><img src="images/drtodolittle-logo.jpg" alt="DrToDoLittle" /></div>
+		<div class="fnt32 fntshadow">Dr ToDo Little</div>
 		<div class="fnt12 fntshadow">Bootcards Edition</div>
 		<div>&nbsp;</div>
 		<input id="liusername" type="text" ng-model="user.email" name="liusername" placeholder="Username" class="liuser fnt16" ng-keydown="loginKeydown($event);" tabindex=1></input>
@@ -35,6 +35,18 @@
 		<div>&nbsp;</div>
 		<div class="fnt12">or</div>
 		<div class="libut fnt16" tabindex=4 ng-click="authenticate('twitter');">Login via Twitter</div>
+		<div>&nbsp;</div>
+		<div class="flash">{{errormsg}}</div>
+</div>
+<div ng-show="s_login==1" class="login fnt16">
+		<div class="fnt32 fntshadow">Register</div>
+		<div class="fnt12 fntshadow">Bootcards Edition</div>
+		<div>&nbsp;</div>
+		<input id="liusername" type="text" ng-model="user.firstname" name="lifirstname" placeholder="Firstname" class="liuser fnt16" ng-keydown="loginKeydown($event);" tabindex=5></input>
+		<input id="liusername" type="text" ng-model="user.lastname" name="lilastname" placeholder="Lastname" class="liuser fnt16" ng-keydown="loginKeydown($event);" tabindex=6></input>
+		<input id="liusername" type="text" ng-model="user.email" name="liusername" placeholder="Username" class="liuser fnt16" ng-keydown="loginKeydown($event);" tabindex=7></input>
+		<input type="password" ng-model="user.password" name="lipass" placeholder="Password" class="lipass fnt16" ng-keydown="loginKeydown($event);" tabindex=8></input>
+		<div class="libut fnt16" ng-click="doRegister();" tabindex=9>Register</div>
 		<div>&nbsp;</div>
 		<div class="flash">{{errormsg}}</div>
 </div>

@@ -23,15 +23,15 @@ tdapp.config(function($authProvider) {
 })
 
 /*
+  Misc ----------------------------------------
+*/
+var cookiename = "derdr";
+
+/*
   Server ----------------------------------------
 */
 var localserver = "http://localhost:3000/api/todos"; // JSON-Server ressource on localhost 
 var server = window.location.protocol + "/api/todos";
-
-/*
-  Misc ----------------------------------------
-*/
-var cookiename = "derdr";
 
 /*
   Factories ----------------------------------------
@@ -103,26 +103,117 @@ tdapp.factory("TDMgr",function(){ // ToDoManager
   Services ----------------------------------------
 */
 tdapp.service('Backend',function($http,$timeout,CLogger,TDMgr){
+	var _scope;
+	this.setScope = function(scope){
+		_scope = scope;
+	}
 	this.postTodo = function(obj){
 		CLogger.log("Sending request (post) to server...");
-		CLogger.log("Doing it via Backend-Service...");
 		$http({
 			method:"post",
 			url: server,
 			header: "application/json",
 			data: obj
 		}).then(
-			function successCallback(response) {
+			function successCallback(res) {
 				CLogger.log("Done.");
-				obj.id=response.data.id;
+				obj.id=res.data.id;
 			}
 			,
 			function errorCallback(res){
-				CLogger.log("Error.");
+				CLogger.log("Error! Check console for details.");
+				console.log(JSON.stringify(res));			
 			}
 		);
 	}
-
+	this.putTodo = function(obj){
+		CLogger.log("Sending request (put) to server...");
+		$http({
+			method:"put",
+			url: server+"/"+obj.id,
+			header: "application/json",
+			data: obj
+		}).then(
+			function successCallback(res){
+				CLogger.log("Done.");
+			}
+			,
+			function errorCallback(res){
+				CLogger.log("Error! Check console for details.");
+				console.log(JSON.stringify(res));			
+			}
+		);
+	}
+	this.delTodo = function(obj){
+		CLogger.log("Sending request (delete) to server...");
+		$http({
+			method:"delete",
+			url: server+"/"+obj.id,
+			header: "application/json",
+			data: obj
+		}).then(
+			function successCallback(res) {
+				CLogger.log("Done.");
+			}
+			,
+			function errorCallback(res){
+				CLogger.log("Error! Check console for details.");
+				console.log(JSON.stringify(res));			
+			}
+		);
+	}	
+	this.doneTodo = function(obj){
+		CLogger.log("Sending request (get; todo is done) to server...");
+		$http({
+			method:"get",
+			url: server+"/"+obj.id+"/done",
+		}).then(
+			function successCallback(res) {
+				CLogger.log("Done.");
+			}
+			,
+			function errorCallback(res){
+				CLogger.log("Error! Check console for details.");
+				console.log(JSON.stringify(res));			
+			}
+		);
+	}
+	this.getTodos = function(){
+		CLogger.log("Sending request (get) to server...");
+		_scope.s_working = 1;
+		_scope.s_list = 0;
+		$http({
+			method:"get",
+			url: server
+		}).then(
+			function successCallback(res) {
+				CLogger.log("Done.");
+				CLogger.log("Updating local Todo-List.");
+				res.data.forEach(function(o){
+					TDMgr.addTodoObj(o);
+				});
+				CLogger.log("Done.");
+				$timeout(function(){
+					_scope.s_list = 1;
+					_scope.s_working = 0;
+				},1000);
+				$timeout(function(){
+					if(typeof window.orientation == 'undefined'){ // Workaround
+						CLogger.log("Desktop browser detected.");
+						CLogger.log("Focus New-Todo-Inputfield.");
+						$("#todotxta").focus();
+					}
+				},1128);
+			}
+			,
+			function(res) {
+				CLogger.log("Error! Check console for details.");
+				console.log(JSON.stringify(res));
+				_scope.errormsg="Server not available!";
+				_scope.dologout();
+			}
+		);
+	}	
 });
 
 /*
@@ -141,101 +232,12 @@ tdapp.controller("MainCtrl",function($scope,$timeout,$interval,$http,$auth,$cook
 
 	// Communication with server
 
+	Backend.setScope($scope);
+
 	function doModifyHeader(token){
 		$http.defaults.headers.common['Authorization'] = "Basic " + token;
 	}
 	
-	function errorCallback(response) {
-		CLogger.log("Error!");
-		CLogger.log("Check browser console for details.");
-		console.log(JSON.stringify(response));
-	}
-
-	function gettodos(){
-		CLogger.log("Sending request (get) to server...");
-		$scope.s_working = 1;
-		$scope.s_list = 0;
-		$http({
-			method:"get",
-			url: server
-		}).then(
-			function successCallback(response) {
-				CLogger.log("Done.");
-				CLogger.log("Updating local Todo-List.");
-				response.data.forEach(function(o){
-					TDMgr.addTodoObj(o);
-				});
-				CLogger.log("Done.");
-				$timeout(function(){
-					$scope.s_list = 1;
-					$scope.s_working = 0;
-				},1000);
-				$timeout(function(){
-					if(typeof window.orientation == 'undefined'){ // Workaround
-						CLogger.log("Desktop browser detected.");
-						CLogger.log("Focus New-Todo-Inputfield.");
-						$("#todotxta").focus();
-					}
-				},1128);
-			}
-			,
-			function(response) {
-				CLogger.log("Error!");
-				CLogger.log("Check browser console for details.");
-				console.log(JSON.stringify(response));
-				$scope.errormsg="Server not available!";
-				$scope.dologout();
-			}
-		);
-	}
-	$scope.gettodos = gettodos;
-
-	function puttodo(obj){
-		CLogger.log("Sending request (put) to server...");
-		$http({
-			method:"put",
-			url: server+"/"+obj.id,
-			header: "application/json",
-			data: obj
-		}).then(
-			function successCallback(response) {
-				CLogger.log("Done.");
-			}
-			,
-			errorCallback
-		);
-	}
-
-	function deletetodo(obj){
-		CLogger.log("Sending request (delete) to server...");
-		$http({
-			method:"delete",
-			url: server+"/"+obj.id,
-			header: "application/json",
-			data: obj
-		}).then(
-			function successCallback(response) {
-				CLogger.log("Done.");
-			}
-			,
-			errorCallback
-		);
-	}
-
-	function donetodo(obj){
-		CLogger.log("Sending request (get; todo is done) to server...");
-		$http({
-			method:"get",
-			url: server+"/"+obj.id+"/done",
-		}).then(
-			function successCallback(response) {
-				CLogger.log("Done.");
-			}
-			,
-			errorCallback
-		);
-	}
-
 	// Satellizer
 
 	$scope.authenticate = function(provider){
@@ -293,7 +295,7 @@ tdapp.controller("MainCtrl",function($scope,$timeout,$interval,$http,$auth,$cook
 				CLogger.log("Done.");
 				CLogger.log("Updating data on server.");
 				obj.topic = currentTodo.html();
-				puttodo(obj);
+				Backend.putTodo(obj);
 				CLogger.log("Todo (id:"+id+") updated.");
 			} else {
 				CLogger.log("Error.");
@@ -316,15 +318,14 @@ tdapp.controller("MainCtrl",function($scope,$timeout,$interval,$http,$auth,$cook
 		CLogger.log("Todo focused.");
 	}
 
-	$scope.deltodonow = function(obj){
+	$scope.deltodonow = function(obj){ // No animation
 		obj.deleted = true;
-		deletetodo(obj);
+		Backend.delTodo(obj);
 		TDMgr.delTodo(obj);
 		CLogger.log("ToDo deleted.");	
 	}
 	
-	$scope.deltodo = function(obj){
-		//Just some animated testings (wip)
+	$scope.deltodo = function(obj){ // Animated testings (wip)
 		obj.opac = 1;
 		obj.del = false;
 		$interval(function(){
@@ -333,7 +334,7 @@ tdapp.controller("MainCtrl",function($scope,$timeout,$interval,$http,$auth,$cook
 			x.css("opacity",obj.opac);
 			if(obj.opac<=0 && !obj.deleted){
 				obj.deleted = true;
-				deletetodo(obj);
+				Backend.delTodo(obj);
 				TDMgr.delTodo(obj);
 				CLogger.log("ToDo deleted.");
 				$timeout(function(){
@@ -348,32 +349,18 @@ tdapp.controller("MainCtrl",function($scope,$timeout,$interval,$http,$auth,$cook
 
 	$scope.togDone = function(obj){
 		TDMgr.togDone(obj);
-		donetodo(obj);
+		Backend.doneTodo(obj);
 		CLogger.log("Todo-Flag changed.");
-	}
-
-	$scope.newtodofromconst = function(){
-		if($scope.newtodotxt!=undefined){
-			if($scope.newtodotxt!=""){
-				var newtodo = {};
-				newtodo.topic=$scope.newtodotxt;
-				newtodo.done=false;
-				$scope.newtodotxt = "";
-				Backend.postTodo(newtodo);
-				TDMgr.addTodoObj(newtodo);
-				window.scrollTo(0,0);
-			}
-		}
 	}
 	
 	// Login & Logout functions
 
 	function logout(){
 		$cookies.remove(cookiename);
+		TDMgr.clearTodos();
 		$scope.s_login = 0;
 		$scope.s_list = 0;
 		$scope.s_working = 1;
-		TDMgr.clearTodos();
 		$timeout(function(){
 			$scope.s_working = 0;
 			$scope.s_login = 1;
@@ -395,7 +382,7 @@ tdapp.controller("MainCtrl",function($scope,$timeout,$interval,$http,$auth,$cook
 				CLogger.log("Logged in.");
 				$scope.errormsg = "";
 				$scope.s_login = 0;
-				gettodos();
+				Backend.getTodos();
 			})
 			.catch(function(error){
 				$scope.errormsg = "Login-Error.";
@@ -408,7 +395,7 @@ tdapp.controller("MainCtrl",function($scope,$timeout,$interval,$http,$auth,$cook
 		$scope.errormsg = "";
 		$scope.s_login = 0;
 		CLogger.log("Logged in.");
-		gettodos();
+		Backend.getTodos();
 	}
 	$scope.dologin = login; // Change to "locallogin" for working against localhost
 
@@ -430,7 +417,7 @@ tdapp.controller("MainCtrl",function($scope,$timeout,$interval,$http,$auth,$cook
 		CLogger.log("Automatic login.");
 		$scope.errormsg = "";
 		$scope.s_login = 0;
-		gettodos();		
+		Backend.getTodos();		
 	}
 	
 });

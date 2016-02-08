@@ -37,88 +37,98 @@ var cookiename = "derdr";
   Factories ----------------------------------------
 */
 tdapp.factory("CLogger",function(){ // ClientLogger
-	service = {};
-	service._log = [];
-	service.log = function(logtxt){
-		service._log.push(logtxt);
-		if(service._log.length>32){
-			service._log.shift();
+	fact = {};
+	fact._log = [];
+	fact.log = function(logtxt){
+		fact._log.push(logtxt);
+		if(fact._log.length>32){
+			fact._log.shift();
 		}
 	}
-	service.getLog = function(){
-		return service._log;
+	fact.getLog = function(){
+		return fact._log;
 	}
 	for(i=0;i<32;i++){
-		service.log("");
+		fact.log("");
 	}
-	return service;	
+	return fact;	
 });
 
 tdapp.factory("TDMgr",function(){ // ToDoManager
-	var service = {};
-	service.todos = [];
-	service.getTodos = function(){
-		return service.todos;
+	var fact = {};
+	fact.todos = [];
+	fact.getTodos = function(){
+		return fact.todos;
 	}
-	service.setTodos = function(todolist){
-		service.todos = todolist;
+	fact.setTodos = function(todolist){
+		fact.todos = todolist;
 	}
-	service.clearTodos = function(){
-		while(service.todos.length>0){
-			service.todos.pop();
+	fact.clearTodos = function(){
+		while(fact.todos.length>0){
+			fact.todos.pop();
 		}
 	}
-	service.getTodoById = function(id){
+	fact.getTodoById = function(id){
 		var ret = undefined;
-		service.todos.forEach(function(obj){
+		fact.todos.forEach(function(obj){
 			if(obj.id==id){
 				ret = obj;
 			}
 		});
 		return ret;
 	}
-	service.addTodoObj = function(obj){
-		service.todos.unshift(obj);
+	fact.addTodoObj = function(obj){
+		fact.todos.unshift(obj);
 	}
-	service.delTodo = function(item){
-		var idx = service.todos.indexOf(item)
-		service.todos.splice(idx,1);
+	fact.addTodo = function(topic){
+		fact.addTodoObj({"topic":topic,done:false});
 	}
-	service.togDone = function(item){
-		var idx = service.todos.indexOf(item);
-		var todo = service.todos[idx];
+	fact.delTodo = function(item){
+		var idx = fact.todos.indexOf(item)
+		fact.todos.splice(idx,1);
+	}
+	fact.togDone = function(item){
+		var idx = fact.todos.indexOf(item);
+		var todo = fact.todos[idx];
 		if(todo.done){
 			todo.done = false;
 		} else {
 			todo.done = true;
 		}
 	}
-	return service;
+	return fact;
 });
 
-tdapp.factory("Backend",function($http){ // ClientLogger
-	service = {};
-	service.getTodos = function(){
+/*
+  Services ----------------------------------------
+*/
+tdapp.service('Backend',function($http,$timeout,CLogger,TDMgr){
+	this.postTodo = function(obj){
+		CLogger.log("Sending request (post) to server...");
+		CLogger.log("Doing it via Backend-Service...");
 		$http({
-			method:"get",
-			url: server
+			method:"post",
+			url: server,
+			header: "application/json",
+			data: obj
 		}).then(
 			function successCallback(response) {
-				return response;
+				CLogger.log("Done.");
+				obj.id=response.data.id;
 			}
 			,
-			function(response) {
-				return response;
+			function errorCallback(res){
+				CLogger.log("Error.");
 			}
 		);
 	}
-	return service;	
+
 });
 
 /*
   Main controller ----------------------------------------
 */
-tdapp.controller("MainCtrl",function($scope,$timeout,$interval,$http,$auth,$cookies,TDMgr,CLogger){
+tdapp.controller("MainCtrl",function($scope,$timeout,$interval,$http,$auth,$cookies,TDMgr,CLogger,Backend){
 
 	// Init
 
@@ -133,7 +143,6 @@ tdapp.controller("MainCtrl",function($scope,$timeout,$interval,$http,$auth,$cook
 
 	function doModifyHeader(token){
 		$http.defaults.headers.common['Authorization'] = "Basic " + token;
-		// $httpProvider.defaults.headers.common['Authorization'] = 'Basic ' + token;
 	}
 	
 	function errorCallback(response) {
@@ -180,23 +189,6 @@ tdapp.controller("MainCtrl",function($scope,$timeout,$interval,$http,$auth,$cook
 		);
 	}
 	$scope.gettodos = gettodos;
-
-	function posttodo(obj){
-		CLogger.log("Sending request (post) to server...");
-		$http({
-			method:"post",
-			url: server,
-			header: "application/json",
-			data: obj
-		}).then(
-			function successCallback(response) {
-				CLogger.log("Done.");
-				obj.id=response.data.id;
-			}
-			,
-			errorCallback
-		);
-	}
 
 	function puttodo(obj){
 		CLogger.log("Sending request (put) to server...");
@@ -277,7 +269,7 @@ tdapp.controller("MainCtrl",function($scope,$timeout,$interval,$http,$auth,$cook
 				newtodo.topic=$scope.newtodotxt;
 				newtodo.done=false;
 				$scope.newtodotxt = "";
-				posttodo(newtodo);
+				Backend.postTodo(newtodo);
 				TDMgr.addTodoObj(newtodo);
 				window.scrollTo(0,0);
 				$("#todotxta").focus();
@@ -367,7 +359,7 @@ tdapp.controller("MainCtrl",function($scope,$timeout,$interval,$http,$auth,$cook
 				newtodo.topic=$scope.newtodotxt;
 				newtodo.done=false;
 				$scope.newtodotxt = "";
-				posttodo(newtodo);
+				Backend.postTodo(newtodo);
 				TDMgr.addTodoObj(newtodo);
 				window.scrollTo(0,0);
 			}
@@ -440,4 +432,5 @@ tdapp.controller("MainCtrl",function($scope,$timeout,$interval,$http,$auth,$cook
 		$scope.s_login = 0;
 		gettodos();		
 	}
+	
 });

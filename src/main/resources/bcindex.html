@@ -36,9 +36,13 @@
 		<div class="fnt12">or</div>
 		<div class="libut fnt16" tabindex=4 ng-click="authenticate('twitter');">Login via Twitter</div>
 		<div>&nbsp;</div>
+		<div class="fnt12">or</div>
+		<div class="libut fnt16" tabindex=5 ng-click="showRegister();">Register</div>
+		<div>&nbsp;</div>
 		<div class="flash">{{errormsg}}</div>
 </div>
-<div ng-show="s_login==1" class="login fnt16">
+<!-- register -->
+<div ng-show="s_register==1" class="register fnt16">
 		<div class="fnt32 fntshadow">Register</div>
 		<div class="fnt12 fntshadow">Bootcards Edition</div>
 		<div>&nbsp;</div>

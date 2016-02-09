@@ -153,6 +153,15 @@ body,div,p,span{
 	box-shadow: 4px 4px 8px grey;
 	border:solid 1px;
 }
+.register{
+	width:320px;
+	background-color:#aaaaaa;
+	padding:32px;
+	margin-top:24px;
+	/* text-align:left; */
+	box-shadow: 4px 4px 8px grey;
+	border:solid 1px;
+}
 .liuser{
 	background-color:#cccccc;
 	color:#000000;

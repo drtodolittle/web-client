@@ -390,6 +390,13 @@ tdapp.controller("MainCtrl",function($scope,$timeout,$interval,$http,$auth,$cook
 				$scope.dologout();
 			});
 	}
+
+	function showRegister(){
+		CLogger.log("Show register.");
+		$scope.errormsg = "";
+		$scope.s_login = 0;
+		$scope.s_register = 1;
+	}
 	
 	function register() {
 		CLogger.log("Commit register.");
@@ -401,6 +408,8 @@ tdapp.controller("MainCtrl",function($scope,$timeout,$interval,$http,$auth,$cook
 		}).then(
 			function successCallback(res) {
 				CLogger.log("Done.");
+				$scope.errormsg = "Registration email sent. Please activate your account.";
+				$scope.s_login = 1;
 			}
 			,
 			function errorCallback(res){
@@ -423,6 +432,7 @@ tdapp.controller("MainCtrl",function($scope,$timeout,$interval,$http,$auth,$cook
 	// Finish
 	
 	$(".flash").css("visibility","visible");
+	$(".register").css("visibility","visible");	
 	$(".working").css("visibility","visible");	
 	$(".fkts").css("visibility","visible");
 	$(".todota").css("visibility","visible");

@@ -410,6 +410,7 @@ tdapp.controller("MainCtrl",function($scope,$timeout,$interval,$http,$auth,$cook
 				CLogger.log("Done.");
 				$scope.errormsg = "Registration email sent. Please activate your account.";
 				$scope.s_login = 1;
+				$scope.s_register = 0;
 			}
 			,
 			function errorCallback(res){

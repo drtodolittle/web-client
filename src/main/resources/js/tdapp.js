@@ -429,6 +429,7 @@ tdapp.controller("MainCtrl",function($scope,$timeout,$interval,$http,$auth,$cook
 	}
 	$scope.dologin = login; // Change to "locallogin" for working against localhost
 	$scope.doRegister = register;
+	$scope.showRegister = showRegister;
 	// Finish
 	
 	$(".flash").css("visibility","visible");

@@ -57,8 +57,37 @@ tdapp.factory("CLogger",function(){ // ClientLogger
 tdapp.factory("TDMgr",function(){ // ToDoManager
 	var fact = {};
 	fact.todos = [];
+	fact.tags = [];
+	fact.checkForHashtag = function(obj){
+		if(obj.topic.indexOf('#')>=0){
+			var s = obj.topic.indexOf('#');
+			if(s==-1) e=obj.topic.length;			
+			var e = obj.topic.indexOf(' ',s+1);
+			if(e==-1) e=obj.topic.length;
+			var tag = obj.topic.substring(s,e);
+			obj.tag = tag;
+			if(fact.tags.indexOf(tag)<0){
+				fact.tags.push(tag);
+			}
+		} else {
+			obj.tag = undefined;
+		}
+	}
+	fact.getTags = function(){
+		return fact.tags;
+	}
 	fact.getTodos = function(){
 		return fact.todos;
+	}
+	fact.getTodosByTag = function(tag){
+		if(tag=='') return fact.todos;
+		var tagged = [];
+		fact.todos.forEach(function(obj){
+			if(obj.tag!=undefined && obj.tag==tag){
+				tagged.push(obj);
+			}
+		});
+		return tagged;
 	}
 	fact.setTodos = function(todolist){
 		fact.todos = todolist;
@@ -78,14 +107,24 @@ tdapp.factory("TDMgr",function(){ // ToDoManager
 		return ret;
 	}
 	fact.addTodoObj = function(obj){
+		fact.checkForHashtag(obj);		
 		fact.todos.unshift(obj);
 	}
 	fact.addTodo = function(topic){
-		fact.addTodoObj({"topic":topic,done:false});
+		var obj = {"topic":topic,done:false};
+		fact.checkForHashtag(obj);
+		fact.addTodoObj(obj);
 	}
 	fact.delTodo = function(item){
 		var idx = fact.todos.indexOf(item)
+		var tag = item.tag;
 		fact.todos.splice(idx,1);
+		if( tag!=undefined ){
+			var ttd = fact.getTodosByTag(tag);
+			if( ttd.length==0 ){
+				fact.tags.splice(fact.tags.indexOf(tag),1);
+			}
+		}
 	}
 	fact.togDone = function(item){
 		var idx = fact.todos.indexOf(item);
@@ -103,7 +142,6 @@ tdapp.factory("TDMgr",function(){ // ToDoManager
   Services ----------------------------------------
 */
 tdapp.service('Backend',function($http,$timeout,CLogger,TDMgr){
-	
 	var _scope;
 	this.setScope = function(scope){
 		_scope = scope;
@@ -225,6 +263,7 @@ tdapp.controller("MainCtrl",function($scope,$timeout,$interval,$http,$auth,$cook
 	// Init
 
 	$scope.todos = TDMgr.getTodos();
+	$scope.tags = TDMgr.getTags();
 	$scope.log = CLogger.getLog();
 
 	$scope.s_login = 1;
@@ -274,6 +313,8 @@ tdapp.controller("MainCtrl",function($scope,$timeout,$interval,$http,$auth,$cook
 				$scope.newtodotxt = "";
 				Backend.postTodo(newtodo);
 				TDMgr.addTodoObj(newtodo);
+				$scope.todos = TDMgr.getTodos();
+				$scope.filtertag = '';
 				window.scrollTo(0,0);
 				$("#todotxta").focus();
 			}
@@ -297,6 +338,16 @@ tdapp.controller("MainCtrl",function($scope,$timeout,$interval,$http,$auth,$cook
 				CLogger.log("Updating data on server.");
 				obj.topic = currentTodo.html();
 				Backend.putTodo(obj);
+				var oldtag = obj.tag;
+				TDMgr.checkForHashtag(obj);
+				if(oldtag!=undefined){
+					var ttd = TDMgr.getTodosByTag(oldtag);
+					if(ttd.length<=0){
+						TDMgr.tags.splice(TDMgr.tags.indexOf(oldtag),1);
+					}
+				}
+				$scope.todos = TDMgr.getTodos();
+				$scope.filtertag = '';
 				CLogger.log("Todo (id:"+id+") updated.");
 			} else {
 				CLogger.log("Error.");
@@ -323,6 +374,7 @@ tdapp.controller("MainCtrl",function($scope,$timeout,$interval,$http,$auth,$cook
 		obj.deleted = true;
 		Backend.delTodo(obj);
 		TDMgr.delTodo(obj);
+		$scope.todos = TDMgr.getTodosByTag($scope.filtertag);
 		CLogger.log("ToDo deleted.");	
 	}
 	
@@ -431,8 +483,11 @@ tdapp.controller("MainCtrl",function($scope,$timeout,$interval,$http,$auth,$cook
 	$scope.dologin = login; // Change to "locallogin" for working against localhost
 	$scope.doRegister = register;
 	$scope.showRegister = showRegister;
-	// Finish
-	
+
+	// Tags
+	$scope.getTodosByTag = TDMgr.getTodosByTag;
+
+	// Finish	
 	$(".flash").css("visibility","visible");
 	$(".register").css("visibility","visible");	
 	$(".working").css("visibility","visible");	

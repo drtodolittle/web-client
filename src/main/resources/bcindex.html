@@ -75,6 +75,20 @@ impressum *** helge schneider, laarkamp 45, 44866 bochum, tel:02327563694, email
 
 <!-- List -->
 <div class="container" ng-show="s_list==1">
+	<div class="dropdown">
+	  <button class="btn btn-default dropdown-toggle" type="button" id="filter1" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
+		Filter {{filtertag}}
+		<span class="caret"></span>
+	  </button>
+	  <ul class="dropdown-menu" aria-labelledby="filter1">
+		<li><a href="#" ng-click="todos=getTodosByTag('');filtertag=''">All</a></li>
+		<li ng-repeat="tag in tags">
+			<a href="#" ng-click="$parent.todos=$parent.getTodosByTag(tag);$parent.filtertag=tag">{{tag}}</a>
+		</li>
+	  </ul>
+	</div>
+</div>
+<div class="container" ng-show="s_list==1">
 	<div class="bootcards-list">
 	  <div class="panel panel-default">
 		<div class="list-group" ng-repeat="todo in todos">
@@ -117,6 +131,8 @@ impressum *** helge schneider, laarkamp 45, 44866 bochum, tel:02327563694, email
 	<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.5.0/angular-cookies.min.js"></script>
     <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
+	<!-- Bootstrap -->
+	<script src="https://netdna.bootstrapcdn.com/bootstrap/3.2.0/js/bootstrap.min.js"></script>	
 	<!-- Misc -->
 	<script src="js/satellizer.js"></script>
 	<script src="js/jwt-decode.min.js"></script>

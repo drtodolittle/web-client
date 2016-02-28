@@ -21,6 +21,18 @@
       "topic": "Blupp.",
       "done": false,
       "id": 32
+    },
+    {
+      "topic": "#work Bla.",
+      "done": false,
+      "id": 33,
+      "tag": "#work"
+    },
+    {
+      "topic": "#work Blupp.",
+      "done": false,
+      "tag": "#work",
+      "id": 34
     }
   ]
 }

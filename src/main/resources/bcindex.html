@@ -82,6 +82,7 @@ impressum *** helge schneider, laarkamp 45, 44866 bochum, tel:02327563694, email
 	  </button>
 	  <ul class="dropdown-menu" aria-labelledby="filter1">
 		<li><a href="#" ng-click="todos=getTodosByTag('');filtertag=''">All</a></li>
+		<li><a href="#" ng-click="todos=getTodosByTag('Done');filtertag='Done'">Done</a></li>
 		<li ng-repeat="tag in tags">
 			<a href="#" ng-click="$parent.todos=$parent.getTodosByTag(tag);$parent.filtertag=tag">{{tag}}</a>
 		</li>

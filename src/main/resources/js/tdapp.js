@@ -81,6 +81,13 @@ tdapp.factory("TDMgr",function(){ // ToDoManager
 	}
 	fact.getTodosByTag = function(tag){
 		if(tag=='') return fact.todos;
+		if(tag=='Done'){
+			var dtd = [];
+			fact.todos.forEach(function(todo){
+				if(todo.done) dtd.push(todo);
+			});
+			return dtd;
+		}
 		var tagged = [];
 		fact.todos.forEach(function(obj){
 			if(obj.tag!=undefined && obj.tag==tag){
@@ -403,6 +410,9 @@ tdapp.controller("MainCtrl",function($scope,$timeout,$interval,$http,$auth,$cook
 	$scope.togDone = function(obj){
 		TDMgr.togDone(obj);
 		Backend.doneTodo(obj);
+		if($scope.filtertag=="Done"){
+			$scope.todos=TDMgr.getTodosByTag('Done');
+		}
 		CLogger.log("Todo-Flag changed.");
 	}
 	

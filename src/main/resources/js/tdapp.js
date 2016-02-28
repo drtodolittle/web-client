@@ -80,7 +80,14 @@ tdapp.factory("TDMgr",function(){ // ToDoManager
 		return fact.todos;
 	}
 	fact.getTodosByTag = function(tag){
-		if(tag=='') return fact.todos;
+		if(tag=='' || tag=='All') return fact.todos;
+		if(tag=='Open'){
+			var tds = [];
+			fact.todos.forEach(function(todo){
+				if(!todo.done) tds.push(todo);
+			});
+			return tds;
+		}
 		if(tag=='Done'){
 			var dtd = [];
 			fact.todos.forEach(function(todo){
@@ -269,7 +276,7 @@ tdapp.controller("MainCtrl",function($scope,$timeout,$interval,$http,$auth,$cook
 
 	// Init
 
-	$scope.todos = TDMgr.getTodos();
+	$scope.todos = TDMgr.getTodosByTag('All');
 	$scope.tags = TDMgr.getTags();
 	$scope.log = CLogger.getLog();
 
@@ -410,9 +417,7 @@ tdapp.controller("MainCtrl",function($scope,$timeout,$interval,$http,$auth,$cook
 	$scope.togDone = function(obj){
 		TDMgr.togDone(obj);
 		Backend.doneTodo(obj);
-		if($scope.filtertag=="Done"){
-			$scope.todos=TDMgr.getTodosByTag('Done');
-		}
+		$scope.todos=TDMgr.getTodosByTag($scope.filtertag);
 		CLogger.log("Todo-Flag changed.");
 	}
 	
@@ -446,6 +451,8 @@ tdapp.controller("MainCtrl",function($scope,$timeout,$interval,$http,$auth,$cook
 				$scope.errormsg = "";
 				$scope.s_login = 0;
 				Backend.getTodos();
+				$scope.todos = TDMgr.getTodosByTag('All');
+				$scope.filtertag = 'All';
 			})
 			.catch(function(error){
 				$scope.errormsg = "Login-Error.";
@@ -489,6 +496,8 @@ tdapp.controller("MainCtrl",function($scope,$timeout,$interval,$http,$auth,$cook
 		$scope.s_login = 0;
 		CLogger.log("Logged in.");
 		Backend.getTodos();
+		$scope.todos = TDMgr.getTodosByTag('All');
+		$scope.filtertag = 'All';
 	}
 	$scope.dologin = login; // Change to "locallogin" for working against localhost
 	$scope.doRegister = register;
@@ -515,7 +524,9 @@ tdapp.controller("MainCtrl",function($scope,$timeout,$interval,$http,$auth,$cook
 		CLogger.log("Automatic login.");
 		$scope.errormsg = "";
 		$scope.s_login = 0;
-		Backend.getTodos();		
+		Backend.getTodos();
+		$scope.todos = TDMgr.getTodosByTag('All');
+		$scope.filtertag = 'All';
 	}
 	
 });

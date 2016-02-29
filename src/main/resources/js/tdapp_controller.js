@@ -225,10 +225,10 @@ tdapp.controller("MainCtrl",function($scope,$timeout,$interval,$http,$auth,$cook
 
 	
 
-	$(".container").css("visibility","hidden");
-	$(".fkts").css("visibility","hidden");
-	$(".todota").css("visibility","hidden");
-	$(".todotab").css("visibility","hidden");	
+	$(".container").css("visibility","visible");
+	$(".fkts").css("visibility","visible");
+	$(".todota").css("visibility","visible");
+	$(".todotab").css("visibility","visible");	
 
 	
 	

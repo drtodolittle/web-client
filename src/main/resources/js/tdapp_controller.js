@@ -164,7 +164,8 @@ tdapp.controller("MainCtrl",function($scope,$timeout,$interval,$http,$auth,$cook
 			})
 			.catch(function(error){
 				$scope.errormsg = "Login-Error.";
-				$scope.dologout();
+				console.log(error);
+				//$scope.dologout();
 			});
 	}
 

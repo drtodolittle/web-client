@@ -18,7 +18,7 @@
 
 <!-- Login -->
 <center>
-<div ng-show="s_login==1" class="login fnt16">
+<div class="login fnt16">
 		<div class="fnt32 fntshadow">DrToDoLittle</div>
 		<div>&nbsp;</div>
 		<input id="liusername" type="text" ng-model="user.email" name="liusername" placeholder="Username" class="liuser fnt16" ng-keydown="loginKeydown($event);" tabindex=1></input>
@@ -37,13 +37,13 @@
 
 <!-- Header/Add -->
 <center>
-<div ng-show="s_list==1">
+<div>
 		<textarea id="todotxta" ng-model="newtodotxt" ng-keydown="newtodoKeydown($event);" class="todota fnt16" placeholder="New ToDo..."></textarea>
 </div>
 </center>
 
 <!-- List -->
-<div class="container" ng-show="s_list==1">
+<div class="container">
 	<div class="dropdown">
 	  <button class="btn btn-default dropdown-toggle" type="button" id="filter1" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
 		Filter {{filtertag}}
@@ -59,7 +59,7 @@
 	  </ul>
 	</div>
 </div>
-<div class="container" ng-show="s_list==1">
+<div class="container">
 	<div class="bootcards-list">
 	  <div class="panel panel-default">
 		<div class="list-group" ng-repeat="todo in todos">

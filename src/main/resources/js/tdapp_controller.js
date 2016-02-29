@@ -8,6 +8,7 @@ tdapp.controller("MainCtrl",function($scope,$timeout,$interval,$http,$auth,$cook
 	// Init
 
 	console.log(appdata);
+	console.log(server);
 	
 	$scope.todos = TDMgr.getTodosByTag('All');
 	$scope.tags = TDMgr.getTags();

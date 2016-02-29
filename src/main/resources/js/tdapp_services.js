@@ -12,7 +12,7 @@ tdapp.service('Backend',function($http,$timeout,appdata,CLogger,TDMgr){
 		CLogger.log("Sending request (post) to server...");
 		$http({
 			method:"post",
-			url: server,
+			url: appdata.server,
 			header: "application/json",
 			data: obj
 		}).then(
@@ -31,7 +31,7 @@ tdapp.service('Backend',function($http,$timeout,appdata,CLogger,TDMgr){
 		CLogger.log("Sending request (put) to server...");
 		$http({
 			method:"put",
-			url: server+"/"+obj.id,
+			url: appdata.server+"/"+obj.id,
 			header: "application/json",
 			data: obj
 		}).then(
@@ -49,7 +49,7 @@ tdapp.service('Backend',function($http,$timeout,appdata,CLogger,TDMgr){
 		CLogger.log("Sending request (delete) to server...");
 		$http({
 			method:"delete",
-			url: server+"/"+obj.id,
+			url: appdata.server+"/"+obj.id,
 			header: "application/json",
 			data: obj
 		}).then(
@@ -67,7 +67,7 @@ tdapp.service('Backend',function($http,$timeout,appdata,CLogger,TDMgr){
 		CLogger.log("Sending request (get; todo is done) to server...");
 		$http({
 			method:"get",
-			url: server+"/"+obj.id+"/done",
+			url: appdata.server+"/"+obj.id+"/done",
 		}).then(
 			function successCallback(res) {
 				CLogger.log("Done.");
@@ -85,7 +85,7 @@ tdapp.service('Backend',function($http,$timeout,appdata,CLogger,TDMgr){
 		_scope.s_list = 0;
 		$http({
 			method:"get",
-			url: server
+			url: appdata.server
 		}).then(
 			function successCallback(res) {
 				CLogger.log("Done.");

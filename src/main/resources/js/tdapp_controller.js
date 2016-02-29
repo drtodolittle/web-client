@@ -6,9 +6,6 @@
 tdapp.controller("MainCtrl",function($scope,$timeout,$interval,$http,$auth,$cookies,appdata,TDMgr,CLogger,Backend){
 
 	// Init
-
-	console.log(appdata);
-	console.log(server);
 	
 	$scope.todos = TDMgr.getTodosByTag('All');
 	$scope.tags = TDMgr.getTags();
@@ -203,7 +200,7 @@ tdapp.controller("MainCtrl",function($scope,$timeout,$interval,$http,$auth,$cook
 	
 	function locallogin(){ // No basic authentication (for communication with localhost)
 		CLogger.log("Commit login.");
-		server = localserver;
+		appdata.server = appdata.localserver;
 		$scope.errormsg = "";
 		$scope.s_login = 0;
 		CLogger.log("Logged in.");

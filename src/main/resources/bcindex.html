@@ -100,7 +100,7 @@ impressum *** helge schneider, laarkamp 45, 44866 bochum, tel:02327563694, email
 					<span ng-if="todo.done==false"><img src="images/checkbox_unchecked.png" style="width:24px;height:24px;" /></span>
 					<span ng-if="todo.done==true"><img src="images/checkbox.png" style="width:24px;height:24px;" /></span>
 				</div>
-				<div class="mo" ng-click="deltodonow(todo);"><img src="images/del.png" style="width:24px;height:24px;" />
+				<div class="mo" ng-click="deltodo(todo);"><img src="images/del.png" style="width:24px;height:24px;" />
 				</div>
 			</div>
 			<h4 class="list-group-item-heading" contenteditable="true" ng-keydown="todolineKeydown($event,todo.id);" id="todoid{{todo.id}}">{{todo.topic}}</h4>
@@ -139,6 +139,9 @@ impressum *** helge schneider, laarkamp 45, 44866 bochum, tel:02327563694, email
 	<script src="js/satellizer.js"></script>
 	<script src="js/jwt-decode.min.js"></script>
 	<script src="js/tdapp.js"></script>
+	<script src="js/tdapp_factories.js"></script>
+	<script src="js/tdapp_services.js"></script>
+	<script src="js/tdapp_controller.js"></script>
 
 <!-- Google analytics -->
 <script>

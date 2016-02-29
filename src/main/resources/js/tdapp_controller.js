@@ -150,7 +150,7 @@ tdapp.controller("MainCtrl",function($scope,$timeout,$interval,$http,$auth,$cook
 		CLogger.log("Commit login.");
 		$auth.login($scope.user)
 			.then(function(response){
-				$location = "/#/working";
+				$window.location = "/#/working";
 				var now = new Date();
 				var exp = new Date(now.getFullYear(), now.getMonth()+1, now.getDate());
 				$cookies.put(appdata.cookiename,response.data.token,{expires:exp});

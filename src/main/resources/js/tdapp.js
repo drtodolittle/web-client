@@ -5,11 +5,10 @@
 */
 var tdapp = angular.module("tdapp",['satellizer','ngCookies','ngRoute']);
 
-//tdapp.config(function($authProvider,$routeProvider) {
-tdapp.config(function($authProvider){
+tdapp.config(function($authProvider,$routeProvider) {
+//tdapp.config(function($authProvider){
 	$authProvider.baseUrl='/api/todos/';
 	$authProvider.loginUrl='login';
-	/*
 	$routeProvider
             .when('/', {
                 templateUrl : 'login.html',
@@ -30,7 +29,6 @@ tdapp.config(function($authProvider){
                 templateUrl : 'register.html',
 				controller : 'MainCtrl'
             });
-	*/
 	// Satellizer
 	/*
 	$authProvider.twitter({

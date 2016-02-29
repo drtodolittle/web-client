@@ -64,7 +64,7 @@ body,div,p,span{
 	right:0px;
 	top:0px;
 	margin:8px;
-	visibility: hidden;
+	visibility: visible;
 }
 .fktsicon{
 	padding: 4px 4px 4px 4px;
@@ -86,6 +86,7 @@ body,div,p,span{
 	left:0px;
 	bottom:0px;
 	padding:8px;
+	visibility: hidden;
 }
 .working{
 	width:256px;
@@ -95,7 +96,7 @@ body,div,p,span{
 	margin-top:24px;
 	border:solid 1px;
 	box-shadow: 4px 4px 8px grey;
-	visibility: hidden;
+	visibility: visible;
 }
 .search{
 	background: url(../images/magnifying-glass-2x.png) no-repeat 230px 10px;
@@ -112,6 +113,7 @@ body,div,p,span{
 	text-align:left;
 	font-family:arial;
 	font-size:10px;
+	visibility: hidden;
 }
 .footer{
 	margin:8px;
@@ -222,7 +224,7 @@ body,div,p,span{
 	margin-bottom:24px;
 	border:solid 1px;
 	border-color: #aaaaaa;
-	visibility: hidden;
+	visibility: visible;
 }
 .mo:hover{
 	cursor:pointer;

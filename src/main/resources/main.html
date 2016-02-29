@@ -1,0 +1,57 @@
+﻿<!-- Main -->
+
+<!-- Functions -->
+<div class="fkts">
+	<div ng-click="dologout();" class="fktsiconwrap"><img class="fktsicon" src="images/account-logout-2x.png" alt="logout"></img></div>
+</div>
+
+<!-- Add -->
+<center>
+<div>
+<textarea id="todotxta" ng-model="newtodotxt" ng-keydown="newtodoKeydown($event);" class="todota fnt16" placeholder="New ToDo..."></textarea>
+</div>
+</center>
+
+<!-- List -->
+<div class="container">
+	<div class="dropdown">
+	  <button class="btn btn-default dropdown-toggle" type="button" id="filter1" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
+		Filter {{filtertag}}
+		<span class="caret"></span>
+	  </button>
+	  <ul class="dropdown-menu" aria-labelledby="filter1">
+		<li><a href="/#/main" ng-click="todos=getTodosByTag('Open');filtertag='Open'">Open</a></li>
+		<li><a href="/#/main" ng-click="todos=getTodosByTag('Done');filtertag='Done'">Done</a></li>
+		<li><a href="/#/main" ng-click="todos=getTodosByTag('');filtertag='All'">All</a></li>
+		<li ng-repeat="tag in tags">
+			<a href="/#/main" ng-click="$parent.todos=$parent.getTodosByTag(tag);$parent.filtertag=tag">{{tag}}</a>
+		</li>
+	  </ul>
+	</div>
+</div>
+<div class="container">
+	<div class="bootcards-list">
+	  <div class="panel panel-default">
+		<div class="list-group" ng-repeat="todo in todos">
+		  <div class="container list-group-item">
+			<div class="pull-right">
+				<div class="mo" ng-click="togDone(todo);">
+					<span ng-if="todo.done==false"><img src="images/checkbox_unchecked.png" style="width:24px;height:24px;" /></span>
+					<span ng-if="todo.done==true"><img src="images/checkbox.png" style="width:24px;height:24px;" /></span>
+				</div>
+				<div class="mo" ng-click="deltodo(todo);"><img src="images/del.png" style="width:24px;height:24px;" />
+				</div>
+			</div>
+			<h4 class="list-group-item-heading" contenteditable="true" ng-keydown="todolineKeydown($event,todo.id);" id="todoid{{todo.id}}">{{todo.topic}}</h4>
+		  </div>
+		</div>
+	  </div>
+	</div>
+</div>
+
+<!-- Log -->
+<div class="log">
+	<div class="fnt10" ng-repeat="logentry in log track by $index">
+		<span id="log{{$index}}" style="opacity:{{ $index*0.03125 }}">{{logentry}}</span>
+	</div>
+</div>

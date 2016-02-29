@@ -3,11 +3,31 @@
 	tdapp.js
 
 */
-var tdapp = angular.module("tdapp",['satellizer','ngCookies']);
+var tdapp = angular.module("tdapp",['satellizer','ngCookies','ngRoute']);
 
-tdapp.config(function($authProvider) {
+tdapp.config(function($authProvider,$routeProvider) {
 	$authProvider.baseUrl='/api/todos/';
 	$authProvider.loginUrl='login';
+	$routeProvider
+            .when('/', {
+                templateUrl : 'login.html',
+				controller : 'MainCtrl'
+            })
+			.when('/working', {
+                templateUrl : 'working.html',
+				controller : 'MainCtrl'
+            })			
+			.when('/main', {
+                templateUrl : 'main.html',
+				controller : 'MainCtrl'
+            })
+			.when('/egg', {
+                templateUrl : 'egg.html'
+            })
+			.when('/register', {
+                templateUrl : 'register.html',
+				controller : 'MainCtrl'
+            });
 	// Satellizer
 	/*
 	$authProvider.twitter({

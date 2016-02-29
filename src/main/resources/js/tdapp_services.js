@@ -81,8 +81,6 @@ tdapp.service('Backend',function($http,$timeout,appdata,CLogger,TDMgr){
 	}
 	this.getTodos = function(){
 		CLogger.log("Sending request (get) to server...");
-		_scope.s_working = 1;
-		_scope.s_list = 0;
 		$http({
 			method:"get",
 			url: appdata.server
@@ -95,8 +93,7 @@ tdapp.service('Backend',function($http,$timeout,appdata,CLogger,TDMgr){
 				});
 				CLogger.log("Done.");
 				$timeout(function(){
-					_scope.s_list = 1;
-					_scope.s_working = 0;
+					window.location = "/#/main";
 				},1000);
 				$timeout(function(){
 					if(typeof window.orientation == 'undefined'){ // Workaround

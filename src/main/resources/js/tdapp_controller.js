@@ -11,14 +11,9 @@ tdapp.controller("MainCtrl",function($scope,$timeout,$interval,$http,$auth,$cook
 	$scope.tags = TDMgr.getTags();
 	$scope.log = CLogger.getLog();
 
-	$scope.s_login = 1;
-	$scope.s_working = 0;
-	$scope.s_list = 0;
-
 	// Communication with server
 
 	Backend.setScope($scope);
-
 	function doModifyHeader(token){
 		$http.defaults.headers.common['Authorization'] = "Basic " + token;
 	}
@@ -36,7 +31,7 @@ tdapp.controller("MainCtrl",function($scope,$timeout,$interval,$http,$auth,$cook
 		});
 	};
 
-	// Keyboard functions
+	// Keyboard
 
 	$scope.mainKeydown = function(e){
 		var k = e.keyCode;
@@ -56,6 +51,7 @@ tdapp.controller("MainCtrl",function($scope,$timeout,$interval,$http,$auth,$cook
 				newtodo.topic=$scope.newtodotxt;
 				newtodo.done=false;
 				$scope.newtodotxt = "";
+				console.log(newtodo);
 				Backend.postTodo(newtodo);
 				TDMgr.addTodoObj(newtodo);
 				$scope.todos = TDMgr.getTodos();
@@ -130,17 +126,18 @@ tdapp.controller("MainCtrl",function($scope,$timeout,$interval,$http,$auth,$cook
 		CLogger.log("Todo-Flag changed.");
 	}
 	
-	// Login & Logout functions
+	// Login & Logout
 
 	function logout(){
+		$(".container").css("visibility","hidden");
+		$(".fkts").css("visibility","hidden");
+		$(".todota").css("visibility","hidden");
+		$(".todotab").css("visibility","hidden");
 		$cookies.remove(appdata.cookiename);
 		TDMgr.clearTodos();
-		$scope.s_login = 0;
-		$scope.s_list = 0;
-		$scope.s_working = 1;
+		window.location = "/#/working";
 		$timeout(function(){
-			$scope.s_working = 0;
-			$scope.s_login = 1;
+			window.location = "/";
 		},1000);
 		$timeout(function(){
 			$("#liusername").focus();
@@ -153,15 +150,17 @@ tdapp.controller("MainCtrl",function($scope,$timeout,$interval,$http,$auth,$cook
 		CLogger.log("Commit login.");
 		$auth.login($scope.user)
 			.then(function(response){
+				window.location = "/#/working";
 				var now = new Date();
 				var exp = new Date(now.getFullYear(), now.getMonth()+1, now.getDate());
 				$cookies.put(appdata.cookiename,response.data.token,{expires:exp});
 				CLogger.log("Logged in.");
 				$scope.errormsg = "";
-				$scope.s_login = 0;
 				Backend.getTodos();
 				$scope.todos = TDMgr.getTodosByTag('All');
 				$scope.filtertag = 'All';
+				window.location = "/#/main";
+				$(".fkts").css("visibility","visible");
 			})
 			.catch(function(error){
 				$scope.errormsg = "Login-Error.";
@@ -169,11 +168,28 @@ tdapp.controller("MainCtrl",function($scope,$timeout,$interval,$http,$auth,$cook
 			});
 	}
 
+	function locallogin(){ // No basic authentication (for communication with localhost)
+		window.location = "/#/working";
+		CLogger.log("Commit login.");
+		appdata.server = appdata.localserver;
+		$scope.errormsg = "";
+		CLogger.log("Logged in.");
+		Backend.getTodos();
+		$scope.todos = TDMgr.getTodosByTag('All');
+		$scope.filtertag = 'All';
+		$(".fkts").css("visibility","visible");
+	}
+	$scope.dologin = locallogin; // Change to "locallogin" for working against localhost
+
+	// Register
+	
 	function showRegister(){
 		CLogger.log("Show register.");
+		window.location = "/#/working";
 		$scope.errormsg = "";
-		$scope.s_login = 0;
-		$scope.s_register = 1;
+		setTimeout(function(){
+			window.location = "/#/register";
+		},1000);
 	}
 	
 	function register() {
@@ -187,8 +203,7 @@ tdapp.controller("MainCtrl",function($scope,$timeout,$interval,$http,$auth,$cook
 			function successCallback(res) {
 				CLogger.log("Done.");
 				$scope.errormsg = "Registration email sent. Please activate your account.";
-				$scope.s_login = 1;
-				$scope.s_register = 0;
+				window.location = "/";
 			}
 			,
 			function errorCallback(res){
@@ -197,45 +212,29 @@ tdapp.controller("MainCtrl",function($scope,$timeout,$interval,$http,$auth,$cook
 			}
 		);
 	}
-	
-	function locallogin(){ // No basic authentication (for communication with localhost)
-		CLogger.log("Commit login.");
-		appdata.server = appdata.localserver;
-		$scope.errormsg = "";
-		$scope.s_login = 0;
-		CLogger.log("Logged in.");
-		Backend.getTodos();
-		$scope.todos = TDMgr.getTodosByTag('All');
-		$scope.filtertag = 'All';
-	}
-	$scope.dologin = login; // Change to "locallogin" for working against localhost
 	$scope.doRegister = register;
 	$scope.showRegister = showRegister;
 
 	// Tags
 	$scope.getTodosByTag = TDMgr.getTodosByTag;
 
-	// Finish	
-	$(".flash").css("visibility","visible");
-	$(".register").css("visibility","visible");	
-	$(".working").css("visibility","visible");	
-	$(".fkts").css("visibility","visible");
-	$(".todota").css("visibility","visible");
-	$(".todotab").css("visibility","visible");
+	// Finish
+	$(".impressum").css("visibility","visible");
 	$("#liusername").focus()
 	
 	CLogger.log("System ready.");
-	
+		
 	// Do login if cookie/token is available
 	var token = $cookies.get(appdata.cookiename);
 	if (token!=undefined){
+		window.location = "/#/working";
 		doModifyHeader(token);
 		CLogger.log("Automatic login.");
 		$scope.errormsg = "";
-		$scope.s_login = 0;
 		Backend.getTodos();
 		$scope.todos = TDMgr.getTodosByTag('All');
 		$scope.filtertag = 'All';
+		window.location = "/#/main";
 	}
-	
+
 });

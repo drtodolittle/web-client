@@ -26,6 +26,9 @@ tdapp.factory("TDMgr",function(){ // ToDoManager
 	fact.todos = [];
 	fact.tags = [];
 	fact.checkForHashtag = function(obj){
+		if(obj.topic==undefined){
+			return;
+		}
 		if(obj.topic.indexOf('#')>=0){
 			var s = obj.topic.indexOf('#');
 			if(s==-1) e=obj.topic.length;			

@@ -1,0 +1,20 @@
+﻿<!-- Login -->
+<center>
+<div class="login fnt16">
+		<div class="fnt32 fntshadow">DrToDoLittle</div>
+		<div>&nbsp;</div>
+		<input id="liusername" type="text" ng-model="user.email" name="liusername" placeholder="Username" class="liuser fnt16" ng-keydown="loginKeydown($event);" tabindex=1></input>
+		<input type="password" ng-model="user.password" name="lipass" placeholder="Password" class="lipass fnt16" ng-keydown="loginKeydown($event);" tabindex=2></input>
+		<div class="libut fnt16" ng-click="dologin();" tabindex=3 ng-keydown="loginKeydown($event);">Login</div>
+		<div>&nbsp;</div>
+		<!--
+		<div class="fnt12">or</div>
+		<div class="libut fnt16" tabindex=4 ng-click="authenticate('twitter');">Login via Twitter</div>
+		<div>&nbsp;</div>
+		-->
+		<div class="fnt12">or</div>
+		<div class="libut fnt16" tabindex=5 ng-click="showRegister();">Register</div>
+		<div>&nbsp;</div>
+		<div class="flash">{{errormsg}}</div>
+</div>
+</center>

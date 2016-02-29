@@ -5,7 +5,8 @@
 */
 var tdapp = angular.module("tdapp",['satellizer','ngCookies','ngRoute']);
 
-tdapp.config(function($authProvider,$routeProvider) {
+//tdapp.config(function($authProvider,$routeProvider) {
+tdapp.config(function($authProvider){
 	$authProvider.baseUrl='/api/todos/';
 	$authProvider.loginUrl='login';
 	/*

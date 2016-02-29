@@ -3,7 +3,7 @@
 	tdapp_services.js
 
 */
-tdapp.service('Backend',function($http,$timeout,appdata,CLogger,TDMgr){
+tdapp.service('Backend',function($http,$timeout,$window,$location,appdata,CLogger,TDMgr){
 	var _scope;
 	this.setScope = function(scope){
 		_scope = scope;
@@ -93,7 +93,7 @@ tdapp.service('Backend',function($http,$timeout,appdata,CLogger,TDMgr){
 				});
 				CLogger.log("Done.");
 				$timeout(function(){
-					window.location = "/#/main";
+					$window.location = "/#/main";
 				},1000);
 				$timeout(function(){
 					if(typeof window.orientation == 'undefined'){ // Workaround

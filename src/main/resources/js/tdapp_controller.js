@@ -160,7 +160,6 @@ tdapp.controller("MainCtrl",function($scope,$timeout,$interval,$http,$auth,$cook
 				Backend.getTodos();
 				$scope.todos = TDMgr.getTodosByTag('All');
 				$scope.filtertag = 'All';
-				$location = "/#/main";
 				$(".fkts").css("visibility","visible");
 			})
 			.catch(function(error){
@@ -171,7 +170,7 @@ tdapp.controller("MainCtrl",function($scope,$timeout,$interval,$http,$auth,$cook
 	}
 
 	function locallogin(){ // No basic authentication (for communication with localhost)
-		$location = "/#/working";
+		$window.location = "/#/working";
 		CLogger.log("Commit login.");
 		appdata.server = appdata.localserver;
 		$scope.errormsg = "";
@@ -181,6 +180,7 @@ tdapp.controller("MainCtrl",function($scope,$timeout,$interval,$http,$auth,$cook
 		$scope.filtertag = 'All';
 		$(".fkts").css("visibility","visible");
 	}
+	
 	$scope.dologin = login; // Change to "locallogin" for working against localhost
 
 	// Register

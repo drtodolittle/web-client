@@ -179,7 +179,7 @@ tdapp.controller("MainCtrl",function($scope,$timeout,$interval,$http,$auth,$cook
 		$scope.filtertag = 'All';
 		$(".fkts").css("visibility","visible");
 	}
-	$scope.dologin = locallogin; // Change to "locallogin" for working against localhost
+	$scope.dologin = login; // Change to "locallogin" for working against localhost
 
 	// Register
 	

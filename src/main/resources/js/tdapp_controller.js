@@ -221,6 +221,7 @@ tdapp.controller("MainCtrl",function($scope,$timeout,$interval,$http,$auth,$cook
 
 	// Finish
 	$(".impressum").css("visibility","visible");
+	$(".flash").css("visibility","visible");
 	$("#liusername").focus()
 	
 	CLogger.log("System ready.");

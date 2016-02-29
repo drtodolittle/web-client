@@ -32,9 +32,3 @@ tdapp.value(
 		"userservice" : window.location.protocol + "/api/users"
 	}
 );
-
-/*
-var localserver = "http://localhost:3000/api/todos"; // JSON-Server ressource on localhost 
-var server = window.location.protocol + "/api/todos";
-var userservice = window.location.protocol + "/api/users";
-*/

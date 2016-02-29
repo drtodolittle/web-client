@@ -4,12 +4,21 @@
 <head>
 	<title>DrToDoLittle</title>
 	<meta charset="utf-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<meta name="viewport" content="width=device-width, initial-scale=1">	
+	<!-- Bootcards -->
+	<link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/css/bootstrap.min.css" rel="stylesheet">
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootcards/1.0.0/css/bootcards-desktop.min.css">
+	<link href="http://netdna.bootstrapcdn.com/font-awesome/4.2.0/css/font-awesome.min.css" rel="stylesheet" />
+	<!-- Homebrew -->
 	<link rel="stylesheet" media="all" type="text/css" href="css/tdstyle.css" />
-	<!-- Bootstrap -->
-    <!-- Latest compiled and minified CSS -->
-	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" integrity="sha384-1q8mTJOASx8j1Au+a5WDVnPi2lkFfwwEAa8hDDdjZlpLegxhjVME1fgjWPGmkzs7" crossorigin="anonymous">
+	<!-- Misc -->
+<!--	
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootcards/1.0.0/css/bootcards-android.min.css">	
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootcards/1.0.0/css/bootcards-ios.min.css">
+	<script src="https://netdna.bootstrapcdn.com/bootstrap/3.2.0/js/bootstrap.min.js"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/bootcards/1.0.0/js/bootcards.min.js"></script>
+-->
 </head>
 
 <body ng-app="tdapp" ng-controller="MainCtrl" ng-keydown="mainKeydown($event);">
@@ -17,7 +26,7 @@
 <!-- Login -->
 <center>
 <div ng-show="s_login==1" class="login fnt16">
-		<div class="fnt32 fntshadow">DrToDoLittle</div>
+		<div class="fnt32 fntshadow">Dr ToDo Little</div>
 		<div>&nbsp;</div>
 		<input id="liusername" type="text" ng-model="user.email" name="liusername" placeholder="Username" class="liuser fnt16" ng-keydown="loginKeydown($event);" tabindex=1></input>
 		<input type="password" ng-model="user.password" name="lipass" placeholder="Password" class="lipass fnt16" ng-keydown="loginKeydown($event);" tabindex=2></input>
@@ -26,26 +35,30 @@
 		<div class="fnt12">or</div>
 		<div class="libut fnt16" tabindex=4 ng-click="authenticate('twitter');">Login via Twitter</div>
 		<div>&nbsp;</div>
+		<div class="fnt12">or</div>
+		<div class="libut fnt16" tabindex=5 ng-click="showRegister();">Register</div>
+		<div>&nbsp;</div>
+		<div class="flash">{{errormsg}}</div>
+</div>
+<!-- register -->
+<div ng-show="s_register==1" class="register fnt16">
+		<div class="fnt32 fntshadow">Register</div>
+		<div class="fnt12 fntshadow">Bootcards Edition</div>
+		<div>&nbsp;</div>
+		<input id="liusername" type="text" ng-model="user.firstname" name="lifirstname" placeholder="Firstname" class="liuser fnt16" ng-keydown="loginKeydown($event);" tabindex=5></input>
+		<input id="liusername" type="text" ng-model="user.lastname" name="lilastname" placeholder="Lastname" class="liuser fnt16" ng-keydown="loginKeydown($event);" tabindex=6></input>
+		<input id="liusername" type="text" ng-model="user.email" name="liusername" placeholder="Username" class="liuser fnt16" ng-keydown="loginKeydown($event);" tabindex=7></input>
+		<input type="password" ng-model="user.password" name="lipass" placeholder="Password" class="lipass fnt16" ng-keydown="loginKeydown($event);" tabindex=8></input>
+		<div class="libut fnt16" ng-click="doRegister();" tabindex=9>Register</div>
+		<div>&nbsp;</div>
 		<div class="flash">{{errormsg}}</div>
 </div>
 <div ng-show="s_login==1" class="impressum">
 hinweis *** diese homepage verwendet cookies zur speicherung von login bezogenen informationen, um dem anwender die nutzung der homepage zu vereinfachen. mit der nutzung der homepage stimmt der anwender der speicherung der login bezogenen informationen zu. 
 <br><br>
-impressum *** helge schneider, laarkamp 45, 44866 bochum, tel:02327563694, email:h.schneider(at)cloud57(punkt)de *** die inhalte dieser homepage wurden von mir mit größter sorgfalt erstellt. fehler oder unklarheiten können dennoch nicht ausgeschlossen werden. für die richtigkeit, vollständigkeit und aktualität der inhalte übernehme ich also keine gewähr. auch behalte ich mir vor, teile des inhaltes oder das gesamte angebot zu verändert, zu ergänzen oder zu löschen. des weiteren hafte ich nicht für eventuelle schäden, die direkt oder indirekt durch die nutzung der bereitgestellten inhalte und/oder verlinkten weibseiten verursacht werden. für die verlinkten webseiten sind deren anbieter und/oder betreiber verantwortlich. eine kontinuierliche inhaltliche kontrolle der verlinkten webseiten ist ohne konkrete anhaltspunkte einer möglichen rechtsverletzung nicht zumutbar. bei bekanntwerden von rechtsverletzungen werde ich derartige links auf dieser homepage umgehend entfernen. die von mir erstellten inhalte und arbeiten auf dieser homepage unterliegen dem urheberrecht. die vervielfältigung, bearbeitung, verbreitung und jede sonstige art der verwertung außerhalb des urheberrechtes bedürfen meiner schriftlichen zustimmung. sollte ich irgendwo (unbeabsichtigt) gegen die rechte dritter verstossen, bitte ich dies zu entschuldigen und mir per email mitzuteilen. ich werde dann umgehend die entsprechenden inhalte bzw. daten löschen. der nutzung der im rahmen der impressumspflicht veröffentlichten kontaktdaten durch dritte (bspw. zur übersendung von nicht ausdrücklich angeforderter werbung und/oder informationsmaterialien) wird hiermit ausdrücklich widersprochen. diese homepage ist eine rein private homepage, sie dient keiner kommerziellen nutzung.
+impressum *** helge schneider, laarkamp 45, 44866 bochum, tel:02327563694, email:h.schneider(at)cloud57(punkt)de *** die inhalte dieser homepage wurden von mir mit größter sorgfalt erstellt. fehler oder unklarheiten können dennoch nicht ausgeschlossen werden. für die richtigkeit, vollständigkeit und aktualität der inhalte übernehme ich also keine gewähr. auch behalte ich mir vor, teile des inhaltes oder das gesamte angebot zu verändert, zu ergänzen oder zu löschen. des weiteren hafte ich nicht für eventuelle schäden, die direkt oder indirekt durch die nutzung der bereitgestellten inhalte und/oder verlinkten weibseiten verursacht werden. für die verlinkten webseiten sind deren anbieter und/oder betreiber verantwortlich. eine kontinuierliche inhaltliche kontrolle der verlinkten webseiten ist ohne konkrete anhaltspunkte einer möglichen rechtsverletzung nicht zumutbar. bei bekanntwerden von rechtsverletzungen werde ich derartige links auf dieser homepage umgehend entfernen. die von mir erstellten inhalte und arbeiten auf dieser homepage unterliegen dem urheberrecht. die vervielfältigung, bearbeitung, verbreitung und jede sonstige art der verwertung außerhalb des urheberrechtes bedürfen meiner schriftlichen zustimmung. sollte ich irgendwo (unbeabsichtigt) gegen die rechte dritter verstossen, bitte ich dies zu entschuldigen und mir per email mitzuteilen. ich werde dann umgehend die entsprechenden inhalte bzw. daten löschen. der nutzung der im rahmen der impressumspflicht veröffentlichten kontaktdaten durch dritte (bspw. zur übersendung von nicht ausdrücklich angeforderter werbung und/oder informationsmaterialien) wird hiermit ausdrücklich widersprochen. diese homepage ist eine rein private homepage, sie dient keiner kommerziellen nutzung. 
 </div>
 </center>
-
-<!-- Functions -->
-<div ng-show="s_list==1" class="fkts">
-<div ng-click="dologout();" class="fktsiconwrap"><img class="fktsicon" src="images/account-logout-2x.png" alt="logout"></img></div>
-</div>
-
-<!-- Log -->
-<div ng-show="s_list==1" class="log">
-	<div class="fnt10" ng-repeat="logentry in log track by $index">
-		<span id="log{{$index}}" style="opacity:{{ $index*0.03125 }}">{{logentry}}</span>
-	</div>
-</div>
 
 <!-- Header/Add -->
 <center>
@@ -60,28 +73,57 @@ impressum *** helge schneider, laarkamp 45, 44866 bochum, tel:02327563694, email
 </center>
 
 <!-- List -->
-<center>
-<div ng-show="s_list==1">
-	<table class="todotab">
-		<tr ng-repeat="todo in todos" id="todox{{todo.id}}">
-			<td class="fnt16 todoline" id="todoline{{todo.id}}" ng-click="seltodoline(todo.id);">
-				<span contenteditable="true" ng-keydown="todolineKeydown($event,todo.id);" id="todoid{{todo.id}}" tabindex=-1>{{todo.topic}}</span>
-			</td>
-			<td class="todofkts">
-				<span class="mo" ng-click="togDone(todo);">
-					<span ng-if="todo.done==false"><img src="images/checkbox_unchecked.png"/></span>
-					<span ng-if="todo.done==true"><img src="images/checkbox.png"/></span>
-				</span>
-				<span class="mo" ng-click="deltodo(todo);"><img src="images/del.png"/></span>
-			</td>
-		</tr>
-	</table>
+<div class="container" ng-show="s_list==1">
+	<div class="dropdown">
+	  <button class="btn btn-default dropdown-toggle" type="button" id="filter1" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
+		Filter {{filtertag}}
+		<span class="caret"></span>
+	  </button>
+	  <ul class="dropdown-menu" aria-labelledby="filter1">
+		<li><a href="#" ng-click="todos=getTodosByTag('Open');filtertag='Open'">Open</a></li>
+		<li><a href="#" ng-click="todos=getTodosByTag('Done');filtertag='Done'">Done</a></li>
+		<li><a href="#" ng-click="todos=getTodosByTag('');filtertag='All'">All</a></li>
+		<li ng-repeat="tag in tags">
+			<a href="#" ng-click="$parent.todos=$parent.getTodosByTag(tag);$parent.filtertag=tag">{{tag}}</a>
+		</li>
+	  </ul>
+	</div>
 </div>
-</center>
+<div class="container" ng-show="s_list==1">
+	<div class="bootcards-list">
+	  <div class="panel panel-default">
+		<div class="list-group" ng-repeat="todo in todos">
+		  <div class="container list-group-item">
+			<div class="pull-right">
+				<div class="mo" ng-click="togDone(todo);">
+					<span ng-if="todo.done==false"><img src="images/checkbox_unchecked.png" style="width:24px;height:24px;" /></span>
+					<span ng-if="todo.done==true"><img src="images/checkbox.png" style="width:24px;height:24px;" /></span>
+				</div>
+				<div class="mo" ng-click="deltodo(todo);"><img src="images/del.png" style="width:24px;height:24px;" />
+				</div>
+			</div>
+			<h4 class="list-group-item-heading" contenteditable="true" ng-keydown="todolineKeydown($event,todo.id);" id="todoid{{todo.id}}">{{todo.topic}}</h4>
+		  </div>
+		</div>
+	  </div>
+	</div>
+</div>
+
+<!-- Log -->
+<div ng-show="s_list==2" class="log">
+	<div class="fnt10" ng-repeat="logentry in log track by $index">
+		<span id="log{{$index}}" style="opacity:{{ $index*0.03125 }}">{{logentry}}</span>
+	</div>
+</div>
+
+<!-- Functions -->
+<div ng-show="s_list==1" class="fkts">
+<div ng-click="dologout();" class="fktsiconwrap"><img class="fktsicon" src="images/account-logout-2x.png" alt="logout"></img></div>
+</div>
 
 <!-- Footer -->
 <center>
-<div ng-show="s_list==1">&nbsp</div>
+<p class="footer" ng-show="s_list==1">*** DrToDoLittle (c) 2016 ***</div>
 </center>
 
 <!-- Libraries -->
@@ -91,11 +133,14 @@ impressum *** helge schneider, laarkamp 45, 44866 bochum, tel:02327563694, email
     <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
 	<!-- Bootstrap -->
-	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js" integrity="sha384-0mSbJDEHialfmuBBQP6A4Qrprq5OVfW37PRR3j5ELqxss1yVqOtnepnHVP9aJ7xS" crossorigin="anonymous"></script>
+	<script src="https://netdna.bootstrapcdn.com/bootstrap/3.2.0/js/bootstrap.min.js"></script>	
 	<!-- Misc -->
 	<script src="js/satellizer.js"></script>
 	<script src="js/jwt-decode.min.js"></script>
 	<script src="js/tdapp.js"></script>
+	<script src="js/tdapp_factories.js"></script>
+	<script src="js/tdapp_services.js"></script>
+	<script src="js/tdapp_controller.js"></script>
 
 <!-- Google analytics -->
 <script>

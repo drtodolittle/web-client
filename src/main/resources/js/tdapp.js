@@ -17,7 +17,7 @@ tdapp.config(function($authProvider,$routeProvider) {
 			.when('/working', {
                 templateUrl : 'working.html',
 				controller : 'MainCtrl'
-            })			
+            })		
 			.when('/main', {
                 templateUrl : 'main.html',
 				controller : 'MainCtrl'
@@ -28,7 +28,10 @@ tdapp.config(function($authProvider,$routeProvider) {
 			.when('/register', {
                 templateUrl : 'register.html',
 				controller : 'MainCtrl'
-            });
+            })
+			.otherwise(
+				{redirectTo: '/egg'}
+			);
 	// Satellizer
 	/*
 	$authProvider.twitter({

@@ -154,6 +154,7 @@ tdapp.controller("MainCtrl",function($scope,$timeout,$interval,$http,$auth,$cook
 				var now = new Date();
 				var exp = new Date(now.getFullYear(), now.getMonth()+1, now.getDate());
 				$cookies.put(appdata.cookiename,response.data.token,{expires:exp});
+				doModifyHeader(response.data.token);
 				CLogger.log("Logged in.");
 				$scope.errormsg = "";
 				Backend.getTodos();
@@ -180,7 +181,7 @@ tdapp.controller("MainCtrl",function($scope,$timeout,$interval,$http,$auth,$cook
 		$scope.filtertag = 'All';
 		$(".fkts").css("visibility","visible");
 	}
-	$scope.dologin = login; // Change to "locallogin" for working against localhost
+	$scope.dologin = locallogin; // Change to "locallogin" for working against localhost
 
 	// Register
 	

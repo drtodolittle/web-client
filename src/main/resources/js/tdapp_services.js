@@ -100,7 +100,7 @@ tdapp.service('Backend',function($http,$timeout,$window,$location,appdata,CLogge
 					if(typeof window.orientation == 'undefined'){ // Workaround
 						CLogger.log("Desktop browser detected.");
 						CLogger.log("Focus New-Todo-Inputfield.");
-						$("#todotxta").focus();
+						$("#todotxta").blur().focus();
 					}
 				},1128);
 			}

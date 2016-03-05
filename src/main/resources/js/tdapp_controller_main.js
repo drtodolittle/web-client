@@ -3,11 +3,14 @@
 	tdapp_controller_main.js
 
 */
-tdapp.controller("MainCtrl",function($scope,$timeout,$interval,$http,$cookies,$window,$location,appdata,TDMgr,CLogger,Backend){
+tdapp.controller("MainCtrl",function($scope,$timeout,$interval,$http,$cookies,$window,$location,appdata,TDMgr,CLogger,Backend,Autologin){
 
-	// Communication with backend
+	// Injections
 
+	Autologin.setScope($scope);
 	Backend.setScope($scope);
+	
+	// Communication with backend
 	
 	function doModifyHeader(token){
 		$http.defaults.headers.common['Authorization'] = "Basic " + token;
@@ -125,21 +128,5 @@ tdapp.controller("MainCtrl",function($scope,$timeout,$interval,$http,$cookies,$w
 	CLogger.log("System ready.");
 		
 	// Do login if cookie/token is available
-	
-	var token = $cookies.get(appdata.cookiename);
-	if (token!=undefined){
-		$location = "/#/working";
-		$scope.errormsg = "";
-		doModifyHeader(token);
-		if($window.location.hostname=="localhost"){
-			appdata.server = appdata.localserver;
-		}
-		Backend.getTodos();
-		$scope.todos = TDMgr.getTodosByTag('All');
-		$scope.filtertag = 'All';
-		$location = "/#/main";
-	} else {
-		if($location.$$url=="/main") $window.location = "/#/login";
-	}	
-	
+	Autologin.check();
 });

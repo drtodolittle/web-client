@@ -3,14 +3,12 @@
 	tdapp_controller_auth.js
 
 */
-tdapp.controller("AuthCtrl",function($scope,$http,$auth,$cookies,$window,appdata,TDMgr,CLogger,Backend){
+tdapp.controller("AuthCtrl",function($scope,$http,$auth,$cookies,$window,appdata,TDMgr,CLogger,Backend,Autologin){
 
-	// Communication with server
+	// Injection
 
+	Autologin.setScope($scope);
 	Backend.setScope($scope);
-	function doModifyHeader(token){
-		$http.defaults.headers.common['Authorization'] = "Basic " + token;
-	}
 	
 	// Satellizer
 
@@ -51,10 +49,12 @@ tdapp.controller("AuthCtrl",function($scope,$http,$auth,$cookies,$window,appdata
 		$auth.login($scope.user)
 			.then(function(response){
 				$window.location = "/#/working";
+				// Create cookie
 				var now = new Date();
 				var exp = new Date(now.getFullYear(), now.getMonth()+1, now.getDate());
 				$cookies.put(appdata.cookiename,response.data.token,{expires:exp});
-				doModifyHeader(response.data.token);
+				// Modifiy headers
+				$http.defaults.headers.common['Authorization'] = "Basic " + response.data.token;
 				CLogger.log("Logged in.");
 				$scope.errormsg = "";
 				Backend.getTodos();
@@ -68,6 +68,8 @@ tdapp.controller("AuthCtrl",function($scope,$http,$auth,$cookies,$window,appdata
 			});
 	}
 
+	// Keyboard
+	
 	$scope.loginKeydown = function(e){
 		var k = e.keyCode;
 		if(k==13){//ret
@@ -76,9 +78,16 @@ tdapp.controller("AuthCtrl",function($scope,$http,$auth,$cookies,$window,appdata
 		}
 	}
 	
+	// Register
+	
 	$scope.showRegister = function(){
 		$window.location = "/#/register";
 	};
+
+	// Finish
 	
+	$(".flash").css("visibility","visible");	
 	$("#liusername").focus()	
+	Autologin.check(); // do automatic login if cookie/token is available
+	
 });

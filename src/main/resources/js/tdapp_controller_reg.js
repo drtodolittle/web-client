@@ -5,6 +5,8 @@
 */
 tdapp.controller("RegCtrl",function($scope,$http,$window,appdata,CLogger){
 
+	// Register
+
 	$scope.doRegister = function(){
 		CLogger.log("Commit register.");
 		$http({
@@ -15,7 +17,7 @@ tdapp.controller("RegCtrl",function($scope,$http,$window,appdata,CLogger){
 		}).then(
 			function successCallback(res) {
 				CLogger.log("Done.");
-				$scope.errormsg = "Registration email sent. Please activate your account.";
+				alert("Registration email sent. Please activate your account.");
 				$window.location = "/";
 			}
 			,
@@ -26,6 +28,8 @@ tdapp.controller("RegCtrl",function($scope,$http,$window,appdata,CLogger){
 		);
 	}
 
+	// Keyboard
+	
 	$scope.registerKeydown = function(e){
 		var k = e.keyCode;
 		if(k==13){//ret
@@ -33,6 +37,11 @@ tdapp.controller("RegCtrl",function($scope,$http,$window,appdata,CLogger){
 			$scope.doRegister();
 		}
 	}
+
+	// Finish
 	
+	$(".impressum").css("visibility","visible");
+	$(".flash").css("visibility","visible");	
 	$("#liusername").focus()		
+
 });

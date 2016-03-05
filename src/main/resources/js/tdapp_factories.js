@@ -98,6 +98,7 @@ tdapp.factory("TDMgr",function(){ // ToDoManager
 		var obj = {"topic":topic,done:false};
 		fact.checkForHashtag(obj);
 		fact.addTodoObj(obj);
+		return obj;
 	}
 	fact.delTodo = function(item){
 		var idx = fact.todos.indexOf(item)

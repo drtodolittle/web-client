@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width">
+	<title>DrToDoLittle:QUnitTests</title>
+	<link rel="stylesheet" href="https://code.jquery.com/qunit/qunit-1.22.0.css">
+</head>
+<body>
+	<div id="qunit"></div>
+	<div id="qunit-fixture"></div>
+	<script src="//code.jquery.com/qunit/qunit-1.22.0.js"></script>
+	
+	<!-- Scripts -->
+	<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.5.0/angular.min.js"></script>
+	<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.5.0/angular-cookies.min.js"></script>
+	<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.5.0/angular-route.min.js"></script>
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
+	<script src="js/satellizer.js"></script>
+	<script src="js/jwt-decode.min.js"></script>
+	<script src="js/tdapp.js"></script>
+	<script src="js/tdapp_factories.js"></script>
+	<script src="js/tdapp_service_backend.js"></script>
+	<script src="js/tdapp_service_autologin.js"></script>
+	<script src="js/tdapp_controller_auth.js"></script>
+	<script src="js/tdapp_controller_reg.js"></script>
+	<script src="js/tdapp_controller_main.js"></script>
+
+	<!-- Tests -->
+	<script>
+
+	QUnit.test("TDMgr", function(assert){	
+		var injector = angular.injector(["ng","tdapp"]);	
+		var TDMgr = injector.get("TDMgr");		
+		assert.ok(TDMgr!=undefined,"TDMgr!=undefined");
+	});
+
+	QUnit.test("TDMgr.clearTodos", function(assert){	
+		var injector = angular.injector(["ng","tdapp"]);	
+		var TDMgr = injector.get("TDMgr");		
+		TDMgr.clearTodos();
+		assert.equal(TDMgr.getTodos().length,0,"TDMgr.clearToDos() -> TDMgr.getTodos().length==0");
+	});
+	
+	QUnit.test("TDMgr.getTodos", function(assert){	
+		var injector = angular.injector(["ng","tdapp"]);	
+		var TDMgr = injector.get("TDMgr");		
+		assert.equal(TDMgr.getTodos().length,0,"TDMgr.getTodos().length==0");	
+		
+		TDMgr.clearTodos();
+		assert.equal(TDMgr.getTodos().length,0,"TDMgr.clearToDos() -> TDMgr.getTodos().length==0");
+	});
+	
+	QUnit.test("TDMgr.setTodos", function(assert){	
+		var injector = angular.injector(["ng","tdapp"]);	
+		var TDMgr = injector.get("TDMgr");
+				
+		TDMgr.setTodos([]);
+		assert.equal(TDMgr.getTodos().length,0,"TDMgr.setTodos([]) -> TDMgr.getTodos().length==0");
+
+		TDMgr.setTodos([{}]);
+		assert.equal(TDMgr.getTodos().length,1,"TDMgr.setTodos([{}]) -> TDMgr.getTodos().length==1");
+
+		TDMgr.setTodos([{},{}]);
+		assert.equal(TDMgr.getTodos().length,2,"TDMgr.setTodos([{},{}]) -> TDMgr.getTodos().length==2");
+		
+		TDMgr.clearTodos();
+		assert.equal(TDMgr.getTodos().length,0,"TDMgr.clearToDos() -> TDMgr.getTodos().length==0");
+		
+		TDMgr.setTodos({});
+		assert.equal(TDMgr.getTodos().length,undefined,"TDMgr.setTodos({}) -> TDMgr.getTodos().length==undefined");
+	});
+
+	QUnit.test("TDMgr.addTodo", function(assert){
+		var injector = angular.injector(["ng","tdapp"]);		
+		var TDMgr = injector.get("TDMgr");
+		
+		var todo = TDMgr.addTodo("test");
+		assert.ok(todo!=null,"TDMgr.addTodo('test'); todo!=null");
+		assert.equal(TDMgr.getTodos().length,1,"TDMgr.getTodos().length==1");
+		assert.equal(todo.done,false,"TDMgr.addTodo('test'); todo.done==false");
+		assert.equal(todo.tags,undefined,"TDMgr.addTodo('test').tags==undefined");		
+		TDMgr.clearTodos();
+		assert.equal(TDMgr.getTodos().length,0,"TDMgr.clearTodos()->TDMgr.getTodos().length==0");		
+	});
+	
+	</script>
+</body>
+</html>

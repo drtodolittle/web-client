@@ -113,7 +113,7 @@ body,div,p,span{
 	text-align:left;
 	font-family:arial;
 	font-size:10px;
-	visibility: hidden;
+	visibility: visible;
 }
 .footer{
 	margin:8px;

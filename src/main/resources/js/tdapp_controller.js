@@ -51,7 +51,6 @@ tdapp.controller("MainCtrl",function($scope,$timeout,$interval,$http,$auth,$cook
 				newtodo.topic=$scope.newtodotxt;
 				newtodo.done=false;
 				$scope.newtodotxt = "";
-				console.log(newtodo);
 				Backend.postTodo(newtodo);
 				TDMgr.addTodoObj(newtodo);
 				$scope.todos = TDMgr.getTodos();
@@ -129,7 +128,7 @@ tdapp.controller("MainCtrl",function($scope,$timeout,$interval,$http,$auth,$cook
 	// Login & Logout
 
 	function logout(){
-		$(".container").css("visibility","hidden");
+		//$(".container").css("visibility","hidden");
 		$(".fkts").css("visibility","hidden");
 		$(".todota").css("visibility","hidden");
 		$(".todotab").css("visibility","hidden");
@@ -137,7 +136,7 @@ tdapp.controller("MainCtrl",function($scope,$timeout,$interval,$http,$auth,$cook
 		TDMgr.clearTodos();
 		$window.location = "/#/working";
 		$timeout(function(){
-			$window.location = "/";
+			$window.location = "/#/login";
 		},1000);
 		$timeout(function(){
 			$("#liusername").focus();
@@ -165,7 +164,7 @@ tdapp.controller("MainCtrl",function($scope,$timeout,$interval,$http,$auth,$cook
 			.catch(function(error){
 				$scope.errormsg = "Login-Error.";
 				console.log(error);
-				//$scope.dologout();
+				// $scope.dologout();
 			});
 	}
 
@@ -175,24 +174,17 @@ tdapp.controller("MainCtrl",function($scope,$timeout,$interval,$http,$auth,$cook
 		appdata.server = appdata.localserver;
 		$scope.errormsg = "";
 		CLogger.log("Logged in.");
+		var now = new Date();
+		var exp = new Date(now.getFullYear(), now.getMonth()+1, now.getDate());
+		$cookies.put(appdata.cookiename,'bla',{expires:exp});
 		Backend.getTodos();
 		$scope.todos = TDMgr.getTodosByTag('All');
 		$scope.filtertag = 'All';
 		$(".fkts").css("visibility","visible");
-	}
-	
+	}	
 	$scope.dologin = login; // Change to "locallogin" for working against localhost
 
 	// Register
-	
-	function showRegister(){
-		CLogger.log("Show register.");
-		$location = "/#/working";
-		$scope.errormsg = "";
-		setTimeout(function(){
-			$location = "/#/register";
-		},1000);
-	}
 	
 	function register() {
 		CLogger.log("Commit register.");
@@ -205,7 +197,7 @@ tdapp.controller("MainCtrl",function($scope,$timeout,$interval,$http,$auth,$cook
 			function successCallback(res) {
 				CLogger.log("Done.");
 				$scope.errormsg = "Registration email sent. Please activate your account.";
-				$location = "/";
+				$window.location = "/";
 			}
 			,
 			function errorCallback(res){
@@ -215,8 +207,10 @@ tdapp.controller("MainCtrl",function($scope,$timeout,$interval,$http,$auth,$cook
 		);
 	}
 	$scope.doRegister = register;
-	$scope.showRegister = showRegister;
-
+	$scope.showRegister = function(){
+		$window.location = "/#/register";
+	};
+	
 	// Tags
 	$scope.getTodosByTag = TDMgr.getTodosByTag;
 
@@ -231,13 +225,17 @@ tdapp.controller("MainCtrl",function($scope,$timeout,$interval,$http,$auth,$cook
 	var token = $cookies.get(appdata.cookiename);
 	if (token!=undefined){
 		$location = "/#/working";
-		doModifyHeader(token);
-		CLogger.log("Automatic login.");
 		$scope.errormsg = "";
+		doModifyHeader(token);
+		if($window.location.hostname=="localhost"){
+			appdata.server = appdata.localserver;
+		}
 		Backend.getTodos();
 		$scope.todos = TDMgr.getTodosByTag('All');
 		$scope.filtertag = 'All';
 		$location = "/#/main";
+	} else {
+		if($location.$$url=="/main") $window.location = "/#/login";
 	}
 
 });

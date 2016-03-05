@@ -33,28 +33,6 @@
       "done": false,
       "tag": "#work",
       "id": 34
-    },
-    {
-      "topic": "Test #private",
-      "done": false,
-      "tag": "#private",
-      "id": 35
-    },
-    {
-      "topic": "Absolut neu!!!",
-      "done": false,
-      "id": 36
-    },
-    {
-      "topic": "Super #work !!!",
-      "done": false,
-      "tag": "#work",
-      "id": 37
-    },
-    {
-      "topic": "Neu!",
-      "done": false,
-      "id": 38
     }
   ]
 }

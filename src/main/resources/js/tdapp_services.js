@@ -88,6 +88,7 @@ tdapp.service('Backend',function($http,$timeout,$window,$location,appdata,CLogge
 			function successCallback(res) {
 				CLogger.log("Done.");
 				CLogger.log("Updating local Todo-List.");
+				TDMgr.clearTodos();
 				res.data.forEach(function(o){
 					TDMgr.addTodoObj(o);
 				});
@@ -106,6 +107,7 @@ tdapp.service('Backend',function($http,$timeout,$window,$location,appdata,CLogge
 			,
 			function(res) {
 				CLogger.log("Error! Check console for details.");
+				console.log("Error!");
 				console.log(JSON.stringify(res));
 				_scope.errormsg="Server not available!";
 				_scope.dologout();

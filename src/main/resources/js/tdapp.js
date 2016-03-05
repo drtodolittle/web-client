@@ -11,11 +11,11 @@ tdapp.config(function($authProvider,$routeProvider) {
 	$routeProvider
             .when('/', {
                 templateUrl : 'login.html',
-				controller : 'MainCtrl'
+				controller : 'AuthCtrl'
             })
 			.when('/login', {
                 templateUrl : 'login.html',
-				controller : 'MainCtrl'
+				controller : 'AuthCtrl'
             })		
 			.when('/working', {
                 templateUrl : 'working.html'
@@ -26,7 +26,7 @@ tdapp.config(function($authProvider,$routeProvider) {
             })
 			.when('/register', {
                 templateUrl : 'register.html',
-				controller : 'MainCtrl'
+				controller : 'RegCtrl'
             })
 			.when('/error', {
                 templateUrl : 'error.html'

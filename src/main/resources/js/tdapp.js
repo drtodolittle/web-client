@@ -57,7 +57,7 @@ tdapp.value(
 		"appnick":"derdr",
 		"cookiename":"derdr",
 		"localserver" : "http://localhost:3000/api/todos",
-		"server" : window.location.protocol + "/api/todos",
-		"userservice" : window.location.protocol + "/api/users"
+		"server" : window.location.origin + "/api/todos",
+		"userservice" : window.location.origin + "/api/users"
 	}
 );

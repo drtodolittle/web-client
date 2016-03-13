@@ -35,8 +35,9 @@ tdapp.factory("TDMgr",function(){ // ToDoManager
 			var e = obj.topic.indexOf(' ',s+1);
 			if(e==-1) e=obj.topic.length;
 			var tag = obj.topic.substring(s,e);
+			if(tag=='#') tag = undefined;
 			obj.tag = tag;
-			if(fact.tags.indexOf(tag)<0){
+			if(tag!=undefined && fact.tags.indexOf(tag)<0){
 				fact.tags.push(tag);
 			}
 		} else {
@@ -74,12 +75,21 @@ tdapp.factory("TDMgr",function(){ // ToDoManager
 		return tagged;
 	}
 	fact.setTodos = function(todolist){
+		if(todolist==undefined) return;
 		fact.todos = todolist;
+		if(todolist.length>0){
+			fact.todos.forEach(function(obj){
+				fact.checkForHashtag(obj);
+			});		
+		}
 	}
 	fact.clearTodos = function(){
 		while(fact.todos.length>0){
 			fact.todos.pop();
 		}
+		while(fact.tags.length>0){
+			fact.tags.pop();
+		}		
 	}
 	fact.getTodoById = function(id){
 		var ret = undefined;
@@ -96,23 +106,25 @@ tdapp.factory("TDMgr",function(){ // ToDoManager
 	}
 	fact.addTodo = function(topic){
 		var obj = {"topic":topic,done:false};
-		fact.checkForHashtag(obj);
 		fact.addTodoObj(obj);
 		return obj;
 	}
 	fact.delTodo = function(item){
 		var idx = fact.todos.indexOf(item)
-		var tag = item.tag;
-		fact.todos.splice(idx,1);
-		if( tag!=undefined ){
-			var ttd = fact.getTodosByTag(tag);
-			if( ttd.length==0 ){
-				fact.tags.splice(fact.tags.indexOf(tag),1);
-			}
+		if(idx>=0){
+			var tag = item.tag;
+			fact.todos.splice(idx,1);
+			if( tag!=undefined ){
+				var ttd = fact.getTodosByTag(tag);
+				if( ttd.length==0 ){
+					fact.tags.splice(fact.tags.indexOf(tag),1);
+				}
+			}		
 		}
 	}
 	fact.togDone = function(item){
 		var idx = fact.todos.indexOf(item);
+		if( idx<0 ) return;
 		var todo = fact.todos[idx];
 		if(todo.done){
 			todo.done = false;

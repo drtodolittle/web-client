@@ -26,64 +26,452 @@
 	<script src="js/tdapp_controller_reg.js"></script>
 	<script src="js/tdapp_controller_main.js"></script>
 
-	<!-- Tests -->
+	<!-- Tests TDMgr -->
 	<script>
 
 	QUnit.test("TDMgr", function(assert){	
 		var injector = angular.injector(["ng","tdapp"]);	
 		var TDMgr = injector.get("TDMgr");		
+
+		// Test...
 		assert.ok(TDMgr!=undefined,"TDMgr!=undefined");
 	});
 
 	QUnit.test("TDMgr.clearTodos", function(assert){	
 		var injector = angular.injector(["ng","tdapp"]);	
-		var TDMgr = injector.get("TDMgr");		
+		var TDMgr = injector.get("TDMgr");
+		
+		// Test...
 		TDMgr.clearTodos();
 		assert.equal(TDMgr.getTodos().length,0,"TDMgr.clearToDos() -> TDMgr.getTodos().length==0");
+		assert.equal(TDMgr.getTags().length,0,"TDMgr.clearToDos() -> TDMgr.getTags().length==0");
 	});
 	
 	QUnit.test("TDMgr.getTodos", function(assert){	
 		var injector = angular.injector(["ng","tdapp"]);	
 		var TDMgr = injector.get("TDMgr");		
-		assert.equal(TDMgr.getTodos().length,0,"TDMgr.getTodos().length==0");	
+
+		// Test...
+		assert.equal(TDMgr.getTodos().length,0,"TDMgr.getTodos().length==0");
+		assert.equal(TDMgr.getTags().length,0,"TDMgr.getTags().length==0");
 		
+		// Test...
 		TDMgr.clearTodos();
 		assert.equal(TDMgr.getTodos().length,0,"TDMgr.clearToDos() -> TDMgr.getTodos().length==0");
+		assert.equal(TDMgr.getTags().length,0,"TDMgr.clearToDos() -> TDMgr.getTags().length==0");
 	});
 	
 	QUnit.test("TDMgr.setTodos", function(assert){	
 		var injector = angular.injector(["ng","tdapp"]);	
 		var TDMgr = injector.get("TDMgr");
-				
+		
+		// Test...
 		TDMgr.setTodos([]);
 		assert.equal(TDMgr.getTodos().length,0,"TDMgr.setTodos([]) -> TDMgr.getTodos().length==0");
+		assert.equal(TDMgr.getTags().length,0,"TDMgr.setTodos([]) -> TDMgr.getTags().length==0");
+		TDMgr.clearTodos();
 
+		// Test...
 		TDMgr.setTodos([{}]);
 		assert.equal(TDMgr.getTodos().length,1,"TDMgr.setTodos([{}]) -> TDMgr.getTodos().length==1");
-
+		TDMgr.clearTodos();
+		
+		// Test...
 		TDMgr.setTodos([{},{}]);
 		assert.equal(TDMgr.getTodos().length,2,"TDMgr.setTodos([{},{}]) -> TDMgr.getTodos().length==2");
+		TDMgr.clearTodos();
 		
+		// Test...
 		TDMgr.clearTodos();
 		assert.equal(TDMgr.getTodos().length,0,"TDMgr.clearToDos() -> TDMgr.getTodos().length==0");
 		
+		// Test...
 		TDMgr.setTodos({});
 		assert.equal(TDMgr.getTodos().length,undefined,"TDMgr.setTodos({}) -> TDMgr.getTodos().length==undefined");
+		TDMgr.clearTodos();
+		
+		// Test...
+		TDMgr.setTodos([
+			{topic:"test",done:false},
+			{topic:"#tag",done:false}
+		]);
+		assert.ok(TDMgr.getTodos().length==2,"TDMgr.setTodos([{...},{...}]) -> TDMgr.getTodos().length==2");
+		assert.ok(TDMgr.getTodos().length==2,"TDMgr.setTodos([{...},{.#tag.}]) -> TDMgr.getTags().length==1");		
+		TDMgr.clearTodos();
 	});
 
 	QUnit.test("TDMgr.addTodo", function(assert){
 		var injector = angular.injector(["ng","tdapp"]);		
 		var TDMgr = injector.get("TDMgr");
-		
+
+		// Test...
 		var todo = TDMgr.addTodo("test");
 		assert.ok(todo!=null,"TDMgr.addTodo('test'); todo!=null");
 		assert.equal(TDMgr.getTodos().length,1,"TDMgr.getTodos().length==1");
 		assert.equal(todo.done,false,"TDMgr.addTodo('test'); todo.done==false");
 		assert.equal(todo.tags,undefined,"TDMgr.addTodo('test').tags==undefined");		
 		TDMgr.clearTodos();
-		assert.equal(TDMgr.getTodos().length,0,"TDMgr.clearTodos()->TDMgr.getTodos().length==0");		
+		assert.equal(TDMgr.getTodos().length,0,"TDMgr.clearTodos()->TDMgr.getTodos().length==0");
+		TDMgr.clearTodos();
+		
+		// Test...
+		todo = TDMgr.addTodo("test");
+		assert.ok(
+			TDMgr.getTodos()[0].tag==undefined,
+			"td = TDMgr.addTodo('test'); TDMgr.getTodos()[0].tag=='undefined'"
+		);
+		TDMgr.clearTodos();
+		
+		// Test...
+		todo = TDMgr.addTodo("#test");
+		assert.ok(
+			TDMgr.getTodos()[0].tag=="#test",
+			"todo = TDMgr.addTodo('#test'); TDMgr.getTodos()[0].tag=='#test'"
+		);
+		assert.ok(
+			TDMgr.getTags()[0]=="#test",
+			"todo = TDMgr.addTodo('#test'); TDMgr.getTags()[0]=='#test'"
+		);
+		TDMgr.addTodo('#tag');
+		// Reminder: New tags will be appended at the end of the tag-list.
+		assert.ok(
+			TDMgr.getTags()[1]=="#tag",
+			"TDMgr.addTodo('#test'); TDMgr.addTodo('#tag'); TDMgr.getTags()[1]=='#tag'"
+		);
+		TDMgr.addTodo('#tag');
+		// Reminder: Tag already exists
+		assert.ok(
+			TDMgr.getTags().length==2,
+			"TDMgr.addTodo('#test'); TDMgr.addTodo('#tag'); TDMgr.addTodo('#tag'); TDMgr.getTags().length==2"
+		);		
+		TDMgr.clearTodos();
+
+		// Test...
+		todo = TDMgr.addTodo("test tag #test");
+		assert.ok(
+			TDMgr.getTodos()[0].tag=="#test",
+			"todo = TDMgr.addTodo('test tag #test'); TDMgr.getTodos()[0].tag=='#test'"
+		);
+		TDMgr.clearTodos();
+		
+		// Test...
+		todo = TDMgr.addTodo("test #test tag");
+		assert.ok(
+			TDMgr.getTodos()[0].tag=="#test",
+			"todo = TDMgr.addTodo('test #test tag'); TDMgr.getTodos()[0].tag=='#test'"
+		);
+		TDMgr.clearTodos();
+
+		// Test...
+		todo = TDMgr.addTodo("test #test #tag untag");
+		assert.ok(
+			TDMgr.getTodos()[0].tag=="#test",
+			"todo = TDMgr.addTodo('test #test #tag untag'); TDMgr.getTodos()[0].tag=='#test'"
+		);
+		TDMgr.clearTodos();
+
+		// Test...
+		todo = TDMgr.addTodo("test #tag #test untag");
+		assert.ok(
+			TDMgr.getTodos()[0].tag=="#tag",
+			"todo = TDMgr.addTodo('test #tag #test untag'); TDMgr.getTodos()[0].tag=='#tag'"
+		);
+		TDMgr.clearTodos();
+		
+		// Test...
+		todo = TDMgr.addTodo("##test");
+		assert.ok(
+			TDMgr.getTodos()[0].tag=="##test",
+			"todo = TDMgr.addTodo('##test'); TDMgr.getTodos()[0].tag=='##test'"
+		);
+		TDMgr.clearTodos();
+
+		// Test...
+		todo = TDMgr.addTodo("test##");
+		assert.ok(
+			TDMgr.getTodos()[0].tag=="##",
+			"todo = TDMgr.addTodo('test##'); TDMgr.getTodos()[0].tag=='##'"
+		);
+		TDMgr.clearTodos();		
+		
+		// Test...
+		todo = TDMgr.addTodo("test#");
+		console.log(todo);
+		assert.ok(
+			TDMgr.getTodos()[0].tag==undefined,
+			"todo = TDMgr.addTodo('test#'); TDMgr.getTodos()[0].tag==undefined"
+		);
+		assert.ok(
+			TDMgr.getTags().length==0,
+			"todo = TDMgr.addTodo('test# '); TDMgr.getTags().length==0"
+		);
+		TDMgr.clearTodos();
+
+		// Test...
+		todo = TDMgr.addTodo("test# ");
+		console.log(todo);
+		assert.ok(
+			TDMgr.getTodos()[0].tag==undefined,
+			"todo = TDMgr.addTodo('test# '); TDMgr.getTodos()[0].tag==undefined"
+		);
+		assert.ok(
+			TDMgr.getTags().length==0,
+			"todo = TDMgr.addTodo('test# '); TDMgr.getTags().length==0"
+		);
+		TDMgr.clearTodos();		
+	});
+
+	QUnit.test("TDMgr.delTodo", function(assert){
+		var injector = angular.injector(["ng","tdapp"]);		
+		var TDMgr = injector.get("TDMgr");
+
+		// Test...
+		var todo = TDMgr.addTodo("test");
+		TDMgr.delTodo(todo);
+		assert.ok(
+			TDMgr.getTodos().length==0,
+			"todo = TDMgr.addTodo('test'); TDMgr.delTodo(todo); TDMgr.getTodos().length==0"
+		);
+		TDMgr.clearTodos();
+		
+		//Test...
+		TDMgr.addTodo("test");
+		TDMgr.delTodo({});
+		assert.ok(
+			TDMgr.getTodos().length==1,
+			"todo = TDMgr.addTodo('test'); TDMgr.delTodo({}); TDMgr.getTodos().length==1"
+		);
+		TDMgr.clearTodos();
+
+		// Test...
+		TDMgr.addTodo("test");
+		TDMgr.delTodo();
+		assert.ok(
+			TDMgr.getTodos().length==1,
+			"todo = TDMgr.addTodo('test'); TDMgr.delTodo(); TDMgr.getTodos().length==1"
+		);
+		TDMgr.clearTodos();
+		
+		// Test...
+		var td1 = TDMgr.addTodo("test1");
+		var td2 = TDMgr.addTodo("test2");
+		TDMgr.delTodo(td1);
+		assert.ok(
+			TDMgr.getTodos().length==1,
+			"td1 = TDMgr.addTodo('test1'); td2 = TDMgr.addTodo('test2'); TDMgr.delTodo(td1); TDMgr.getTodos().length==1"
+		);
+		assert.ok(
+			TDMgr.getTodos()[0]==td2,
+			"td1 = TDMgr.addTodo('test1'); td2 = TDMgr.addTodo('test2'); TDMgr.delTodo(td1); TDMgr.getTodos[0]==td1"
+		);
+		TDMgr.clearTodos();
+		
+		// Test...
+		td1 = TDMgr.addTodo("test1");
+		td2 = TDMgr.addTodo("test2");
+		var td3 = TDMgr.addTodo("test3");
+		// Reminder: New todos will be attached at the beginning of the todo-list.
+		TDMgr.delTodo(td2);
+		// So after deletion of td2 the todo-list will look like this: [td3,td1]
+		assert.ok(
+			TDMgr.getTodos()[0]==td3,
+			"TDMgr.addTodo(td1,td2,td3); TDMgr.delTodo(td2); TDMgr.getTodos[0]==td1"
+		);
+		assert.ok(
+			TDMgr.getTodos()[1]==td1,
+			"TDMgr.addTodo(td1,td2,td3); TDMgr.delTodo(td2); TDMgr.getTodos[1]==td3"
+		);
+		TDMgr.clearTodos();
+	});
+
+	QUnit.test("TDMgr.togDone", function(assert){
+		var injector = angular.injector(["ng","tdapp"]);		
+		var TDMgr = injector.get("TDMgr");
+
+		// Test...
+		var td1 = TDMgr.addTodo("test1");
+		assert.ok(
+			TDMgr.getTodos()[0].done==false,
+			"td1 = TDMgr.addTodo('test1'); TDMgr.getTodos()[0].done==false"
+		);
+		TDMgr.togDone(TDMgr.getTodos()[0]);
+		assert.ok(
+			TDMgr.getTodos()[0].done==true,
+			"TDMgr.togDone(TDMgr.getTodos()[0]); TDMgr.getTodos()[0].done==true"
+		);
+		TDMgr.togDone(TDMgr.getTodos()[0]);
+		assert.ok(
+			TDMgr.getTodos()[0].done==false,
+			"TDMgr.togDone(TDMgr.getTodos()[0]); TDMgr.getTodos()[0].done==false"
+		);
+		TDMgr.clearTodos();
+		
+		// Test...
+		td1 = {topic:"test",done:false};
+		TDMgr.togDone(td1);
+		assert.ok(
+			td1.done==false,
+			"Empty todolist; TDMgr.togDone({topic:'test',done:false}); td1.done==false"
+		);
+		
+	});
+	
+	QUnit.test("TDMgr.getTodosByTag", function(assert){
+		var injector = angular.injector(["ng","tdapp"]);		
+		var TDMgr = injector.get("TDMgr");
+
+		// Test...
+		assert.ok(
+			TDMgr.getTodosByTag('').length==0,
+			"Empty todolist; TDMgr.getTodosByTag('').length==0"
+		);
+		assert.ok(
+			TDMgr.getTodosByTag('All').length==0,
+			"Empty todolist; TDMgr.getTodosByTag('').length==0"
+		);
+		assert.ok(
+			TDMgr.getTodosByTag('Open').length==0,
+			"Empty todolist; TDMgr.getTodosByTag('Open').length==0"
+		);		
+		assert.ok(
+			TDMgr.getTodosByTag('Done').length==0,
+			"Empty todolist; TDMgr.getTodosByTag('Done').length==0"
+		);
+		
+		// Test...
+		var td1 = TDMgr.addTodo("#test");
+		assert.ok(
+			TDMgr.getTodosByTag('').length==1,
+			"td1 = TDMgr.addTodo('#test'); TDMgr.getTodosByTag('').length==1"
+		);
+		assert.ok(
+			TDMgr.getTodosByTag('Open').length==1,
+			"td1 = TDMgr.addTodo('#test'); TDMgr.getTodosByTag('Open').length==1"
+		);
+		assert.ok(
+			TDMgr.getTodosByTag('Done').length==0,
+			"td1 = TDMgr.addTodo('#test'); TDMgr.getTodosByTag('Done').length==0"
+		);		
+		assert.ok(
+			TDMgr.getTodosByTag('#test').length==1,
+			"td1 = TDMgr.addTodo('#test'); TDMgr.getTodosByTag('#test').length==1"
+		);
+		assert.ok(
+			TDMgr.getTodosByTag('#tag').length==0,
+			"td1 = TDMgr.addTodo('#test'); TDMgr.getTodosByTag('#tag').length==0"
+		);
+		TDMgr.getTodos()[0].done=true;
+		assert.ok(
+			TDMgr.getTodosByTag('Done').length==1,
+			"td1 = TDMgr.addTodo('#test'); TDMgr.getTodos()[0].done=true; TDMgr.getTodosByTag('Done').length==1"
+		);
+		assert.ok(
+			TDMgr.getTodosByTag('Open').length==0,
+			"td1 = TDMgr.addTodo('#test'); TDMgr.getTodos()[0].done=true; TDMgr.getTodosByTag('Open').length==0"
+		);
+		TDMgr.clearTodos();
+		assert.ok(
+			TDMgr.getTodosByTag('Open').length==0,
+			"TDMgr.clearTodos(); TDMgr.getTodosByTag('Open').length==0"
+		);
+		assert.ok(
+			TDMgr.getTodosByTag('All').length==0,
+			"TDMgr.clearTodos(); TDMgr.getTodosByTag('All').length==0"
+		);
+		assert.ok(
+			TDMgr.getTodosByTag('#test').length==0,
+			"TDMgr.clearTodos(); TDMgr.getTodosByTag('#test').length==0"
+		);
+		assert.ok(
+			TDMgr.getTodosByTag().length==0,
+			"TDMgr.clearTodos(); TDMgr.getTodosByTag().length==0"
+		);
+		assert.ok(
+			TDMgr.getTodosByTag(undefined).length==0,
+			"TDMgr.clearTodos(); TDMgr.getTodosByTag(undefined).length==0"
+		);
+		TDMgr.clearTodos();
+		
+		// Test...
+		TDMgr.addTodoObj({topic:"#test 1",done:false});
+		TDMgr.addTodoObj({topic:"#test 2",done:false});
+		TDMgr.addTodoObj({topic:"#tag 1",done:false});
+		TDMgr.addTodoObj({topic:"#tag 2",done:false});
+		assert.ok(
+			TDMgr.getTodosByTag('').length==4,
+			"TDMgr.addTodo( 4x ); TDMgr.getTodosByTag('').length==4"
+		);
+		assert.ok(
+			TDMgr.getTodosByTag('#tag').length==2,
+			"TDMgr.addTodo( 4x ); TDMgr.getTodosByTag('#tag').length==2"
+		);
+		assert.ok(
+			TDMgr.getTodosByTag('#test').length==2,
+			"TDMgr.addTodo( 4x ); TDMgr.getTodosByTag('#test').length==2"
+		);
+		assert.ok(
+			TDMgr.getTodosByTag('#x').length==0,
+			"TDMgr.addTodo( 4x ); TDMgr.getTodosByTag('#x').length==0"
+		);
+		TDMgr.clearTodos();
+
+		// Test...
+		TDMgr.addTodoObj({topic:"#test 1",done:false});
+		TDMgr.addTodoObj({topic:"#test #tag 1",done:false});
+		assert.ok(
+			TDMgr.getTodosByTag('#test').length==2,
+			"TDMgr.addTodo( 2x ); TDMgr.getTodosByTag('#test').length==2"
+		);
+		assert.ok(
+			TDMgr.getTodosByTag('#tag').length==0,
+			"TDMgr.addTodo( 2x ); TDMgr.getTodosByTag('#tag').length==2"
+		);
 	});
 	
 	</script>
+
+	<!-- Tests CLogger -->
+	<script>
+
+	QUnit.test("CLogger", function(assert){	
+		var injector = angular.injector(["ng","tdapp"]);	
+		var CLogger = injector.get("CLogger");		
+
+		// Test...
+		assert.ok(CLogger!=undefined,"CLogger!=undefined");
+	});
+	
+	QUnit.test("CLogger.getLog", function(assert){	
+		var injector = angular.injector(["ng","tdapp"]);	
+		var CLogger = injector.get("CLogger");		
+
+		// Test...
+		assert.ok(
+			CLogger.getLog().length==32,
+			"CLogger.getLog().length==32"
+		);
+		assert.ok(
+			CLogger.getLog()[0].length==0,
+			"CLogger.getLog()[0].length==0"
+		);
+		assert.ok(
+			CLogger.getLog()[0]=="",
+			"CLogger.getLog()[0]==''"
+		);
+		
+		// Test...
+		CLogger.log("test");
+		assert.ok(
+			CLogger.getLog().length==32,
+			"CLogger.log('test'); CLogger.getLog().length==32"
+		);
+		assert.ok(
+			CLogger.getLog()[31]=='test',
+			"CLogger.log('test'); CLogger.getLog()[31]=='test'"
+		);
+	});
+	
+	</script>
+	
 </body>
 </html>

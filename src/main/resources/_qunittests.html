@@ -25,8 +25,13 @@
 	<script src="js/tdapp_controller_auth.js"></script>
 	<script src="js/tdapp_controller_reg.js"></script>
 	<script src="js/tdapp_controller_main.js"></script>
+	
+	<!--
 
-	<!-- Tests TDMgr -->
+		Tests TDMgr ********************************************************************************
+		
+	-->
+
 	<script>
 
 	QUnit.test("TDMgr", function(assert){	
@@ -196,7 +201,6 @@
 		
 		// Test...
 		todo = TDMgr.addTodo("test#");
-		console.log(todo);
 		assert.ok(
 			TDMgr.getTodos()[0].tag==undefined,
 			"todo = TDMgr.addTodo('test#'); TDMgr.getTodos()[0].tag==undefined"
@@ -209,7 +213,6 @@
 
 		// Test...
 		todo = TDMgr.addTodo("test# ");
-		console.log(todo);
 		assert.ok(
 			TDMgr.getTodos()[0].tag==undefined,
 			"todo = TDMgr.addTodo('test# '); TDMgr.getTodos()[0].tag==undefined"
@@ -429,8 +432,13 @@
 	});
 	
 	</script>
-
-	<!-- Tests CLogger -->
+	
+	<!--
+	
+		Tests CLogger ********************************************************************************
+	
+	-->
+	
 	<script>
 
 	QUnit.test("CLogger", function(assert){	
@@ -469,6 +477,50 @@
 			CLogger.getLog()[31]=='test',
 			"CLogger.log('test'); CLogger.getLog()[31]=='test'"
 		);
+	});
+	
+	</script>
+	
+	<!--
+	
+		Tests Controller (WIP) ********************************************************************************
+		
+	-->
+	
+	<script>
+	
+	QUnit.test("MainCtrl", function(assert){
+		var injector = angular.injector(["ng","tdapp"]);	
+		var ctrlScope = injector.get("$rootScope").$new();
+		var ctrlHttp = injector.get('$httpBackend');		
+		var _win = {};
+		var _appdata = {};
+		var _TDMgr = injector.get("TDMgr");
+		var _CLogger = injector.get("CLogger");
+
+		// Preparation...
+		injector.get('$controller')('MainCtrl',{
+			$scope: ctrlScope,
+			$http: ctrlHttp,
+			TDMgr: _TDMgr,
+			CLogger: _CLogger,
+			Autologin:{
+				setScope: function(){},
+				check: function(){}
+			},
+			Backend: {
+				setScope: function(){},
+			},
+			appdata: _appdata,
+			$window: _win,
+		});
+
+		// Test...
+		ctrlScope.dologout();
+		assert.ok(_win.location=="/#/working","MainCtrl.dologout -> window.location = working");
+		
+		// Test...
+		assert.ok(_TDMgr.getTodos().length==0,"MainCtrl.dologout -> TDMgr.getTodos().length == 0");
 	});
 	
 	</script>

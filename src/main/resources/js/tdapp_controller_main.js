@@ -3,19 +3,13 @@
 	tdapp_controller_main.js
 
 */
-tdapp.controller("MainCtrl",function($scope,$timeout,$interval,$http,$cookies,$window,$location,appdata,TDMgr,CLogger,Backend,Autologin){
+tdapp.controller("MainCtrl",function($scope,$timeout,$interval,$http,$cookies,$window,appdata,TDMgr,CLogger,Backend,Autologin){
 
 	// Injections
 
 	Autologin.setScope($scope);
 	Backend.setScope($scope);
 	
-	// Communication with backend
-	
-	function doModifyHeader(token){
-		$http.defaults.headers.common['Authorization'] = "Basic " + token;
-	}
-
 	// Init
 	
 	$scope.todos = TDMgr.getTodosByTag('All');
@@ -39,7 +33,7 @@ tdapp.controller("MainCtrl",function($scope,$timeout,$interval,$http,$cookies,$w
 		},1128);
 		CLogger.log("Logged out.");
 	}
-	
+
 	// Keyboard
 
 	$scope.newtodoKeydown = function(e){

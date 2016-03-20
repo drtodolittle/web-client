@@ -3,6 +3,8 @@
 	tdapp_controller_reg.js
 
 */
+var tdapp = require('./tdapp');
+
 tdapp.controller("RegCtrl",function($scope,$http,$window,appdata,CLogger){
 
 	// Register

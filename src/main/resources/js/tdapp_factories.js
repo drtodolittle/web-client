@@ -3,6 +3,8 @@
 	tdapp_factories.js
 
 */
+var tdapp = require('./tdapp');
+
 tdapp.factory("CLogger",function(){ // ClientLogger
 	fact = {};
 	fact._log = [];

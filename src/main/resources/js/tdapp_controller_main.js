@@ -3,6 +3,8 @@
 	tdapp_controller_main.js
 
 */
+var tdapp = require('./tdapp');
+
 tdapp.controller("MainCtrl",function($scope,$timeout,$interval,$http,$cookies,$window,appdata,TDMgr,CLogger,Backend,Autologin){
 
 	// Injections

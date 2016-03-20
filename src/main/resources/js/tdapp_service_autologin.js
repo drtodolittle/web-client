@@ -3,6 +3,8 @@
 	tdapp_service_autologin.js
 
 */
+var tdapp = require('./tdapp');
+
 tdapp.service('Autologin',function($http,$window,$location,$cookies,appdata,TDMgr,Backend){
 	var _scope;
 	this.setScope = function(scope){

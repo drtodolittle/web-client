@@ -3,6 +3,8 @@
 	tdapp_controller_auth.js
 
 */
+var tdapp = require('./tdapp');
+
 tdapp.controller("AuthCtrl",function($scope,$http,$auth,$cookies,$window,appdata,TDMgr,CLogger,Backend,Autologin){
 
 	// Injection

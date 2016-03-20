@@ -61,3 +61,5 @@ tdapp.value(
 		"userservice" : window.location.origin + "/api/users"
 	}
 );
+
+module.exports = tdapp

@@ -3,6 +3,8 @@
 	tdapp_service_backend.js
 
 */
+var tdapp = require('./tdapp');
+
 tdapp.service('Backend',function($http,$timeout,$window,$location,appdata,CLogger,TDMgr){
 	var _scope;
 	this.setScope = function(scope){

@@ -28,18 +28,17 @@ tdapp.controller("AuthCtrl",function($scope,$http,$auth,$cookies,$window,appdata
 	// Login
 
 	function locallogin(){ // No basic authentication (just communicate with localhost)
-		$window.location = "/#/working";
 		CLogger.log("Commit login.");
+		$window.location = "/#/working";
 		appdata.server = appdata.localserver;
-		$scope.errormsg = "";
 		CLogger.log("Logged in.");
 		var now = new Date();
 		var exp = new Date(now.getFullYear(), now.getMonth()+1, now.getDate());
 		$cookies.put(appdata.cookiename,'bla',{expires:exp});
+		$scope.filtertag = 'Open'; // set filtertag before calling Backend.getTodos()
 		Backend.getTodos();
-		$scope.todos = TDMgr.getTodosByTag('All');
-		$scope.filtertag = 'All';
 		$(".fkts").css("visibility","visible");
+		$scope.errormsg = "";
 	}
 	
 	$scope.dologin = function(){
@@ -57,12 +56,11 @@ tdapp.controller("AuthCtrl",function($scope,$http,$auth,$cookies,$window,appdata
 				$cookies.put(appdata.cookiename,response.data.token,{expires:exp});
 				// Modifiy headers
 				$http.defaults.headers.common['Authorization'] = "Basic " + response.data.token;
-				CLogger.log("Logged in.");
-				$scope.errormsg = "";
+				CLogger.log("Logged in.");				
+				$scope.filtertag = 'Open'; // set filtertag before calling Backend.getTodos()
 				Backend.getTodos();
-				$scope.todos = TDMgr.getTodosByTag('All');
-				$scope.filtertag = 'All';
 				$(".fkts").css("visibility","visible");
+				$scope.errormsg = "";
 			})
 			.catch(function(error){
 				$scope.errormsg = "Login-Error.";
@@ -89,7 +87,7 @@ tdapp.controller("AuthCtrl",function($scope,$http,$auth,$cookies,$window,appdata
 	// Finish
 	
 	$(".flash").css("visibility","visible");	
-	$("#liusername").focus()	
+	$("#liusername").focus()
+
 	Autologin.check(); // do automatic login if cookie/token is available
-	
 });

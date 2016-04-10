@@ -13,9 +13,6 @@ tdapp.controller("MainCtrl",function($scope,$timeout,$interval,$http,$cookies,$w
 	Backend.setScope($scope);
 	
 	// Init
-	
-	$scope.todos = TDMgr.getTodosByTag('All');
-	$scope.tags = TDMgr.getTags();
 	$scope.log = CLogger.getLog();
 
 	// Logout
@@ -122,7 +119,6 @@ tdapp.controller("MainCtrl",function($scope,$timeout,$interval,$http,$cookies,$w
 	$(".impressum").css("visibility","visible");
 	$(".flash").css("visibility","visible");	
 	CLogger.log("System ready.");
-		
-	// Do login if cookie/token is available
-	Autologin.check();
+
+	Autologin.check(); // do automatic login if cookie/token is available
 });

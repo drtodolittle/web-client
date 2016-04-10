@@ -33,6 +33,12 @@
       "done": false,
       "tag": "#work",
       "id": 34
+    },
+    {
+      "topic": "#private Test.",
+      "done": true,
+      "tag": "#private",
+      "id": 35
     }
   ]
 }

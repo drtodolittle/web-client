@@ -53,28 +53,33 @@ tdapp.factory("TDMgr",function(){ // ToDoManager
 		return fact.todos;
 	}
 	fact.getTodosByTag = function(tag){
-		if(tag=='' || tag=='All') return fact.todos;
+		if(tag=='' || tag=='All'){
+			return fact.todos;
+		} else
 		if(tag=='Open'){
 			var tds = [];
 			fact.todos.forEach(function(todo){
-				if(!todo.done) tds.push(todo);
+				if(!todo.done){
+					tds.push(todo);
+				};				
 			});
 			return tds;
-		}
+		} else
 		if(tag=='Done'){
 			var dtd = [];
 			fact.todos.forEach(function(todo){
 				if(todo.done) dtd.push(todo);
 			});
 			return dtd;
+		} else {
+			var tagged = [];
+			fact.todos.forEach(function(obj){
+				if(obj.tag!=undefined && obj.tag==tag){
+					tagged.push(obj);
+				}
+			});
+			return tagged;
 		}
-		var tagged = [];
-		fact.todos.forEach(function(obj){
-			if(obj.tag!=undefined && obj.tag==tag){
-				tagged.push(obj);
-			}
-		});
-		return tagged;
 	}
 	fact.setTodos = function(todolist){
 		if(todolist==undefined) return;

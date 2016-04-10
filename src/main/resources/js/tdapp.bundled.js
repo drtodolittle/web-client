@@ -187,28 +187,33 @@
 			return fact.todos;
 		}
 		fact.getTodosByTag = function(tag){
-			if(tag=='' || tag=='All') return fact.todos;
+			if(tag=='' || tag=='All'){
+				return fact.todos;
+			} else
 			if(tag=='Open'){
 				var tds = [];
 				fact.todos.forEach(function(todo){
-					if(!todo.done) tds.push(todo);
+					if(!todo.done){
+						tds.push(todo);
+					};				
 				});
 				return tds;
-			}
+			} else
 			if(tag=='Done'){
 				var dtd = [];
 				fact.todos.forEach(function(todo){
 					if(todo.done) dtd.push(todo);
 				});
 				return dtd;
+			} else {
+				var tagged = [];
+				fact.todos.forEach(function(obj){
+					if(obj.tag!=undefined && obj.tag==tag){
+						tagged.push(obj);
+					}
+				});
+				return tagged;
 			}
-			var tagged = [];
-			fact.todos.forEach(function(obj){
-				if(obj.tag!=undefined && obj.tag==tag){
-					tagged.push(obj);
-				}
-			});
-			return tagged;
 		}
 		fact.setTodos = function(todolist){
 			if(todolist==undefined) return;
@@ -296,10 +301,9 @@
 				$http.defaults.headers.common['Authorization'] = "Basic " + token;
 				if($window.location.hostname=="localhost"){
 					appdata.server = appdata.localserver;
-				}
+				}			
+				_scope.filtertag = 'Open'; // set filtertag before calling Backend.getTodos()
 				Backend.getTodos();
-				_scope.todos = TDMgr.getTodosByTag('All');
-				_scope.filtertag = 'All';
 				$location = "/#/main";
 			} else {
 				if($location.$$url=="/main") $window.location = "/#/login";
@@ -409,6 +413,8 @@
 					});
 					CLogger.log("Done.");
 					$timeout(function(){
+						_scope.tags = TDMgr.getTags();
+						_scope.todos = TDMgr.getTodosByTag(_scope.filtertag);
 						$window.location = "/#/main";
 					},1000);
 					$timeout(function(){
@@ -521,18 +527,17 @@
 		// Login
 
 		function locallogin(){ // No basic authentication (just communicate with localhost)
-			$window.location = "/#/working";
 			CLogger.log("Commit login.");
+			$window.location = "/#/working";
 			appdata.server = appdata.localserver;
-			$scope.errormsg = "";
 			CLogger.log("Logged in.");
 			var now = new Date();
 			var exp = new Date(now.getFullYear(), now.getMonth()+1, now.getDate());
 			$cookies.put(appdata.cookiename,'bla',{expires:exp});
+			$scope.filtertag = 'Open'; // set filtertag before calling Backend.getTodos()
 			Backend.getTodos();
-			$scope.todos = TDMgr.getTodosByTag('All');
-			$scope.filtertag = 'All';
 			$(".fkts").css("visibility","visible");
+			$scope.errormsg = "";
 		}
 		
 		$scope.dologin = function(){
@@ -550,12 +555,11 @@
 					$cookies.put(appdata.cookiename,response.data.token,{expires:exp});
 					// Modifiy headers
 					$http.defaults.headers.common['Authorization'] = "Basic " + response.data.token;
-					CLogger.log("Logged in.");
-					$scope.errormsg = "";
+					CLogger.log("Logged in.");				
+					$scope.filtertag = 'Open'; // set filtertag before calling Backend.getTodos()
 					Backend.getTodos();
-					$scope.todos = TDMgr.getTodosByTag('All');
-					$scope.filtertag = 'All';
 					$(".fkts").css("visibility","visible");
+					$scope.errormsg = "";
 				})
 				.catch(function(error){
 					$scope.errormsg = "Login-Error.";
@@ -582,9 +586,9 @@
 		// Finish
 		
 		$(".flash").css("visibility","visible");	
-		$("#liusername").focus()	
+		$("#liusername").focus()
+
 		Autologin.check(); // do automatic login if cookie/token is available
-		
 	});
 
 
@@ -607,9 +611,6 @@
 		Backend.setScope($scope);
 		
 		// Init
-		
-		$scope.todos = TDMgr.getTodosByTag('All');
-		$scope.tags = TDMgr.getTags();
 		$scope.log = CLogger.getLog();
 
 		// Logout
@@ -716,9 +717,8 @@
 		$(".impressum").css("visibility","visible");
 		$(".flash").css("visibility","visible");	
 		CLogger.log("System ready.");
-			
-		// Do login if cookie/token is available
-		Autologin.check();
+
+		Autologin.check(); // do automatic login if cookie/token is available
 	});
 
 

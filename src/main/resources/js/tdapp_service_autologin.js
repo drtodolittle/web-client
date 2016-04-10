@@ -18,10 +18,9 @@ tdapp.service('Autologin',function($http,$window,$location,$cookies,appdata,TDMg
 			$http.defaults.headers.common['Authorization'] = "Basic " + token;
 			if($window.location.hostname=="localhost"){
 				appdata.server = appdata.localserver;
-			}
+			}			
+			_scope.filtertag = 'Open'; // set filtertag before calling Backend.getTodos()
 			Backend.getTodos();
-			_scope.todos = TDMgr.getTodosByTag('All');
-			_scope.filtertag = 'All';
 			$location = "/#/main";
 		} else {
 			if($location.$$url=="/main") $window.location = "/#/login";

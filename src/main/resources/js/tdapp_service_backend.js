@@ -96,6 +96,8 @@ tdapp.service('Backend',function($http,$timeout,$window,$location,appdata,CLogge
 				});
 				CLogger.log("Done.");
 				$timeout(function(){
+					_scope.tags = TDMgr.getTags();
+					_scope.todos = TDMgr.getTodosByTag(_scope.filtertag);
 					$window.location = "/#/main";
 				},1000);
 				$timeout(function(){

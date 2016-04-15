@@ -677,8 +677,7 @@
 							TDMgr.tags.splice(TDMgr.tags.indexOf(oldtag),1);
 						}
 					}
-					$scope.todos = TDMgr.getTodos();
-					$scope.filtertag = '';
+					$scope.todos = TDMgr.getTodosByTag($scope.filtertag);
 					CLogger.log("Todo (id:"+id+") updated.");
 				} else {
 					CLogger.log("Error.");

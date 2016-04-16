@@ -14,19 +14,24 @@
 
 <!-- List -->
 <div class="container">
-	<div class="dropdown">
+	<div class="dropdown pull-left">
 	  <button class="btn btn-default dropdown-toggle" type="button" id="filter1" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
 		Filter {{filtertag}}
 		<span class="caret"></span>
 	  </button>
 	  <ul class="dropdown-menu" aria-labelledby="filter1">
+		<!-- 16.04.2016 _ Old Filter (Backup)
 		<li><a href="/#/main" ng-click="todos=getTodosByTag('Open');filtertag='Open'">Open</a></li>
 		<li><a href="/#/main" ng-click="todos=getTodosByTag('Done');filtertag='Done'">Done</a></li>
-		<li><a href="/#/main" ng-click="todos=getTodosByTag('');filtertag='All'">All</a></li>
+		-->
+		<li><a href="/#/main" ng-click="todos=getTodosByTag('',showdone);filtertag='All'">All</a></li>
 		<li ng-repeat="tag in tags">
-			<a href="/#/main" ng-click="$parent.todos=$parent.getTodosByTag(tag);$parent.filtertag=tag">{{tag}}</a>
+			<a href="/#/main" ng-click="$parent.filtertag=tag;$parent.showdone=showdone;$parent.todos=$parent.getTodosByTag(tag,showdone)">{{tag}}</a>
 		</li>
 	  </ul>
+	</div>
+	<div class="dropdown pull-left">
+	  <button class="btn btn-default" type="button" ng-click="togShowdone()">{{showdonetext}}</button>
 	</div>
 </div>
 <div class="container">

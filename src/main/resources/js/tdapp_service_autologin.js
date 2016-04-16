@@ -19,7 +19,7 @@ tdapp.service('Autologin',function($http,$window,$location,$cookies,appdata,TDMg
 			if($window.location.hostname=="localhost"){
 				appdata.server = appdata.localserver;
 			}			
-			_scope.filtertag = 'Open'; // set filtertag before calling Backend.getTodos()
+			_scope.filtertag = 'All'; // set filtertag before calling Backend.getTodos()
 			Backend.getTodos();
 			$location = "/#/main";
 		} else {

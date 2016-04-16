@@ -52,6 +52,7 @@ tdapp.factory("TDMgr",function(){ // ToDoManager
 	fact.getTodos = function(){
 		return fact.todos;
 	}
+	/* 16.04.2016 _ Old getTodosByTag (Backup)
 	fact.getTodosByTag = function(tag){
 		if(tag=='' || tag=='All'){
 			return fact.todos;
@@ -80,6 +81,37 @@ tdapp.factory("TDMgr",function(){ // ToDoManager
 			});
 			return tagged;
 		}
+	}
+	*/
+	fact.getTodosByTag = function(tag,done){
+		if(tag=='' || tag=='All'){
+			var ret = [];
+			if(done){
+				fact.todos.forEach(function(obj){
+					if(obj.done){
+						ret.push(obj);
+					}
+				});
+			} else {
+				fact.todos.forEach(function(obj){
+					if(!obj.done){
+						ret.push(obj);
+					}
+				});
+			}
+			return ret;		
+		}
+		var tagged = [];
+		fact.todos.forEach(function(obj){
+			if(obj.tag!=undefined && obj.tag==tag){
+				if(done){
+					if(obj.done) tagged.push(obj);
+				} else {
+					if(!obj.done) tagged.push(obj);
+				}
+			}
+		});
+		return tagged;
 	}
 	fact.setTodos = function(todolist){
 		if(todolist==undefined) return;
@@ -110,6 +142,7 @@ tdapp.factory("TDMgr",function(){ // ToDoManager
 	fact.addTodoObj = function(obj){
 		fact.checkForHashtag(obj);		
 		fact.todos.unshift(obj);
+		return obj;
 	}
 	fact.addTodo = function(topic){
 		var obj = {"topic":topic,done:false};

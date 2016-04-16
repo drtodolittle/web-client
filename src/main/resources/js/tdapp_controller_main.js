@@ -15,6 +15,11 @@ tdapp.controller("MainCtrl",function($scope,$timeout,$interval,$http,$cookies,$w
 	// Init
 	$scope.log = CLogger.getLog();
 
+	// General Done Filter
+	
+	$scope.showdone = false;
+	$scope.showdonetext = "Show Done";	
+	
 	// Logout
 
 	$scope.dologout = function(){
@@ -41,13 +46,22 @@ tdapp.controller("MainCtrl",function($scope,$timeout,$interval,$http,$cookies,$w
 			e.preventDefault();
 			if($scope.newtodotxt!=""){
 				var newtodo = {};
-				newtodo.topic=$scope.newtodotxt;
-				newtodo.done=false;
+				newtodo.topic = $scope.newtodotxt;
+				newtodo.done = false;
 				$scope.newtodotxt = "";
 				Backend.postTodo(newtodo);
 				TDMgr.addTodoObj(newtodo);
-				$scope.todos = TDMgr.getTodos();
-				$scope.filtertag = '';
+				if($scope.showdone){
+					$scope.showdone = false;
+					$scope.showdonetext = "Show Done";
+				}
+				console.log(newtodo.tag);
+				if(newtodo.tag!=undefined){
+					$scope.filtertag = newtodo.tag;
+				} else {
+					$scope.filtertag = "All";
+				}
+				$scope.todos = TDMgr.getTodosByTag($scope.filtertag,$scope.showdone);
 				window.scrollTo(0,0);
 				$("#todotxta").focus();
 			}
@@ -79,7 +93,7 @@ tdapp.controller("MainCtrl",function($scope,$timeout,$interval,$http,$cookies,$w
 						TDMgr.tags.splice(TDMgr.tags.indexOf(oldtag),1);
 					}
 				}
-				$scope.todos = TDMgr.getTodosByTag($scope.filtertag);
+				$scope.todos = TDMgr.getTodosByTag($scope.filtertag,$scope.showdone);
 				CLogger.log("Todo (id:"+id+") updated.");
 			} else {
 				CLogger.log("Error.");
@@ -98,17 +112,29 @@ tdapp.controller("MainCtrl",function($scope,$timeout,$interval,$http,$cookies,$w
 		obj.deleted = true;
 		Backend.delTodo(obj);
 		TDMgr.delTodo(obj);
-		$scope.todos = TDMgr.getTodosByTag($scope.filtertag);
+		$scope.todos = TDMgr.getTodosByTag($scope.filtertag,$scope.showdone);
 		CLogger.log("ToDo deleted.");	
 	}
 	
 	$scope.togDone = function(obj){
 		TDMgr.togDone(obj);
 		Backend.doneTodo(obj);
-		$scope.todos=TDMgr.getTodosByTag($scope.filtertag);
+		$scope.todos=TDMgr.getTodosByTag($scope.filtertag,$scope.showdone);
 		CLogger.log("Todo-Flag changed.");
 	}
 
+	// Filter function
+	
+	$scope.togShowdone = function(){
+		$scope.showdone = !$scope.showdone;
+		if($scope.showdone){
+			$scope.showdonetext = "Show Open";
+		} else {
+			$scope.showdonetext = "Show Done";
+		}
+		$scope.todos=TDMgr.getTodosByTag($scope.filtertag,$scope.showdone);
+	}
+	
 	// Tags
 	
 	$scope.getTodosByTag = TDMgr.getTodosByTag;

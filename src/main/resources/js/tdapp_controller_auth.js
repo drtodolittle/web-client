@@ -35,7 +35,7 @@ tdapp.controller("AuthCtrl",function($scope,$http,$auth,$cookies,$window,appdata
 		var now = new Date();
 		var exp = new Date(now.getFullYear(), now.getMonth()+1, now.getDate());
 		$cookies.put(appdata.cookiename,'bla',{expires:exp});
-		$scope.filtertag = 'Open'; // set filtertag before calling Backend.getTodos()
+		$scope.filtertag = 'All'; // set filtertag before calling Backend.getTodos()
 		Backend.getTodos();
 		$(".fkts").css("visibility","visible");
 		$scope.errormsg = "";
@@ -57,7 +57,7 @@ tdapp.controller("AuthCtrl",function($scope,$http,$auth,$cookies,$window,appdata
 				// Modifiy headers
 				$http.defaults.headers.common['Authorization'] = "Basic " + response.data.token;
 				CLogger.log("Logged in.");				
-				$scope.filtertag = 'Open'; // set filtertag before calling Backend.getTodos()
+				$scope.filtertag = 'All'; // set filtertag before calling Backend.getTodos()
 				Backend.getTodos();
 				$(".fkts").css("visibility","visible");
 				$scope.errormsg = "";

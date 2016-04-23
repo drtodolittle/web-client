@@ -5,16 +5,13 @@
 */
 var tdapp = require('./tdapp');
 
-tdapp.controller("MainCtrl",function($scope,$timeout,$interval,$http,$cookies,$window,appdata,TDMgr,CLogger,Backend,Autologin){
+tdapp.controller("MainCtrl",function($scope,$timeout,$interval,$http,$cookies,$window,appdata,TDMgr,Backend,Autologin){
 
 	// Injections
 
 	Autologin.setScope($scope);
 	Backend.setScope($scope);
 	
-	// Init
-	$scope.log = CLogger.getLog();
-
 	// General Done Filter
 	
 	$scope.showdone = false;
@@ -35,7 +32,6 @@ tdapp.controller("MainCtrl",function($scope,$timeout,$interval,$http,$cookies,$w
 		$timeout(function(){
 			$("#liusername").focus();
 		},1128);
-		CLogger.log("Logged out.");
 	}
 
 	// Keyboard
@@ -55,7 +51,6 @@ tdapp.controller("MainCtrl",function($scope,$timeout,$interval,$http,$cookies,$w
 					$scope.showdone = false;
 					$scope.showdonetext = "Show Done";
 				}
-				console.log(newtodo.tag);
 				if(newtodo.tag!=undefined){
 					$scope.filtertag = newtodo.tag;
 				} else {
@@ -75,14 +70,10 @@ tdapp.controller("MainCtrl",function($scope,$timeout,$interval,$http,$cookies,$w
 		var k = e.keyCode;
 		if(k==13){//ret
 			e.preventDefault();
-			CLogger.log("Change Todo (id:"+id+").");
 			var currentTodo = $('#todoid'+id);
 			currentTodo.blur();
-			CLogger.log("Todo unfocused.");
 			var obj = TDMgr.getTodoById(id);
 			if(obj!=undefined){
-				CLogger.log("Done.");
-				CLogger.log("Updating data on server.");
 				obj.topic = currentTodo.html();
 				Backend.putTodo(obj);
 				var oldtag = obj.tag;
@@ -94,9 +85,6 @@ tdapp.controller("MainCtrl",function($scope,$timeout,$interval,$http,$cookies,$w
 					}
 				}
 				$scope.todos = TDMgr.getTodosByTag($scope.filtertag,$scope.showdone);
-				CLogger.log("Todo (id:"+id+") updated.");
-			} else {
-				CLogger.log("Error.");
 			}
 		}
 	}
@@ -105,7 +93,6 @@ tdapp.controller("MainCtrl",function($scope,$timeout,$interval,$http,$cookies,$w
 
 	$scope.seltodoline = function(id){
 		$("#todoid"+id).focus();
-		CLogger.log("Todo focused.");
 	}
 
 	$scope.deltodo = function(obj){ // No animation
@@ -113,14 +100,12 @@ tdapp.controller("MainCtrl",function($scope,$timeout,$interval,$http,$cookies,$w
 		Backend.delTodo(obj);
 		TDMgr.delTodo(obj);
 		$scope.todos = TDMgr.getTodosByTag($scope.filtertag,$scope.showdone);
-		CLogger.log("ToDo deleted.");	
 	}
 	
 	$scope.togDone = function(obj){
 		TDMgr.togDone(obj);
 		Backend.doneTodo(obj);
-		$scope.todos=TDMgr.getTodosByTag($scope.filtertag,$scope.showdone);
-		CLogger.log("Todo-Flag changed.");
+		$scope.todos = TDMgr.getTodosByTag($scope.filtertag,$scope.showdone);
 	}
 
 	// Filter function
@@ -143,7 +128,6 @@ tdapp.controller("MainCtrl",function($scope,$timeout,$interval,$http,$cookies,$w
 	
 	$(".impressum").css("visibility","visible");
 	$(".flash").css("visibility","visible");	
-	CLogger.log("System ready.");
 
 	Autologin.check(); // do automatic login if cookie/token is available
 });

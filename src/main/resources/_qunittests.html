@@ -446,54 +446,6 @@
 	
 	<!--
 	
-		Tests CLogger ********************************************************************************
-	
-	-->
-	
-	<script>
-
-	QUnit.test("CLogger", function(assert){	
-		var injector = angular.injector(["ng","tdapp"]);	
-		var CLogger = injector.get("CLogger");		
-
-		// Test...
-		assert.ok(CLogger!=undefined,"CLogger!=undefined");
-	});
-	
-	QUnit.test("CLogger.getLog", function(assert){	
-		var injector = angular.injector(["ng","tdapp"]);	
-		var CLogger = injector.get("CLogger");		
-
-		// Test...
-		assert.ok(
-			CLogger.getLog().length==32,
-			"CLogger.getLog().length==32"
-		);
-		assert.ok(
-			CLogger.getLog()[0].length==0,
-			"CLogger.getLog()[0].length==0"
-		);
-		assert.ok(
-			CLogger.getLog()[0]=="",
-			"CLogger.getLog()[0]==''"
-		);
-		
-		// Test...
-		CLogger.log("test");
-		assert.ok(
-			CLogger.getLog().length==32,
-			"CLogger.log('test'); CLogger.getLog().length==32"
-		);
-		assert.ok(
-			CLogger.getLog()[31]=='test',
-			"CLogger.log('test'); CLogger.getLog()[31]=='test'"
-		);
-	});
-	
-	</script>
-	
-	<!--
-	
 		Tests Controller (WIP) ********************************************************************************
 		
 	-->
@@ -507,14 +459,12 @@
 		var _win = {};
 		var _appdata = {};
 		var _TDMgr = injector.get("TDMgr");
-		var _CLogger = injector.get("CLogger");
 
 		// Preparation...
 		injector.get('$controller')('MainCtrl',{
 			$scope: ctrlScope,
 			$http: ctrlHttp,
 			TDMgr: _TDMgr,
-			CLogger: _CLogger,
 			Autologin:{
 				setScope: function(){},
 				check: function(){}

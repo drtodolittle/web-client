@@ -5,12 +5,11 @@
 */
 var tdapp = require('./tdapp');
 
-tdapp.controller("RegCtrl",function($scope,$http,$window,appdata,CLogger){
+tdapp.controller("RegCtrl",function($scope,$http,$window,appdata){
 
 	// Register
 
 	$scope.doRegister = function(){
-		CLogger.log("Commit register.");
 		$http({
 			method:"post",
 			url: userservice,
@@ -18,13 +17,11 @@ tdapp.controller("RegCtrl",function($scope,$http,$window,appdata,CLogger){
 			data: $scope.user
 		}).then(
 			function successCallback(res) {
-				CLogger.log("Done.");
 				alert("Registration email sent. Please activate your account.");
 				$window.location = "/";
 			}
 			,
 			function errorCallback(res){
-				CLogger.log("Error! Check console for details.");
 				console.log(JSON.stringify(res));			
 			}
 		);

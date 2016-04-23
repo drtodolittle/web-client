@@ -5,7 +5,7 @@
 */
 var tdapp = require('./tdapp');
 
-tdapp.controller("AuthCtrl",function($scope,$http,$auth,$cookies,$window,appdata,TDMgr,CLogger,Backend,Autologin){
+tdapp.controller("AuthCtrl",function($scope,$http,$auth,$cookies,$window,appdata,TDMgr,Backend,Autologin){
 
 	// Injection
 
@@ -28,10 +28,8 @@ tdapp.controller("AuthCtrl",function($scope,$http,$auth,$cookies,$window,appdata
 	// Login
 
 	function locallogin(){ // No basic authentication (just communicate with localhost)
-		CLogger.log("Commit login.");
 		$window.location = "/#/working";
 		appdata.server = appdata.localserver;
-		CLogger.log("Logged in.");
 		var now = new Date();
 		var exp = new Date(now.getFullYear(), now.getMonth()+1, now.getDate());
 		$cookies.put(appdata.cookiename,'bla',{expires:exp});
@@ -42,7 +40,6 @@ tdapp.controller("AuthCtrl",function($scope,$http,$auth,$cookies,$window,appdata
 	}
 	
 	$scope.dologin = function(){
-		CLogger.log("Commit login.");
 		if($window.location.host=="localhost"){
 			locallogin();
 			return;
@@ -56,7 +53,6 @@ tdapp.controller("AuthCtrl",function($scope,$http,$auth,$cookies,$window,appdata
 				$cookies.put(appdata.cookiename,response.data.token,{expires:exp});
 				// Modifiy headers
 				$http.defaults.headers.common['Authorization'] = "Basic " + response.data.token;
-				CLogger.log("Logged in.");				
 				$scope.filtertag = 'All'; // set filtertag before calling Backend.getTodos()
 				Backend.getTodos();
 				$(".fkts").css("visibility","visible");

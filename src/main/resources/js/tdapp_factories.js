@@ -5,24 +5,6 @@
 */
 var tdapp = require('./tdapp');
 
-tdapp.factory("CLogger",function(){ // ClientLogger
-	fact = {};
-	fact._log = [];
-	fact.log = function(logtxt){
-		fact._log.push(logtxt);
-		if(fact._log.length>32){
-			fact._log.shift();
-		}
-	}
-	fact.getLog = function(){
-		return fact._log;
-	}
-	for(i=0;i<32;i++){
-		fact.log("");
-	}
-	return fact;	
-});
-
 tdapp.factory("TDMgr",function(){ // ToDoManager
 	var fact = {};
 	fact.todos = [];

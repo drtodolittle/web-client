@@ -81,13 +81,6 @@ body,div,p,span{
 	cursor:pointer;
 	border-bottom:solid 1px;
 }
-.log{
-	position:fixed;
-	left:0px;
-	bottom:0px;
-	padding:8px;
-	visibility: hidden;
-}
 .working{
 	width:256px;
 	background-color:#aaaaaa;

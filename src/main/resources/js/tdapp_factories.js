@@ -122,6 +122,7 @@ tdapp.factory("TDMgr",function(){ // ToDoManager
 		return ret;
 	}
 	fact.addTodoObj = function(obj){
+		obj.predone = obj.done;
 		fact.checkForHashtag(obj);		
 		fact.todos.unshift(obj);
 		return obj;
@@ -150,9 +151,21 @@ tdapp.factory("TDMgr",function(){ // ToDoManager
 		var todo = fact.todos[idx];
 		if(todo.done){
 			todo.done = false;
+			todo.predone = todo.done;
 		} else {
 			todo.done = true;
+			todo.predone = todo.done;
 		}
 	}
+	fact.togPreDone = function(item){
+		var idx = fact.todos.indexOf(item);
+		if( idx<0 ) return;
+		var todo = fact.todos[idx];
+		if(todo.predone){
+			todo.predone = false;
+		} else {
+			todo.predone = true;
+		}
+	}	
 	return fact;
 });

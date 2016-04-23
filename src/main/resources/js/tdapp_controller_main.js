@@ -103,9 +103,12 @@ tdapp.controller("MainCtrl",function($scope,$timeout,$interval,$http,$cookies,$w
 	}
 	
 	$scope.togDone = function(obj){
-		TDMgr.togDone(obj);
-		Backend.doneTodo(obj);
-		$scope.todos = TDMgr.getTodosByTag($scope.filtertag,$scope.showdone);
+		TDMgr.togPreDone(obj);
+		$timeout(function(){
+			TDMgr.togDone(obj);
+			Backend.doneTodo(obj);		
+			$scope.todos = TDMgr.getTodosByTag($scope.filtertag,$scope.showdone);
+		},1000);
 	}
 
 	// Filter function

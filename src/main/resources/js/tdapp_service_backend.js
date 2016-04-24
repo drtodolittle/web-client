@@ -69,6 +69,19 @@ tdapp.service('Backend',function($http,$timeout,$window,$location,appdata,TDMgr)
 			}
 		);
 	}
+	this.undoneTodo = function(obj){
+		$http({
+			method:"get",
+			url: appdata.server+"/"+obj.id+"/undone",
+		}).then(
+			function successCallback(res){
+			}
+			,
+			function errorCallback(res){
+				console.log("Error:"+JSON.stringify(res));			
+			}
+		);
+	}
 	this.getTodos = function(){
 		$http({
 			method:"get",

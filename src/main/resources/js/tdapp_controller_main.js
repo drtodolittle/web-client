@@ -105,8 +105,12 @@ tdapp.controller("MainCtrl",function($scope,$timeout,$interval,$http,$cookies,$w
 	$scope.togDone = function(obj){
 		TDMgr.togPreDone(obj);
 		$timeout(function(){
-			TDMgr.togDone(obj);
-			Backend.doneTodo(obj);		
+			TDMgr.togDone(obj); // Toggle todo local (within TDMgr)
+			if(obj.done){ // Toggle Todo on the server
+				Backend.doneTodo(obj);			
+			} else {
+				Backend.undoneTodo(obj);
+			}
 			$scope.todos = TDMgr.getTodosByTag($scope.filtertag,$scope.showdone);
 		},1000);
 	}

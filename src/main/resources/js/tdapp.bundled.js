@@ -279,6 +279,16 @@
 				}		
 			}
 		}
+		fact.togPreDone = function(item){
+			var idx = fact.todos.indexOf(item);
+			if( idx<0 ) return;
+			var todo = fact.todos[idx];
+			if(todo.predone){
+				todo.predone = false;
+			} else {
+				todo.predone = true;
+			}
+		}
 		fact.togDone = function(item){
 			var idx = fact.todos.indexOf(item);
 			if( idx<0 ) return;
@@ -289,16 +299,6 @@
 			} else {
 				todo.done = true;
 				todo.predone = todo.done;
-			}
-		}
-		fact.togPreDone = function(item){
-			var idx = fact.todos.indexOf(item);
-			if( idx<0 ) return;
-			var todo = fact.todos[idx];
-			if(todo.predone){
-				todo.predone = false;
-			} else {
-				todo.predone = true;
 			}
 		}	
 		return fact;
@@ -405,6 +405,19 @@
 			$http({
 				method:"get",
 				url: appdata.server+"/"+obj.id+"/done",
+			}).then(
+				function successCallback(res){
+				}
+				,
+				function errorCallback(res){
+					console.log("Error:"+JSON.stringify(res));			
+				}
+			);
+		}
+		this.undoneTodo = function(obj){
+			$http({
+				method:"get",
+				url: appdata.server+"/"+obj.id+"/undone",
 			}).then(
 				function successCallback(res){
 				}
@@ -704,8 +717,12 @@
 		$scope.togDone = function(obj){
 			TDMgr.togPreDone(obj);
 			$timeout(function(){
-				TDMgr.togDone(obj);
-				Backend.doneTodo(obj);		
+				TDMgr.togDone(obj); // Toggle todo local (within TDMgr)
+				if(obj.done){ // Toggle Todo on the server
+					Backend.doneTodo(obj);			
+				} else {
+					Backend.undoneTodo(obj);
+				}
 				$scope.todos = TDMgr.getTodosByTag($scope.filtertag,$scope.showdone);
 			},1000);
 		}

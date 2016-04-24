@@ -145,6 +145,16 @@ tdapp.factory("TDMgr",function(){ // ToDoManager
 			}		
 		}
 	}
+	fact.togPreDone = function(item){
+		var idx = fact.todos.indexOf(item);
+		if( idx<0 ) return;
+		var todo = fact.todos[idx];
+		if(todo.predone){
+			todo.predone = false;
+		} else {
+			todo.predone = true;
+		}
+	}
 	fact.togDone = function(item){
 		var idx = fact.todos.indexOf(item);
 		if( idx<0 ) return;
@@ -155,16 +165,6 @@ tdapp.factory("TDMgr",function(){ // ToDoManager
 		} else {
 			todo.done = true;
 			todo.predone = todo.done;
-		}
-	}
-	fact.togPreDone = function(item){
-		var idx = fact.todos.indexOf(item);
-		if( idx<0 ) return;
-		var todo = fact.todos[idx];
-		if(todo.predone){
-			todo.predone = false;
-		} else {
-			todo.predone = true;
 		}
 	}	
 	return fact;

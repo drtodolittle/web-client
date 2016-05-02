@@ -4,7 +4,7 @@
 	<!-- Default Resource Mapping -->
 	<service id="defaultResourceService" interface="org.ops4j.pax.web.extender.whiteboard.ResourceMapping">
 		<bean class="org.ops4j.pax.web.extender.whiteboard.runtime.DefaultResourceMapping">
-			<property name="alias" value="/app"/>
+			<property name="alias" value="/"/>
 			<property name="path" value="" />
 		</bean>	
 	</service>

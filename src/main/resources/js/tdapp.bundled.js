@@ -67,9 +67,9 @@
 		tdapp.js
 
 	*/
-	var tdapp = angular.module("tdapp",['satellizer','ngCookies','ngRoute']);
+	var tdapp = angular.module('tdapp',['satellizer','ngCookies','ngRoute']);
 
-	tdapp.config(function($authProvider,$routeProvider) {
+	tdapp.config(function($authProvider,$routeProvider,$compileProvider) {
 		$authProvider.baseUrl='/api/todos/';
 		$authProvider.loginUrl='login';
 		$routeProvider
@@ -101,6 +101,8 @@
 				.otherwise({
 					redirectTo: '/error'
 				});
+		// Performance improvement
+		$compileProvider.debugInfoEnabled(false);
 		// Satellizer
 		/*
 		$authProvider.twitter({

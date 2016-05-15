@@ -529,7 +529,7 @@
 	*/
 	var tdapp = __webpack_require__(1);
 
-	tdapp.controller("SettingsCtrl",function($scope,$http,$window,appdata){
+	tdapp.controller("SettingsCtrl",function($scope,$http,$window,$cookies,appdata){
 
 		// Change passwrod
 
@@ -541,6 +541,7 @@
 				data: $scope.user
 			}).then(
 				function successCallback(res) {
+					$cookies.remove(appdata.cookiename);
 					alert("Change password initiated. Please login again.");
 					$window.location = "/";
 				}

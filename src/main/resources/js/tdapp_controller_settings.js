@@ -5,7 +5,7 @@
 */
 var tdapp = require('./tdapp');
 
-tdapp.controller("SettingsCtrl",function($scope,$http,$window,appdata){
+tdapp.controller("SettingsCtrl",function($scope,$http,$window,$cookies,appdata){
 
 	// Change passwrod
 
@@ -17,6 +17,7 @@ tdapp.controller("SettingsCtrl",function($scope,$http,$window,appdata){
 			data: $scope.user
 		}).then(
 			function successCallback(res) {
+				$cookies.remove(appdata.cookiename);
 				alert("Change password initiated. Please login again.");
 				$window.location = "/";
 			}

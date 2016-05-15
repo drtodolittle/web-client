@@ -12,7 +12,7 @@ tdapp.controller("RegCtrl",function($scope,$http,$window,appdata){
 	$scope.doRegister = function(){
 		$http({
 			method:"post",
-			url: userservice,
+			url: appdata.userservice,
 			header: "application/json",
 			data: $scope.user
 		}).then(

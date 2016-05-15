@@ -56,6 +56,7 @@
 	__webpack_require__(5);
 	__webpack_require__(6);
 	__webpack_require__(7);
+	__webpack_require__(8);
 
 
 /***/ },
@@ -92,6 +93,10 @@
 	                templateUrl : 'register.html',
 					controller : 'RegCtrl'
 	            })
+				.when('/chpwd', {
+	                templateUrl : 'chpwd.html',
+					controller : 'SettingsCtrl'
+	            })			
 				.when('/error', {
 	                templateUrl : 'error.html'
 	            })
@@ -519,6 +524,48 @@
 
 	/*
 
+		tdapp_controller_settings.js
+
+	*/
+	var tdapp = __webpack_require__(1);
+
+	tdapp.controller("SettingsCtrl",function($scope,$http,$window,appdata){
+
+		// Change passwrod
+
+		$scope.doChPwd = function(){
+			$http({
+				method:"put",
+				url: appdata.userservice,
+				header: "application/json",
+				data: $scope.user
+			}).then(
+				function successCallback(res) {
+					alert("Change password initiated. Please login again.");
+					$window.location = "/";
+				}
+				,
+				function errorCallback(res){
+					$scope.errormsg = 'Error!';
+					console.log(JSON.stringify(res));			
+				}
+			);
+		}
+
+		// Finish
+		
+		$(".flash").css("visibility","visible");	
+		$("#liusername").focus()		
+
+	});
+
+
+/***/ },
+/* 7 */
+/***/ function(module, exports, __webpack_require__) {
+
+	/*
+
 		tdapp_controller_auth.js
 
 	*/
@@ -609,7 +656,7 @@
 
 
 /***/ },
-/* 7 */
+/* 8 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/*

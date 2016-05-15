@@ -1,0 +1,15 @@
+﻿<!-- Change password -->
+<center>
+<div class="register fnt16">
+		<div class="fnt32 fntshadow">DrToDoLittle</div>
+		<div class="fnt16 fntshadow">Change password</div>
+		<div>&nbsp;</div>
+		<input id="liusername" type="text" ng-model="user.email" name="liusername" placeholder="E-Mail/Username" class="liuser fnt16" tabindex=7></input>
+		<input type="password" ng-model="user.oldPassword" name="lipass" placeholder="Old password" class="lipass fnt16" tabindex=8></input>
+		<input type="password" ng-model="user.newPassword" name="lipass" placeholder="New password" class="lipass fnt16" tabindex=8></input>
+		<input type="password" ng-model="user.retypeNewPassword" name="lipass" placeholder="Retype new password" class="lipass fnt16" tabindex=8></input>
+		<div class="libut fnt16" ng-click="doChPwd();" tabindex=9>Do change password</div>
+		<div>&nbsp;</div>
+		<div class="flash">{{errormsg}}</div>
+</div>
+</center>

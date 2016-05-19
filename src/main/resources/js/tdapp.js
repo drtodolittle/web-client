@@ -64,7 +64,7 @@ tdapp.value(
 		"cookiename":"derdr",
 		"localserver" : "http://localhost:3000/api/todos",
 		"server" : window.location.origin + "/api/todos",
-		"userservice" : window.location.origin + "/api/users"
+		"userservice" : window.location.origin + "/api/user"
 	}
 );
 

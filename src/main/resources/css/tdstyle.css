@@ -32,8 +32,9 @@ body,div,p,span{
 	font-size:48px;
 }
 .fntshadow{
-	text-shadow: 4px 4px #888888;
+	//text-shadow: 4px 4px #888888;
 }
+
 /*
   Margins ----------------------------------------
 */
@@ -59,55 +60,24 @@ body,div,p,span{
 .header{
 	padding:32px;
 }
-.fkts{
-	position:fixed;
-	right:0px;
-	top:0px;
-	margin:8px;
-	visibility: visible;
-}
-.fktsiconwrap{
-	margin-bottom:8px;
-}
-.fktsicon:hover{
-	border: solid 1px #000000;
-	cursor: pointer;
-}
 .customnavbar{
 	background-color:#dddddd;
 	padding-top:8px;
-	padding-bottom:10px;
+	padding-bottom:12px;
 	padding-left:8px;
 }
-.molink:hover{
-	cursor:pointer;
-	border-bottom:solid 1px;
-}
 .working{
-	width:256px;
-	background-color:#aaaaaa;
-	color:#000000;
-	padding:32px;
-	margin-top:24px;
-	border:solid 1px;
-	box-shadow: 4px 4px 8px grey;
-	visibility: visible;
-}
-.search{
-	background: url(../images/magnifying-glass-2x.png) no-repeat 230px 10px;
-	width: 256px;
-	padding: 6px;
-	margin-bottom:40px;
-	border:solid 1px;
-	border-color: #aaaaaa;
-	visibility: hidden;
-}
-.impressum{
-	margin:32px;
-	color:#888888;
-	text-align:left;
-	font-family:arial;
-	font-size:10px;
+	background-color:#dddddd;
+	padding-top:8px;
+	padding-bottom:12px;
+	padding-left:8px;	
+	//width:256px;
+	//background-color:#dddddd;
+	//color:#000000;
+	//padding:32px;
+	//margin-top:24px;
+	//border:solid 1px;
+	//box-shadow: 4px 4px 8px grey;
 	visibility: visible;
 }
 .footer{
@@ -116,6 +86,9 @@ body,div,p,span{
 	text-align:center;
 	font-family:arial;
 	font-size:10px;
+}
+.bwidth196{
+	width:164px;
 }
 
 /*
@@ -143,7 +116,7 @@ body,div,p,span{
 */
 .login{
 	width:320px;
-	background-color:#aaaaaa;
+	//background-color:#aaaaaa;
 	padding:32px;
 	margin-top:24px;
 	/* text-align:left; */
@@ -160,22 +133,24 @@ body,div,p,span{
 	border:solid 1px;
 }
 .liuser{
-	background-color:#cccccc;
 	color:#000000;
 	resize:none;
 	width:16em;
 	height:32px;
 	padding:4px;
 	margin:4px;
+	border:solid 1px;
+	border-color: #aaaaaa;
 }
 .lipass{
-	background-color:#cccccc;
 	color:#000000;
 	resize:none;
 	width:16em;
 	height:32px;
 	padding:4px;
 	margin:4px;
+	border:solid 1px;
+	border-color: #aaaaaa;
 }
 .libut{
 	width:16em;

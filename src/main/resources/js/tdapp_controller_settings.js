@@ -29,6 +29,12 @@ tdapp.controller("SettingsCtrl",function($scope,$http,$window,$cookies,$timeout,
 		$window.location = "/#/main";
 	}
 
+	// Go settings
+
+	$scope.gosettings = function(){
+		$window.location = "/#/settings";
+	}	
+	
 	// Logout
 	
 	$scope.dologout = function(){

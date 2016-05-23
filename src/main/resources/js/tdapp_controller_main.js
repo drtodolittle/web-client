@@ -16,22 +16,11 @@ tdapp.controller("MainCtrl",function($scope,$timeout,$interval,$http,$cookies,$w
 	
 	$scope.showdone = false;
 	$scope.showdonetext = "Show Done";	
-	
-	// Logout
 
-	$scope.dologout = function(){
-		$(".fkts").css("visibility","hidden");
-		$(".todota").css("visibility","hidden");
-		$(".todotab").css("visibility","hidden");
-		$cookies.remove(appdata.cookiename);
-		TDMgr.clearTodos();
-		$window.location = "/#/working";
-		$timeout(function(){
-			$window.location = "/#/login";
-		},1000);
-		$timeout(function(){
-			$("#liusername").focus();
-		},1128);
+	// Go to settings
+	
+	$scope.dosettings = function(){
+		$window.location = "/#/settings";
 	}
 
 	// Keyboard

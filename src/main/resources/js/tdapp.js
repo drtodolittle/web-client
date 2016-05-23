@@ -31,7 +31,11 @@ tdapp.config(function($authProvider,$routeProvider,$compileProvider) {
 			.when('/chpwd', {
                 templateUrl : 'chpwd.html',
 				controller : 'SettingsCtrl'
-            })			
+            })
+			.when('/settings', {
+                templateUrl : 'settings.html',
+				controller : 'SettingsCtrl'
+            })
 			.when('/error', {
                 templateUrl : 'error.html'
             })

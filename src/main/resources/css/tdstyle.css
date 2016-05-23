@@ -66,16 +66,18 @@ body,div,p,span{
 	margin:8px;
 	visibility: visible;
 }
-.fktsicon{
-	padding: 4px 4px 4px 4px;
-	border: solid 1px #aaaaaa;
-}
 .fktsiconwrap{
 	margin-bottom:8px;
 }
 .fktsicon:hover{
 	border: solid 1px #000000;
 	cursor: pointer;
+}
+.customnavbar{
+	background-color:#dddddd;
+	padding-top:8px;
+	padding-bottom:10px;
+	padding-left:8px;
 }
 .molink:hover{
 	cursor:pointer;

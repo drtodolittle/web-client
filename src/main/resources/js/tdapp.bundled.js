@@ -96,7 +96,11 @@
 				.when('/chpwd', {
 	                templateUrl : 'chpwd.html',
 					controller : 'SettingsCtrl'
-	            })			
+	            })
+				.when('/settings', {
+	                templateUrl : 'settings.html',
+					controller : 'SettingsCtrl'
+	            })
 				.when('/error', {
 	                templateUrl : 'error.html'
 	            })
@@ -129,7 +133,7 @@
 			"cookiename":"derdr",
 			"localserver" : "http://localhost:3000/api/todos",
 			"server" : window.location.origin + "/api/todos",
-			"userservice" : window.location.origin + "/api/users"
+			"userservice" : window.location.origin + "/api/user"
 		}
 	);
 
@@ -529,9 +533,51 @@
 	*/
 	var tdapp = __webpack_require__(1);
 
-	tdapp.controller("SettingsCtrl",function($scope,$http,$window,$cookies,appdata){
+	tdapp.controller("SettingsCtrl",function($scope,$http,$window,$cookies,$timeout,appdata,TDMgr){
 
+		// Get current user
+
+		$http({
+			method:"get",
+			url: appdata.userservice,
+		}).then(
+			function successCallback(res) {
+				$scope.currentuser = res;
+			}
+			,
+			function errorCallback(res){
+				console.log(JSON.stringify(res));			
+				$scope.currentuser = "n/a";
+			}
+		);
+
+		// Go main
+		
+		$scope.gomain = function(){
+			$window.location = "/#/main";
+		}
+
+		// Logout
+		
+		$scope.dologout = function(){
+			$(".todota").css("visibility","hidden");
+			$(".todotab").css("visibility","hidden");
+			$cookies.remove(appdata.cookiename);
+			TDMgr.clearTodos();
+			$window.location = "/#/working";
+			$timeout(function(){
+				$window.location = "/#/login";
+			},1000);
+			$timeout(function(){
+				$("#liusername").focus();
+			},1128);
+		}
+		
 		// Change passwrod
+
+		$scope.gochpwd = function(){
+			$window.location = "/#/chpwd";
+		}
 
 		$scope.doChPwd = function(){
 			$http({
@@ -678,22 +724,11 @@
 		
 		$scope.showdone = false;
 		$scope.showdonetext = "Show Done";	
-		
-		// Logout
 
-		$scope.dologout = function(){
-			$(".fkts").css("visibility","hidden");
-			$(".todota").css("visibility","hidden");
-			$(".todotab").css("visibility","hidden");
-			$cookies.remove(appdata.cookiename);
-			TDMgr.clearTodos();
-			$window.location = "/#/working";
-			$timeout(function(){
-				$window.location = "/#/login";
-			},1000);
-			$timeout(function(){
-				$("#liusername").focus();
-			},1128);
+		// Go to settings
+		
+		$scope.dosettings = function(){
+			$window.location = "/#/settings";
 		}
 
 		// Keyboard

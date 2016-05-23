@@ -14,7 +14,7 @@ tdapp.controller("SettingsCtrl",function($scope,$http,$window,$cookies,$timeout,
 		url: appdata.userservice,
 	}).then(
 		function successCallback(res) {
-			$scope.currentuser = res;
+			$scope.currentuser = res.data.email;
 		}
 		,
 		function errorCallback(res){

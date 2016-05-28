@@ -77,9 +77,12 @@ tdapp.controller("SettingsCtrl",function($scope,$http,$window,$cookies,$timeout,
 		);
 	}
 
+	// Animation
+	
+	$(".set").animate({left:32},1000);	
+	
 	// Finish
 	
 	$(".flash").css("visibility","visible");	
-	$("#liusername").focus()		
 
 });

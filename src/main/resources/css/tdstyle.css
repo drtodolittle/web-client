@@ -60,6 +60,9 @@ body,div,p,span{
 .header{
 	padding:32px;
 }
+.headspacer{
+	height:48px;
+}
 .customnavbar{
 	background-color:#dddddd;
 	padding-top:8px;
@@ -77,9 +80,6 @@ body,div,p,span{
 	padding-left:8px;	
 	visibility: visible;
 }
-.headspacer{
-	height:48px;
-}
 .footer{
 	margin:8px;
 	color:#888888;
@@ -89,6 +89,10 @@ body,div,p,span{
 }
 .bwidth196{
 	width:164px;
+}
+.set{
+	position:absolute;
+	left:-128px;
 }
 
 /*

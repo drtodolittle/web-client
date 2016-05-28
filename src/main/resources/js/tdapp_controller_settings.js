@@ -77,6 +77,12 @@ tdapp.controller("SettingsCtrl",function($scope,$http,$window,$cookies,$timeout,
 		);
 	}
 
+	// Check for login, redirect if not logged in
+
+	if ($cookies.get(appdata.cookiename)==undefined){
+		$window.location = "/#/login";
+	}	
+	
 	// Animation
 	
 	$(".set").animate({left:32},1000);	

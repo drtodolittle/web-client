@@ -5,7 +5,7 @@
 */
 var tdapp = require('./tdapp');
 
-tdapp.controller("AuthCtrl",function($scope,$http,$auth,$cookies,$window,appdata,TDMgr,Backend,Autologin){
+tdapp.controller("AuthCtrl",function($scope,$http,$auth,$cookies,$window,$timeout,appdata,TDMgr,Backend,Autologin){
 
 	// Injection
 
@@ -27,6 +27,12 @@ tdapp.controller("AuthCtrl",function($scope,$http,$auth,$cookies,$window,appdata
 
 	// Login
 
+	function gomain(){
+		$timeout(function(){
+			$window.location = "/#/main";
+		},1000);
+	}
+	
 	function locallogin(){ // No basic authentication (just communicate with localhost)
 		$window.location = "/#/working";
 		appdata.server = appdata.localserver;
@@ -34,9 +40,10 @@ tdapp.controller("AuthCtrl",function($scope,$http,$auth,$cookies,$window,appdata
 		var exp = new Date(now.getFullYear(), now.getMonth()+1, now.getDate());
 		$cookies.put(appdata.cookiename,'bla',{expires:exp});
 		$scope.filtertag = 'All'; // set filtertag before calling Backend.getTodos()
-		Backend.getTodos();
+		//Backend.getTodos();
 		$(".fkts").css("visibility","visible");
 		$scope.errormsg = "";
+		gomain();
 	}
 	
 	$scope.dologin = function(){
@@ -54,9 +61,10 @@ tdapp.controller("AuthCtrl",function($scope,$http,$auth,$cookies,$window,appdata
 				// Modifiy headers
 				$http.defaults.headers.common['Authorization'] = "Basic " + response.data.token;
 				$scope.filtertag = 'All'; // set filtertag before calling Backend.getTodos()
-				Backend.getTodos();
+				//Backend.getTodos();
 				$(".fkts").css("visibility","visible");
 				$scope.errormsg = "";
+				gomain();
 			})
 			.catch(function(error){
 				$scope.errormsg = "Login-Error.";

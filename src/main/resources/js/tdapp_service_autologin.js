@@ -20,10 +20,16 @@ tdapp.service('Autologin',function($http,$window,$location,$cookies,appdata,TDMg
 				appdata.server = appdata.localserver;
 			}			
 			_scope.filtertag = 'All'; // set filtertag before calling Backend.getTodos()
-			Backend.getTodos();
+			if(TDMgr.getTodos().length==0){
+				Backend.getTodos();
+			} else {
+				_scope.tags = TDMgr.getTags();
+				_scope.todos = TDMgr.getTodosByTag(_scope.filtertag);			
+			}
 			$location = "/#/main";
 		} else {
-			if($location.$$url=="/main") $window.location = "/#/login";
+			// if($location.$$url=="/main") $window.location = "/#/login";
+			$window.location = "/#/login";
 		}	
 	}
 });

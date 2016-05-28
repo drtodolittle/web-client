@@ -65,20 +65,20 @@ body,div,p,span{
 	padding-top:8px;
 	padding-bottom:12px;
 	padding-left:8px;
+	position:fixed;
+	left:0px;
+	top:0px;
+	width:100%;
 }
 .working{
 	background-color:#dddddd;
 	padding-top:8px;
 	padding-bottom:12px;
 	padding-left:8px;	
-	//width:256px;
-	//background-color:#dddddd;
-	//color:#000000;
-	//padding:32px;
-	//margin-top:24px;
-	//border:solid 1px;
-	//box-shadow: 4px 4px 8px grey;
 	visibility: visible;
+}
+.headspacer{
+	height:48px;
 }
 .footer{
 	margin:8px;

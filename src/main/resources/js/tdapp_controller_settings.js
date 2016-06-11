@@ -34,23 +34,7 @@ tdapp.controller("SettingsCtrl",function($scope,$http,$window,$cookies,$timeout,
 	$scope.gosettings = function(){
 		$window.location = "/#/settings";
 	}	
-	
-	// Logout
-	
-	$scope.dologout = function(){
-		$(".todota").css("visibility","hidden");
-		$(".todotab").css("visibility","hidden");
-		$cookies.remove(appdata.cookiename);
-		TDMgr.clearTodos();
-		$window.location = "/#/working";
-		$timeout(function(){
-			$window.location = "/#/login";
-		},1000);
-		$timeout(function(){
-			$("#liusername").focus();
-		},1128);
-	}
-	
+		
 	// Change passwrod
 
 	$scope.gochpwd = function(){

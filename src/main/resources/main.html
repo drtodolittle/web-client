@@ -2,6 +2,17 @@
 
 <div class="headspacer">&nbsp;</div>
 
+<!-- Menu -->
+<center>
+<div class="fnt16 custommenu">
+	<br>
+	<button class="btn btn-default bwidth196" type="button" ng-click="gosettings()">Settings</button>
+	<br><br>
+	<button class="btn btn-default bwidth196" type="button" ng-click="dologout()">Logout</button>
+	<br><br>
+</div>
+</center>
+
 <!-- Add -->
 <center>
 <div>
@@ -53,5 +64,5 @@
 
 <!-- Navbar -->
 <div class="customnavbar fnt16">
-<span ng-click="dosettings();"><img class="mo" src="images/menu-3x.png" alt="settings"></img></span>
+<span ng-click="showcustommenu();"><img id="customnavbaricon" class="mo" src="images/menu-3x.png" alt="custommenu"></img></span>
 </div>

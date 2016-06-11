@@ -18,11 +18,50 @@ tdapp.controller("MainCtrl",function($scope,$timeout,$interval,$http,$cookies,$w
 	$scope.showdonetext = "Show Done";	
 
 	// Go to settings
-	
-	$scope.dosettings = function(){
+
+	$scope.gosettings = function(){
 		$window.location = "/#/settings";
 	}
+	
+	// Show and hide custom menu (animated via jquery)
+	
+	$scope.tmpcustommenu = 0;
+	$scope.showcustommenu = function(){
+		if($scope.tmpcustommenu==0){
+			$scope.tmpcustommenu=1;
+			$(".custommenu").css("visibility","visible");
+			$(".custommenu").css("position","relative");
+			$(".custommenu").css("top","0px");
+			$("#customnavbaricon").attr("src","images/arrow-left-3x.png");
+			$(".custommenu").animate({height:"140px"},1000);
+		} else {
+			$scope.tmpcustommenu=0;
+			$("#customnavbaricon").attr("src","images/menu-3x.png");
+			$(".custommenu").animate({height:"0px"},1000,
+				function(){
+					$(".custommenu").css("visibility","hidden");
+					$(".custommenu").css("position","absolute");
+					$(".custommenu").css("top","-1024px");				
+				});			
+		}
+	}	
 
+	// Logout
+	
+	$scope.dologout = function(){
+		$(".todota").css("visibility","hidden");
+		$(".todotab").css("visibility","hidden");
+		$cookies.remove(appdata.cookiename);
+		TDMgr.clearTodos();
+		$window.location = "/#/working";
+		$timeout(function(){
+			$window.location = "/#/login";
+		},1000);
+		$timeout(function(){
+			$("#liusername").focus();
+		},1128);
+	}	
+	
 	// Keyboard
 
 	$scope.newtodoKeydown = function(e){

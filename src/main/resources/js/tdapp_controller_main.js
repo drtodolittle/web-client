@@ -30,13 +30,18 @@ tdapp.controller("MainCtrl",function($scope,$timeout,$interval,$http,$cookies,$w
 		if($scope.tmpcustommenu==0){
 			$scope.tmpcustommenu=1;
 			$("#customnavbaricon").attr("src","images/arrow-left-3x.png");
-			if($("html").scrollTop()>64){
-				$("html").animate({scrollTop:0},500,function(){
-					$(".custommenu").animate({height:"140px"},500);
-				});						
+			if(navigator.userAgent.match(/(iPod|iPhone|iPad|Android)/)) {           
+				window.scrollTo(0);
+				$(".custommenu").animate({height:"140px"},500);				
 			} else {
-				$("html").scrollTop(0);
-				$(".custommenu").animate({height:"140px"},500);
+				if($('html').scrollTop()>64){
+					$('html').animate({scrollTop:0},500,function(){
+						$(".custommenu").animate({height:"140px"},500);
+					});						
+				} else {
+					$('html').scrollTop(0);
+					$(".custommenu").animate({height:"140px"},500);
+				}
 			}
 		} else {
 			$scope.tmpcustommenu=0;

@@ -23,26 +23,18 @@ tdapp.controller("MainCtrl",function($scope,$timeout,$interval,$http,$cookies,$w
 		$window.location = "/#/settings";
 	}
 	
-	// Show and hide custom menu (animated via jquery)
+	// Show and hide custommenu (animated via jquery)
 	
 	$scope.tmpcustommenu = 0;
 	$scope.showcustommenu = function(){
 		if($scope.tmpcustommenu==0){
 			$scope.tmpcustommenu=1;
-			$(".custommenu").css("visibility","visible");
-			$(".custommenu").css("position","relative");
-			$(".custommenu").css("top","0px");
 			$("#customnavbaricon").attr("src","images/arrow-left-3x.png");
 			$(".custommenu").animate({height:"140px"},1000);
 		} else {
 			$scope.tmpcustommenu=0;
 			$("#customnavbaricon").attr("src","images/menu-3x.png");
-			$(".custommenu").animate({height:"0px"},1000,
-				function(){
-					$(".custommenu").css("visibility","hidden");
-					$(".custommenu").css("position","absolute");
-					$(".custommenu").css("top","-1024px");				
-				});			
+			$(".custommenu").animate({height:"0px"},1000);			
 		}
 	}	
 

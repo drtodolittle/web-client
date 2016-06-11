@@ -38,9 +38,6 @@ tdapp.controller("RegCtrl",function($scope,$http,$window,appdata){
 	}
 
 	// Finish
-	
-	$(".impressum").css("visibility","visible");
-	$(".flash").css("visibility","visible");	
-	$("#liusername").focus()		
 
+	$("#liusername").focus()		
 });

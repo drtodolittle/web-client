@@ -30,11 +30,11 @@ tdapp.controller("MainCtrl",function($scope,$timeout,$interval,$http,$cookies,$w
 		if($scope.tmpcustommenu==0){
 			$scope.tmpcustommenu=1;
 			$("#customnavbaricon").attr("src","images/arrow-left-3x.png");
-			$(".custommenu").animate({height:"140px"},1000);
+			$(".custommenu").animate({height:"140px"},500);
 		} else {
 			$scope.tmpcustommenu=0;
 			$("#customnavbaricon").attr("src","images/menu-3x.png");
-			$(".custommenu").animate({height:"0px"},1000);			
+			$(".custommenu").animate({height:"0px"},500);			
 		}
 	}	
 
@@ -153,8 +153,5 @@ tdapp.controller("MainCtrl",function($scope,$timeout,$interval,$http,$cookies,$w
 
 	// Finish
 	
-	$(".impressum").css("visibility","visible");
-	$(".flash").css("visibility","visible");	
-
 	Autologin.check(); // do automatic login if cookie/token is available
 });

@@ -90,7 +90,6 @@ tdapp.controller("AuthCtrl",function($scope,$http,$auth,$cookies,$window,$timeou
 
 	// Finish
 	
-	$(".flash").css("visibility","visible");	
 	$("#liusername").focus()
 
 	Autologin.check(); // do automatic login if cookie/token is available

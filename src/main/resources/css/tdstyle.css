@@ -31,9 +31,6 @@ body,div,p,span{
 	font-family:arial;
 	font-size:48px;
 }
-.fntshadow{
-	//text-shadow: 4px 4px #888888;
-}
 
 /*
   Margins ----------------------------------------
@@ -61,12 +58,13 @@ body,div,p,span{
 	padding:32px;
 }
 .headspacer{
-	height:48px;
+	//height:48px;
+	height:53px;
 }
 .customnavbar{
 	background-color:#dddddd;
-	padding-top:8px;
-	padding-bottom:12px;
+	padding-top:12px;
+	padding-bottom:16px;
 	padding-left:8px;
 	position:fixed;
 	left:0px;
@@ -113,7 +111,6 @@ body,div,p,span{
 	-webkit-animation: flash 1s linear infinite;
 	-moz-animation: flash 1s linear infinite;
 	animation: flash 1s linear infinite;
-	visibility: hidden;
 }
 
 /*
@@ -200,6 +197,17 @@ body,div,p,span{
 	border:solid 1px;
 	border-color: #aaaaaa;
 	visibility: visible;
+}
+.todota_ex{
+	width: 320px;
+	height: 32px;
+	padding: 4px;
+	border:solid 1px;
+	border-color: #aaaaaa;
+	position:absolute;
+	top:10px;
+	left:44px;
+	margin:auto;
 }
 .mo:hover{
 	cursor:pointer;

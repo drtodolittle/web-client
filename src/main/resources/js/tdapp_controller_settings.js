@@ -65,10 +65,5 @@ tdapp.controller("SettingsCtrl",function($scope,$http,$window,$cookies,$timeout,
 
 	if ($cookies.get(appdata.cookiename)==undefined){
 		$window.location = "/#/login";
-	}	
-		
-	// Finish
-	
-	$(".flash").css("visibility","visible");	
-
+	}
 });

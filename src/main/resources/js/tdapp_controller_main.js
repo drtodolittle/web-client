@@ -31,7 +31,7 @@ tdapp.controller("MainCtrl",function($scope,$timeout,$interval,$http,$cookies,$w
 			$scope.tmpcustommenu=1;
 			$("#customnavbaricon").attr("src","images/arrow-left-3x.png");
 			if(navigator.userAgent.match(/(iPod|iPhone|iPad|Android)/)) {           
-				window.scrollTo(0);
+				$('body').scrollTop(0);
 				$(".custommenu").animate({height:"140px"},500);				
 			} else {
 				if($('html').scrollTop()>64){

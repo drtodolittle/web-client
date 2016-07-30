@@ -8,24 +8,26 @@ var tdapp = require('./tdapp');
 tdapp.factory("TDMgr",function(){ // ToDoManager
 	var fact = {};
 	fact.todos = [];
-	fact.tags = [];
+	fact.tags = [];	
 	fact.checkForHashtag = function(obj){
 		if(obj.topic==undefined){
 			return;
 		}
-		if(obj.topic.indexOf('#')>=0){
-			var s = obj.topic.indexOf('#');
-			if(s==-1) e=obj.topic.length;			
-			var e = obj.topic.indexOf(' ',s+1);
+		obj.tags = [];
+		var s = obj.topic.indexOf('#');
+		var e = 0;
+		while(s>=0){
+			e = obj.topic.indexOf(' ',s+1);
 			if(e==-1) e=obj.topic.length;
 			var tag = obj.topic.substring(s,e);
 			if(tag=='#') tag = undefined;
-			obj.tag = tag;
+			if(tag!=undefined){
+				obj.tags.push(tag);
+			}
 			if(tag!=undefined && fact.tags.indexOf(tag)<0){
 				fact.tags.push(tag);
 			}
-		} else {
-			obj.tag = undefined;
+			s = obj.topic.indexOf('#', s+1);		
 		}
 	}
 	fact.getTags = function(){
@@ -34,37 +36,6 @@ tdapp.factory("TDMgr",function(){ // ToDoManager
 	fact.getTodos = function(){
 		return fact.todos;
 	}
-	/* 16.04.2016 _ Old getTodosByTag (Backup)
-	fact.getTodosByTag = function(tag){
-		if(tag=='' || tag=='All'){
-			return fact.todos;
-		} else
-		if(tag=='Open'){
-			var tds = [];
-			fact.todos.forEach(function(todo){
-				if(!todo.done){
-					tds.push(todo);
-				};				
-			});
-			return tds;
-		} else
-		if(tag=='Done'){
-			var dtd = [];
-			fact.todos.forEach(function(todo){
-				if(todo.done) dtd.push(todo);
-			});
-			return dtd;
-		} else {
-			var tagged = [];
-			fact.todos.forEach(function(obj){
-				if(obj.tag!=undefined && obj.tag==tag){
-					tagged.push(obj);
-				}
-			});
-			return tagged;
-		}
-	}
-	*/
 	fact.getTodosByTag = function(tag,done){
 		if(tag=='' || tag=='All'){
 			var ret = [];
@@ -85,7 +56,7 @@ tdapp.factory("TDMgr",function(){ // ToDoManager
 		}
 		var tagged = [];
 		fact.todos.forEach(function(obj){
-			if(obj.tag!=undefined && obj.tag==tag){
+			if(obj.tags.indexOf(tag)>=0){
 				if(done){
 					if(obj.done) tagged.push(obj);
 				} else {

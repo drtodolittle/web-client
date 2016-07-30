@@ -117,7 +117,7 @@
 		assert.ok(todo!=null,"TDMgr.addTodo('test'); todo!=null");
 		assert.equal(TDMgr.getTodos().length,1,"TDMgr.getTodos().length==1");
 		assert.equal(todo.done,false,"TDMgr.addTodo('test'); todo.done==false");
-		assert.equal(todo.tags,undefined,"TDMgr.addTodo('test').tags==undefined");		
+		assert.equal(todo.tags.length,0,"TDMgr.addTodo('test').tags.length==0");
 		TDMgr.clearTodos();
 		assert.equal(TDMgr.getTodos().length,0,"TDMgr.clearTodos()->TDMgr.getTodos().length==0");
 		TDMgr.clearTodos();
@@ -133,9 +133,10 @@
 		// Test...
 		todo = TDMgr.addTodo("#test");
 		assert.ok(
-			TDMgr.getTodos()[0].tag=="#test",
-			"todo = TDMgr.addTodo('#test'); TDMgr.getTodos()[0].tag=='#test'"
+			TDMgr.getTodos()[0].tags[0]=="#test",
+			"todo = TDMgr.addTodo('#test'); TDMgr.getTodos()[0].tags[0]=='#test'"
 		);
+		console.log(todo);
 		assert.ok(
 			TDMgr.getTags()[0]=="#test",
 			"todo = TDMgr.addTodo('#test'); TDMgr.getTags()[0]=='#test'"
@@ -157,48 +158,56 @@
 		// Test...
 		todo = TDMgr.addTodo("test tag #test");
 		assert.ok(
-			TDMgr.getTodos()[0].tag=="#test",
-			"todo = TDMgr.addTodo('test tag #test'); TDMgr.getTodos()[0].tag=='#test'"
+			TDMgr.getTodos()[0].tags[0]=="#test",
+			"todo = TDMgr.addTodo('test tag #test'); TDMgr.getTodos()[0].tags[0]=='#test'"
 		);
 		TDMgr.clearTodos();
 		
 		// Test...
 		todo = TDMgr.addTodo("test #test tag");
 		assert.ok(
-			TDMgr.getTodos()[0].tag=="#test",
-			"todo = TDMgr.addTodo('test #test tag'); TDMgr.getTodos()[0].tag=='#test'"
+			TDMgr.getTodos()[0].tags[0]=="#test",
+			"todo = TDMgr.addTodo('test #test tag'); TDMgr.getTodos()[0].tags[0]=='#test'"
 		);
 		TDMgr.clearTodos();
 
 		// Test...
 		todo = TDMgr.addTodo("test #test #tag untag");
 		assert.ok(
-			TDMgr.getTodos()[0].tag=="#test",
-			"todo = TDMgr.addTodo('test #test #tag untag'); TDMgr.getTodos()[0].tag=='#test'"
+			TDMgr.getTodos()[0].tags.length==2,
+			"todo = TDMgr.addTodo('test #test #tag untag'); TDMgr.getTodos()[0].tags.length==2"
 		);
 		TDMgr.clearTodos();
 
 		// Test...
 		todo = TDMgr.addTodo("test #tag #test untag");
 		assert.ok(
-			TDMgr.getTodos()[0].tag=="#tag",
-			"todo = TDMgr.addTodo('test #tag #test untag'); TDMgr.getTodos()[0].tag=='#tag'"
+			TDMgr.getTodos()[0].tags[0]=='#tag',
+			"todo = TDMgr.addTodo('test #tag #test untag'); TDMgr.getTodos()[0].tags[0]=='#tag'"
+		);
+		TDMgr.clearTodos();
+
+		// Test...
+		todo = TDMgr.addTodo("test #tag #test untag");
+		assert.ok(
+			TDMgr.getTodos()[0].tags[1]=='#test',
+			"todo = TDMgr.addTodo('test #tag #test untag'); TDMgr.getTodos()[0].tags[1]=='#test'"
 		);
 		TDMgr.clearTodos();
 		
 		// Test...
 		todo = TDMgr.addTodo("##test");
 		assert.ok(
-			TDMgr.getTodos()[0].tag=="##test",
-			"todo = TDMgr.addTodo('##test'); TDMgr.getTodos()[0].tag=='##test'"
+			TDMgr.getTodos()[0].tags[0]=="##test",
+			"todo = TDMgr.addTodo('##test'); TDMgr.getTodos()[0].tags[0]=='##test'"
 		);
 		TDMgr.clearTodos();
 
 		// Test...
 		todo = TDMgr.addTodo("test##");
 		assert.ok(
-			TDMgr.getTodos()[0].tag=="##",
-			"todo = TDMgr.addTodo('test##'); TDMgr.getTodos()[0].tag=='##'"
+			TDMgr.getTodos()[0].tags[0]=="##",
+			"todo = TDMgr.addTodo('test##'); TDMgr.getTodos()[0].tags[0]=='##'"
 		);
 		TDMgr.clearTodos();		
 		
@@ -350,18 +359,6 @@
 			TDMgr.getTodosByTag('').length==1,
 			"td1 = TDMgr.addTodo('#test'); TDMgr.getTodosByTag('').length==1"
 		);
-		/* 16.04.2016 _ Open-Tag is no longer supported.
-		assert.ok(
-			TDMgr.getTodosByTag('Open').length==1,
-			"td1 = TDMgr.addTodo('#test'); TDMgr.getTodosByTag('Open').length==1"
-		);
-		*/
-		/* 16.04.2016 _ Done-Tag is no longer supported.
-		assert.ok(
-			TDMgr.getTodosByTag('Done').length==0,
-			"td1 = TDMgr.addTodo('#test'); TDMgr.getTodosByTag('Done').length==0"
-		);
-		*/
 		assert.ok(
 			TDMgr.getTodosByTag('#test').length==1,
 			"td1 = TDMgr.addTodo('#test'); TDMgr.getTodosByTag('#test').length==1"
@@ -370,19 +367,6 @@
 			TDMgr.getTodosByTag('#tag').length==0,
 			"td1 = TDMgr.addTodo('#test'); TDMgr.getTodosByTag('#tag').length==0"
 		);
-		TDMgr.getTodos()[0].done=true;
-		/* 16.04.2016 _ Done-Tag is no longer supported.
-		assert.ok(
-			TDMgr.getTodosByTag('Done').length==1,
-			"td1 = TDMgr.addTodo('#test'); TDMgr.getTodos()[0].done=true; TDMgr.getTodosByTag('Done').length==1"
-		);
-		*/
-		/* 16.04.2016 _ Open-Tag is no longer supported.
-		assert.ok(
-			TDMgr.getTodosByTag('Open').length==0,
-			"td1 = TDMgr.addTodo('#test'); TDMgr.getTodos()[0].done=true; TDMgr.getTodosByTag('Open').length==0"
-		);
-		*/
 		TDMgr.clearTodos();
 		assert.ok(
 			TDMgr.getTodosByTag('Open').length==0,
@@ -437,7 +421,7 @@
 			"TDMgr.addTodo( 2x ); TDMgr.getTodosByTag('#test').length==2"
 		);
 		assert.ok(
-			TDMgr.getTodosByTag('#tag').length==0,
+			TDMgr.getTodosByTag('#tag').length==1,
 			"TDMgr.addTodo( 2x ); TDMgr.getTodosByTag('#tag').length==2"
 		);
 	});

@@ -12,15 +12,6 @@ tdapp.controller("AuthCtrl",function($scope,$http,$auth,$cookies,$window,$timeou
 	Autologin.setScope($scope);
 	Backend.setScope($scope);
 
-	var auth = $firebaseAuth();
-
-	// login with google
-	auth.$signInWithPopup("google").then(function(firebaseUser) {
-    console.log("Signed in as:", firebaseUser.user.email);
-    $scope.email = firebaseUser.user.email;
-  }).catch(function(error) {
-    console.log("Authentication failed:", error);
-  });
 	
 	// Satellizer
 
@@ -82,8 +73,21 @@ tdapp.controller("AuthCtrl",function($scope,$http,$auth,$cookies,$window,$timeou
 			});
 	}
 
-	// Keyboard
+	$scope.dologinWithGoogle = function() {
+		var auth = $firebaseAuth();
+
+		// login with google
+		auth.$signInWithPopup("google").then(function(firebaseUser) {
+		console.log("Signed in as:", firebaseUser.user.email);
+		console.log("Credentials:", firebaseUser.credential);
+		$scope.email = firebaseUser.user.email;
+	  }).catch(function(error) {
+		console.log("Authentication failed:", error);
+	  });
+		
+	}
 	
+	// Keyboard
 	$scope.loginKeydown = function(e){
 		var k = e.keyCode;
 		if(k==13){//ret

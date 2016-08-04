@@ -5,12 +5,22 @@
 */
 var tdapp = require('./tdapp');
 
-tdapp.controller("AuthCtrl",function($scope,$http,$auth,$cookies,$window,$timeout,appdata,TDMgr,Backend,Autologin){
+tdapp.controller("AuthCtrl",function($scope,$http,$auth,$cookies,$window,$timeout,appdata,TDMgr,Backend,Autologin, $firebaseAuth){
 
 	// Injection
 
 	Autologin.setScope($scope);
 	Backend.setScope($scope);
+
+	var auth = $firebaseAuth();
+
+	// login with google
+	auth.$signInWithPopup("google").then(function(firebaseUser) {
+    console.log("Signed in as:", firebaseUser.user.email);
+    $scope.email = firebaseUser.user.email;
+  }).catch(function(error) {
+    console.log("Authentication failed:", error);
+  });
 	
 	// Satellizer
 

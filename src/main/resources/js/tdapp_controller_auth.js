@@ -12,7 +12,7 @@ tdapp.controller("AuthCtrl",function($scope,$http,$auth,$cookies,$window,$timeou
 	Autologin.setScope($scope);
 	Backend.setScope($scope);
 
-	
+
 	// Satellizer
 
 	$scope.authenticate = function(provider){
@@ -33,7 +33,7 @@ tdapp.controller("AuthCtrl",function($scope,$http,$auth,$cookies,$window,$timeou
 			$window.location = "/#/main";
 		},1000);
 	}
-	
+
 	function locallogin(){ // No basic authentication (just communicate with localhost)
 		$window.location = "/#/working";
 		appdata.server = appdata.localserver;
@@ -46,7 +46,7 @@ tdapp.controller("AuthCtrl",function($scope,$http,$auth,$cookies,$window,$timeou
 		$scope.errormsg = "";
 		gomain();
 	}
-	
+
 	$scope.dologin = function(){
 		if($window.location.host=="localhost"){
 			locallogin();
@@ -80,13 +80,16 @@ tdapp.controller("AuthCtrl",function($scope,$http,$auth,$cookies,$window,$timeou
 		auth.$signInWithPopup("google").then(function(firebaseUser) {
 		console.log("Signed in as:", firebaseUser.user.email);
 		console.log("Credentials:", firebaseUser.credential);
+		firebaseUser.user.getToken(false).then(function(idToken) {
+			console.log("Token: ", idToken);
+		});
 		$scope.email = firebaseUser.user.email;
 	  }).catch(function(error) {
 		console.log("Authentication failed:", error);
 	  });
-		
+
 	}
-	
+
 	// Keyboard
 	$scope.loginKeydown = function(e){
 		var k = e.keyCode;
@@ -95,15 +98,15 @@ tdapp.controller("AuthCtrl",function($scope,$http,$auth,$cookies,$window,$timeou
 			$scope.dologin();
 		}
 	}
-	
+
 	// Register
-	
+
 	$scope.showRegister = function(){
 		$window.location = "/#/register";
 	};
 
 	// Finish
-	
+
 	$("#liusername").focus()
 
 	Autologin.check(); // do automatic login if cookie/token is available

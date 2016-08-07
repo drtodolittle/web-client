@@ -103,6 +103,8 @@ tdapp.controller("MainCtrl",function($scope,$timeout,$interval,$http,$cookies,$w
 		if(k==13){//ret
 			e.preventDefault();
 			var currentTodo = $('#todoid'+id);
+			// Correct contenteditable behaviour
+			currentTodo.html(currentTodo.html().replace('<br>',''));
 			currentTodo.blur();
 			var obj = TDMgr.getTodoById(id);
 			if(obj!=undefined){

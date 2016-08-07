@@ -41,8 +41,6 @@ tdapp.controller("AuthCtrl",function($scope,$http,$auth,$cookies,$window,$timeou
 		var exp = new Date(now.getFullYear(), now.getMonth()+1, now.getDate());
 		$cookies.put(appdata.cookiename,'bla',{expires:exp});
 		$scope.filtertag = 'All'; // set filtertag before calling Backend.getTodos()
-		//Backend.getTodos();
-		$(".fkts").css("visibility","visible");
 		$scope.errormsg = "";
 		gomain();
 	}
@@ -62,8 +60,6 @@ tdapp.controller("AuthCtrl",function($scope,$http,$auth,$cookies,$window,$timeou
 				// Modifiy headers
 				$http.defaults.headers.common['Authorization'] = "Basic " + response.data.token;
 				$scope.filtertag = 'All'; // set filtertag before calling Backend.getTodos()
-				//Backend.getTodos();
-				$(".fkts").css("visibility","visible");
 				$scope.errormsg = "";
 				gomain();
 			})
@@ -72,25 +68,34 @@ tdapp.controller("AuthCtrl",function($scope,$http,$auth,$cookies,$window,$timeou
 				console.log(error);
 			});
 	}
-
-	$scope.dologinWithGoogle = function() {
+	
+	$scope.dologinWithGoogle = function(){
 		var auth = $firebaseAuth();
-
-		// login with google
-		auth.$signInWithPopup("google").then(function(firebaseUser) {
-		console.log("Signed in as:", firebaseUser.user.email);
-		console.log("Credentials:", firebaseUser.credential);
-		firebaseUser.user.getToken(false).then(function(idToken) {
-			console.log("Token: ", idToken);
+		// Login with Firebase/Google
+		auth.$signInWithPopup("google").then(function(firebaseUser){
+			console.log("Signed in as: ", firebaseUser.user.email);
+			console.log("Credentials: ", firebaseUser.credential);
+			$scope.email = firebaseUser.user.email;
+			firebaseUser.user.getToken(false).then(function(idToken){
+				console.log("Token: ", idToken);			
+				// Create cookie
+				var now = new Date();
+				var exp = new Date(now.getFullYear(), now.getMonth()+1, now.getDate());
+				$cookies.put(appdata.cookiename,idToken,{expires:exp});
+				// Modifiy headers
+				$http.defaults.headers.common['Authorization'] = "Basic " + idToken;
+				$scope.filtertag = 'All'; // set filtertag before calling Backend.getTodos()
+				$scope.errormsg = "";
+				gomain();
+			});
+		}).catch(function(error){
+			$scope.errormsg = "Login-Error."
+			console.log("Authentication failed: ", error);
 		});
-		$scope.email = firebaseUser.user.email;
-	  }).catch(function(error) {
-		console.log("Authentication failed:", error);
-	  });
-
 	}
 
 	// Keyboard
+
 	$scope.loginKeydown = function(e){
 		var k = e.keyCode;
 		if(k==13){//ret

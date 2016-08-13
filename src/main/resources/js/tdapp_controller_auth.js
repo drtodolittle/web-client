@@ -13,7 +13,7 @@ tdapp.controller("AuthCtrl",function($scope,$http,$auth,$cookies,$window,$timeou
 	Backend.setScope($scope);
 
 
-	//* Satellizer
+	/* Satellizer
 	$scope.authenticate = function(provider){
 		$auth.authenticate(provider)
 		.then(function(res){

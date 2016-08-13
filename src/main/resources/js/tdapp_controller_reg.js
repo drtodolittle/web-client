@@ -16,8 +16,9 @@ tdapp.controller("RegCtrl",function($scope,$http,$window,appdata){
 			$scope.user.password
 		).then(
 			function(data){
-				console.log("Registration successful");
-				console.log(data);
+				console.log("Registration successful.");
+				alert('Registration successful. Please login.');
+				$window.location = "/#/login";
 			}
 		).catch(function(error){
 			var errorCode = error.code;

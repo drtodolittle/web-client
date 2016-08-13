@@ -39,7 +39,8 @@
 				databaseURL: "https://drtodolittle.firebaseio.com",
 				storageBucket: "",
 			  };
-			  window.fbref = firebase.initializeApp(config);
+			  var fbapp = firebase.initializeApp(config);
+			  window.fbref = fbapp.ref();
 			  // window.fbref = new Firebase("https://drtodolittle.firebaseio.com");
 			</script>
 		<!--

@@ -12,7 +12,6 @@ tdapp.controller("AuthCtrl",function($scope,$http,$auth,$cookies,$window,$timeou
 	Autologin.setScope($scope);
 	Backend.setScope($scope);
 
-
 	/* Satellizer
 	$scope.authenticate = function(provider){
 		$auth.authenticate(provider)
@@ -45,7 +44,7 @@ tdapp.controller("AuthCtrl",function($scope,$http,$auth,$cookies,$window,$timeou
 		gomain();
 	}
 
-	/* Old login
+	/* Old
 	$scope.dologin = function(){
 		if($window.location.host=="localhost"){
 			locallogin();
@@ -71,7 +70,7 @@ tdapp.controller("AuthCtrl",function($scope,$http,$auth,$cookies,$window,$timeou
 	}
 	*/
 
-	// Login via firebase
+	// New
 	$scope.dologin = function(){
 		if($window.location.host=="localhost"){
 			locallogin();
@@ -83,8 +82,7 @@ tdapp.controller("AuthCtrl",function($scope,$http,$auth,$cookies,$window,$timeou
 		).then(
 			function(data){
 				console.log("Login correct!");
-				console.log("Data: "+data);
-				console.log("Token: "+data.getToken());
+				// Create cookie
 				var now = new Date();
 				var exp = new Date(now.getFullYear(), now.getMonth()+1, now.getDate());
 				$cookies.put(appdata.cookiename,data.getToken(),{expires:exp});
@@ -95,51 +93,33 @@ tdapp.controller("AuthCtrl",function($scope,$http,$auth,$cookies,$window,$timeou
 				gomain();
 			}
 		).catch(function(error){
-			var errorCode = error.code;
-			var errorMessage = error.message;
-			console.log("Error: "+errorCode+": "+errorMessage);
-		});
+			$scope.errormsg = "Login-Error."
+			console.log("Authentication failed: ", error.message);			
+		});			
 	}
-		/* Old login
-		$auth.login($scope.user)
-			.then(function(response){
-				$window.location = "/#/working";
-				// Create cookie
-				var now = new Date();
-				var exp = new Date(now.getFullYear(), now.getMonth()+1, now.getDate());
-				$cookies.put(appdata.cookiename,response.data.token,{expires:exp});
-				// Modifiy headers
-				$http.defaults.headers.common['Authorization'] = "Basic " + response.data.token;
-				$scope.filtertag = 'All'; // set filtertag before calling Backend.getTodos()
-				$scope.errormsg = "";
-				gomain();
-			})
-			.catch(function(error){
-				$scope.errormsg = "Login-Error.";
-				console.log(error);
-			});
-		*/
-		
+
 	$scope.dologinWithGoogle = function(){
 		var auth = $firebaseAuth();
 		// Login with Firebase/Google
-		auth.$signInWithPopup("google").then(function(firebaseUser){
-			console.log("Signed in as: ", firebaseUser.user.email);
-			console.log("Credentials: ", firebaseUser.credential);
-			$scope.email = firebaseUser.user.email;
-			firebaseUser.user.getToken(false).then(function(idToken){
-				console.log("Token: ", idToken);			
-				// Create cookie
-				var now = new Date();
-				var exp = new Date(now.getFullYear(), now.getMonth()+1, now.getDate());
-				$cookies.put(appdata.cookiename,idToken,{expires:exp});
-				// Modifiy headers
-				$http.defaults.headers.common['Authorization'] = "Basic " + idToken;
-				$scope.filtertag = 'All'; // set filtertag before calling Backend.getTodos()
-				$scope.errormsg = "";
-				gomain();
-			});
-		}).catch(function(error){
+		auth.$signInWithPopup("google").then(
+			function(firebaseUser){
+				console.log("Signed in as: ", firebaseUser.user.email);
+				console.log("Credentials: ", firebaseUser.credential);
+				$scope.email = firebaseUser.user.email;
+				firebaseUser.user.getToken(false).then(function(idToken){
+					console.log("Token: ", idToken);			
+					// Create cookie
+					var now = new Date();
+					var exp = new Date(now.getFullYear(), now.getMonth()+1, now.getDate());
+					$cookies.put(appdata.cookiename,idToken,{expires:exp});
+					// Modifiy headers
+					$http.defaults.headers.common['Authorization'] = "Basic " + idToken;
+					$scope.filtertag = 'All'; // set filtertag before calling Backend.getTodos()
+					$scope.errormsg = "";
+					gomain();
+				});
+			}
+		).catch(function(error){
 			$scope.errormsg = "Login-Error."
 			console.log("Authentication failed: ", error);
 		});

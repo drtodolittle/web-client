@@ -9,7 +9,7 @@ tdapp.controller("RegCtrl",function($scope,$http,$window,appdata){
 
 	// Register
 
-	/* Old registration
+	/* Old
 	$scope.doRegister = function(){
 		$http({
 			method:"post",
@@ -29,9 +29,17 @@ tdapp.controller("RegCtrl",function($scope,$http,$window,appdata){
 	}
 	*/
 	
-	// Registration via firebase
+	// New
 	$scope.doRegister = function(){
-		window.firebase.auth().createUserWithEmailAndPassword($scope.user.email,$scope.user.password).catch(function(error){
+		window.firebase.auth().createUserWithEmailAndPassword(
+			$scope.user.email,
+			$scope.user.password
+		).then(
+			function(data){
+				console.log("Registration successful");
+				console.log(data);
+			}
+		).catch(function(error){
 			var errorCode = error.code;
 			var errorMessage = error.message;
 			console.log("Error: "+errorCode+": "+errorMessage);

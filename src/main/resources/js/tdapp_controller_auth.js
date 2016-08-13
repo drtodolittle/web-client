@@ -77,27 +77,14 @@ tdapp.controller("AuthCtrl",function($scope,$http,$auth,$cookies,$window,$timeou
 			locallogin();
 			return;
 		}
-		// var ref = new Firebase("https://drtodolittle.firebaseio.com");
-		var ref = window.fbref;
-		ref.authWithPassword({
-			email: $scope.user.email,
-			password: $scope.user.password
-		},function(error, authData){
-			if (error) {
-				console.log("Error: Login failed: ", error);
-			} else {
-				console.log("Authenticated successfully with payload:", authData);
-				// Create cookie
-				var now = new Date();
-				var exp = new Date(now.getFullYear(), now.getMonth()+1, now.getDate());
-				$cookies.put(appdata.cookiename,authData,{expires:exp});
-				// Modifiy headers
-				$http.defaults.headers.common['Authorization'] = "Basic " + authData;
-				$scope.filtertag = 'All'; // set filtertag before calling Backend.getTodos()
-				$scope.errormsg = "";
-				gomain();
-			}
+		var auth = $firebaseAuth();
+		firebase.auth().signInWithEmailAndPassword($scope.user.email,$scope.user.password).catch(function(error){
+		  var errorCode = error.code;
+		  var errorMessage = error.message;
 		});
+		console.log("Error: "+errorCode+": "+errorMessage);
+	}
+
 		/* Old login
 		$auth.login($scope.user)
 			.then(function(response){

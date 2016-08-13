@@ -39,9 +39,7 @@
 				databaseURL: "https://drtodolittle.firebaseio.com",
 				storageBucket: "",
 			  };
-			  var fbapp = firebase.initializeApp(config);
-			  window.fbref = fbapp.database().ref();
-			  console.log(window.fbref);
+			  firebase.initializeApp(config);
 			</script>
 		<!--
 			<script src="js/tdapp.js"></script>

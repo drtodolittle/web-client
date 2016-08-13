@@ -5,7 +5,7 @@
 */
 var tdapp = require('./tdapp');
 
-tdapp.controller("RegCtrl",function($scope,$http,$window,appdata){
+tdapp.controller("RegCtrl",function($scope,$http,$window,appdata,$firebaseAuth){
 
 	// Register
 
@@ -31,27 +31,12 @@ tdapp.controller("RegCtrl",function($scope,$http,$window,appdata){
 	
 	// Registration via firebase
 	$scope.doRegister = function(){
-		// var ref = new Firebase("https://drtodolittle.firebaseio.com");
-		var ref = window.fbref;
-		ref.createUser({
-			email: $scope.user.email,
-			password: $scope.user.password
-		},function(error, userData){
-			if (error) {
-				switch (error.code) {
-				case "EMAIL_TAKEN":
-					console.log("Error: Email already in use.");
-					break;
-				case "INVALID_EMAIL":
-					console.log("Error: Invalid email.");
-					break;
-				default:
-					console.log("Error: ", error);
-			}
-		  } else {
-			console.log("User account created with uid:", userData.uid);
-		  }
-		});
+		var auth = $firebaseAuth();
+		auth.createUserWithEmailAndPassword($scope.user.email,$scope.user.password).catch(function(error){
+			var errorCode = error.code;
+			var errorMessage = error.message;
+			console.log("Error: "+errorCode+": "+errorMessage);
+		});	
 	}
 
 	// Keyboard

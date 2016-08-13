@@ -13,8 +13,7 @@ tdapp.controller("AuthCtrl",function($scope,$http,$auth,$cookies,$window,$timeou
 	Backend.setScope($scope);
 
 
-	// Satellizer
-
+	//* Satellizer
 	$scope.authenticate = function(provider){
 		$auth.authenticate(provider)
 		.then(function(res){
@@ -25,7 +24,8 @@ tdapp.controller("AuthCtrl",function($scope,$http,$auth,$cookies,$window,$timeou
 			}
 		});
 	};
-
+	*/
+	
 	// Login
 
 	function gomain(){
@@ -45,6 +45,7 @@ tdapp.controller("AuthCtrl",function($scope,$http,$auth,$cookies,$window,$timeou
 		gomain();
 	}
 
+	/* Old login
 	$scope.dologin = function(){
 		if($window.location.host=="localhost"){
 			locallogin();
@@ -68,7 +69,55 @@ tdapp.controller("AuthCtrl",function($scope,$http,$auth,$cookies,$window,$timeou
 				console.log(error);
 			});
 	}
-	
+	*/
+
+	// Login via firebase
+	$scope.dologin = function(){
+		if($window.location.host=="localhost"){
+			locallogin();
+			return;
+		}
+		var ref = new Firebase("https://drtodolittle.firebaseio.com");
+		ref.authWithPassword({
+			email: $scope.user.email,
+			password: $scope.user.password
+		},function(error, authData){
+			if (error) {
+				console.log("Error: Login failed: ", error);
+			} else {
+				console.log("Authenticated successfully with payload:", authData);
+				// Create cookie
+				var now = new Date();
+				var exp = new Date(now.getFullYear(), now.getMonth()+1, now.getDate());
+				$cookies.put(appdata.cookiename,authData,{expires:exp});
+				// Modifiy headers
+				$http.defaults.headers.common['Authorization'] = "Basic " + authData;
+				$scope.filtertag = 'All'; // set filtertag before calling Backend.getTodos()
+				$scope.errormsg = "";
+				gomain();
+			}
+		});
+		/* Old login
+		$auth.login($scope.user)
+			.then(function(response){
+				$window.location = "/#/working";
+				// Create cookie
+				var now = new Date();
+				var exp = new Date(now.getFullYear(), now.getMonth()+1, now.getDate());
+				$cookies.put(appdata.cookiename,response.data.token,{expires:exp});
+				// Modifiy headers
+				$http.defaults.headers.common['Authorization'] = "Basic " + response.data.token;
+				$scope.filtertag = 'All'; // set filtertag before calling Backend.getTodos()
+				$scope.errormsg = "";
+				gomain();
+			})
+			.catch(function(error){
+				$scope.errormsg = "Login-Error.";
+				console.log(error);
+			});
+		*/
+	}
+		
 	$scope.dologinWithGoogle = function(){
 		var auth = $firebaseAuth();
 		// Login with Firebase/Google

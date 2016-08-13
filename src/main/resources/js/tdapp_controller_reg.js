@@ -9,6 +9,7 @@ tdapp.controller("RegCtrl",function($scope,$http,$window,appdata){
 
 	// Register
 
+	/* Old registration
 	$scope.doRegister = function(){
 		$http({
 			method:"post",
@@ -25,6 +26,31 @@ tdapp.controller("RegCtrl",function($scope,$http,$window,appdata){
 				console.log(JSON.stringify(res));			
 			}
 		);
+	}
+	*/
+	
+	// Registration via firebase
+	$scope.doRegister = function(){
+		var ref = new Firebase("https://drtodolittle.firebaseio.com");
+		ref.createUser({
+			email: $scope.user.email,
+			password: $scope.user.password
+		},function(error, userData){
+			if (error) {
+				switch (error.code) {
+				case "EMAIL_TAKEN":
+					console.log("Error: Email already in use.");
+					break;
+				case "INVALID_EMAIL":
+					console.log("Error: Invalid email.");
+					break;
+				default:
+					console.log("Error: ", error);
+			}
+		  } else {
+			console.log("User account created with uid:", userData.uid);
+		  }
+		});
 	}
 
 	// Keyboard

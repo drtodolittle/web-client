@@ -78,11 +78,11 @@ tdapp.controller("AuthCtrl",function($scope,$http,$auth,$cookies,$window,$timeou
 			return;
 		}
 		window.firebase.auth().signInWithEmailAndPassword(
-			$scope.user.name,
+			$scope.user.email,
 			$scope.user.password
 		).then(
 			function(data){
-				console.log("Login correkt");
+				console.log("Login correct!");
 				console.log(data);
 			}
 		).catch(function(error){

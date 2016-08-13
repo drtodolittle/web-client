@@ -43,17 +43,18 @@ tdapp.controller("AuthCtrl",function($scope,$http,$cookies,$window,$timeout,appd
 		).then(
 			function(data){
 				console.log("Login correct!");
-				var token = data.getToken();
-				console.log("Token: "+token);
-				// Create cookie
-				var now = new Date();
-				var exp = new Date(now.getFullYear(), now.getMonth()+1, now.getDate());
-				$cookies.put(appdata.cookiename,token,{expires:exp});
-				// Modifiy headers
-				$http.defaults.headers.common['Authorization'] = "Basic " + token;
-				$scope.filtertag = 'All'; // set filtertag before calling Backend.getTodos()
-				$scope.errormsg = "";
-				gomain();
+				data.getToken().then(function(token){
+						console.log("Token: "+token);
+						// Create cookie
+						var now = new Date();
+						var exp = new Date(now.getFullYear(), now.getMonth()+1, now.getDate());
+						$cookies.put(appdata.cookiename,token,{expires:exp});
+						// Modifiy headers
+						$http.defaults.headers.common['Authorization'] = "Basic " + token;
+						$scope.filtertag = 'All'; // set filtertag before calling Backend.getTodos()
+						$scope.errormsg = "";
+						gomain();
+				});
 			}
 		).catch(function(error){
 			$scope.errormsg = "Login-Error."

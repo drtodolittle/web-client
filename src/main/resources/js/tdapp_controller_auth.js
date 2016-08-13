@@ -4,8 +4,9 @@
 
 */
 var tdapp = require('./tdapp');
+var firebase = require('firebase');
 
-tdapp.controller("AuthCtrl",function($scope,$http,$auth,$cookies,$window,$timeout,appdata,TDMgr,Backend,Autologin, $firebaseAuth){
+tdapp.controller("AuthCtrl",function($scope,$http,$auth,$cookies,$window,$timeout,appdata,TDMgr,Backend,Autologin,$firebaseAuth){
 
 	// Injection
 

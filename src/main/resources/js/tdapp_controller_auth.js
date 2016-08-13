@@ -84,7 +84,6 @@ tdapp.controller("AuthCtrl",function($scope,$http,$auth,$cookies,$window,$timeou
 		});
 		console.log("Error: "+errorCode+": "+errorMessage);
 	}
-
 		/* Old login
 		$auth.login($scope.user)
 			.then(function(response){
@@ -104,7 +103,6 @@ tdapp.controller("AuthCtrl",function($scope,$http,$auth,$cookies,$window,$timeou
 				console.log(error);
 			});
 		*/
-	}
 		
 	$scope.dologinWithGoogle = function(){
 		var auth = $firebaseAuth();

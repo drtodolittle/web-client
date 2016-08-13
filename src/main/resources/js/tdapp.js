@@ -3,7 +3,7 @@
 	tdapp.js
 
 */
-var tdapp = angular.module('tdapp',['satellizer','ngCookies','ngRoute', 'firebase']);
+var tdapp = angular.module('tdapp',['ngCookies','ngRoute','firebase']);
 
 tdapp.config(function($authProvider,$routeProvider,$compileProvider) {
 	$authProvider.baseUrl='/api/todos/';
@@ -47,18 +47,6 @@ tdapp.config(function($authProvider,$routeProvider,$compileProvider) {
 			});
 	// Performance improvement
 	$compileProvider.debugInfoEnabled(false);
-	// Satellizer
-	/*
-	$authProvider.twitter({
-		url: 'http://127.0.0.1:5000/auth/twitter', // Satellizer server component on localhost
-		authorizationEndpoint: 'https://api.twitter.com/oauth/authenticate',
-		redirectUri: window.location.origin,
-		type: '1.0',
-		popupOptions: { width: 495, height: 645 }
-	});
-	$authProvider.httpInterceptor = false,
-	$authProvider.withCredentials = false;
-	*/
 })
 
 tdapp.value(

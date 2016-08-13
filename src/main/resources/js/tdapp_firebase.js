@@ -9,7 +9,7 @@ var config = {
 	databaseURL: "https://drtodolittle.firebaseio.com",
 	storageBucket: ""
 };
+
 firebase.initializeApp(config);
-// window.firebase = firebase;
 
 module.exports = firebase

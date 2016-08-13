@@ -12,19 +12,6 @@ tdapp.controller("AuthCtrl",function($scope,$http,$auth,$cookies,$window,$timeou
 
 	Autologin.setScope($scope);
 	Backend.setScope($scope);
-
-	/* Satellizer
-	$scope.authenticate = function(provider){
-		$auth.authenticate(provider)
-		.then(function(res){
-			if($auth.isAuthenticated){
-				var dtok = jwt_decode(res.data.token);
-				$scope.user = {};
-				$scope.user.id = dtok.sub;
-			}
-		});
-	};
-	*/
 	
 	// Login
 
@@ -45,39 +32,11 @@ tdapp.controller("AuthCtrl",function($scope,$http,$auth,$cookies,$window,$timeou
 		gomain();
 	}
 
-	/* Old
 	$scope.dologin = function(){
 		if($window.location.host=="localhost"){
 			locallogin();
 			return;
 		}
-		$auth.login($scope.user)
-			.then(function(response){
-				$window.location = "/#/working";
-				// Create cookie
-				var now = new Date();
-				var exp = new Date(now.getFullYear(), now.getMonth()+1, now.getDate());
-				$cookies.put(appdata.cookiename,response.data.token,{expires:exp});
-				// Modifiy headers
-				$http.defaults.headers.common['Authorization'] = "Basic " + response.data.token;
-				$scope.filtertag = 'All'; // set filtertag before calling Backend.getTodos()
-				$scope.errormsg = "";
-				gomain();
-			})
-			.catch(function(error){
-				$scope.errormsg = "Login-Error.";
-				console.log(error);
-			});
-	}
-	*/
-
-	// New
-	$scope.dologin = function(){
-		if($window.location.host=="localhost"){
-			locallogin();
-			return;
-		}
-		//window.firebase.auth().signInWithEmailAndPassword(
 		firebase.auth().signInWithEmailAndPassword(
 			$scope.user.email,
 			$scope.user.password

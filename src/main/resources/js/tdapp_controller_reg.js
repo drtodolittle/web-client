@@ -4,34 +4,14 @@
 
 */
 var tdapp = require('./tdapp');
+var firebase = require('./tdapp_firebase');
 
 tdapp.controller("RegCtrl",function($scope,$http,$window,appdata){
 
 	// Register
-
-	/* Old
-	$scope.doRegister = function(){
-		$http({
-			method:"post",
-			url: appdata.userservice,
-			header: "application/json",
-			data: $scope.user
-		}).then(
-			function successCallback(res) {
-				alert("Registration email sent. Please activate your account.");
-				$window.location = "/";
-			}
-			,
-			function errorCallback(res){
-				console.log(JSON.stringify(res));			
-			}
-		);
-	}
-	*/
 	
-	// New
 	$scope.doRegister = function(){
-		window.firebase.auth().createUserWithEmailAndPassword(
+		firebase.auth().createUserWithEmailAndPassword(
 			$scope.user.email,
 			$scope.user.password
 		).then(

@@ -40,8 +40,7 @@
 				storageBucket: "",
 			  };
 			  var fbapp = firebase.initializeApp(config);
-			  window.fbref = fbapp.ref();
-			  // window.fbref = new Firebase("https://drtodolittle.firebaseio.com");
+			  window.fbref = fbapp.database().ref();
 			</script>
 		<!--
 			<script src="js/tdapp.js"></script>

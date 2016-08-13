@@ -83,7 +83,16 @@ tdapp.controller("AuthCtrl",function($scope,$http,$auth,$cookies,$window,$timeou
 		).then(
 			function(data){
 				console.log("Login correct!");
-				console.log(data);
+				console.log("Data: "+data);
+				console.log("Token: "+data.getToken());
+				var now = new Date();
+				var exp = new Date(now.getFullYear(), now.getMonth()+1, now.getDate());
+				$cookies.put(appdata.cookiename,data.getToken(),{expires:exp});
+				// Modifiy headers
+				$http.defaults.headers.common['Authorization'] = "Basic " + data.getToken();
+				$scope.filtertag = 'All'; // set filtertag before calling Backend.getTodos()
+				$scope.errormsg = "";
+				gomain();
 			}
 		).catch(function(error){
 			var errorCode = error.code;

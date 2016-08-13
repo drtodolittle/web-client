@@ -5,7 +5,7 @@
 */
 var tdapp = require('./tdapp');
 
-tdapp.controller("RegCtrl",function($scope,$http,$window,appdata,$firebaseAuth){
+tdapp.controller("RegCtrl",function($scope,$http,$window,appdata){
 
 	// Register
 
@@ -31,8 +31,7 @@ tdapp.controller("RegCtrl",function($scope,$http,$window,appdata,$firebaseAuth){
 	
 	// Registration via firebase
 	$scope.doRegister = function(){
-		var auth = $firebaseAuth();
-		auth.createUserWithEmailAndPassword($scope.user.email,$scope.user.password).catch(function(error){
+		window.firebase.auth().createUserWithEmailAndPassword($scope.user.email,$scope.user.password).catch(function(error){
 			var errorCode = error.code;
 			var errorMessage = error.message;
 			console.log("Error: "+errorCode+": "+errorMessage);

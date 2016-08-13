@@ -77,8 +77,7 @@ tdapp.controller("AuthCtrl",function($scope,$http,$auth,$cookies,$window,$timeou
 			locallogin();
 			return;
 		}
-		var auth = $firebaseAuth();
-		firebase.auth().signInWithEmailAndPassword($scope.user.email,$scope.user.password).catch(function(error){
+		window.firebase.auth().signInWithEmailAndPassword($scope.user.email,$scope.user.password).catch(function(error){
 		  var errorCode = error.code;
 		  var errorMessage = error.message;
 		});

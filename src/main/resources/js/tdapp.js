@@ -5,9 +5,7 @@
 */
 var tdapp = angular.module('tdapp',['ngCookies','ngRoute','firebase']);
 
-tdapp.config(function($authProvider,$routeProvider,$compileProvider) {
-	$authProvider.baseUrl='/api/todos/';
-	$authProvider.loginUrl='login';
+tdapp.config(function($routeProvider,$compileProvider) {
 	$routeProvider
             .when('/', {
                 templateUrl : 'login.html',

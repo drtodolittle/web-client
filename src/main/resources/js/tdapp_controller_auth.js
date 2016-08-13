@@ -77,11 +77,19 @@ tdapp.controller("AuthCtrl",function($scope,$http,$auth,$cookies,$window,$timeou
 			locallogin();
 			return;
 		}
-		window.firebase.auth().signInWithEmailAndPassword($scope.user.email,$scope.user.password).catch(function(error){
-		  var errorCode = error.code;
-		  var errorMessage = error.message;
+		window.firebase.auth().signInWithEmailAndPassword(
+			$scope.user.name,
+			$scope.user.password
+		).then(
+			function(data){
+				console.log("Login correkt");
+				console.log(data);
+			}
+		).catch(function(error){
+			var errorCode = error.code;
+			var errorMessage = error.message;
+			console.log("Error: "+errorCode+": "+errorMessage);
 		});
-		console.log("Error: "+errorCode+": "+errorMessage);
 	}
 		/* Old login
 		$auth.login($scope.user)

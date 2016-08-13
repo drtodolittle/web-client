@@ -4,6 +4,7 @@
 
 */
 var tdapp = require('./tdapp');
+var firebase = require('./tdapp_firebase');
 
 tdapp.controller("AuthCtrl",function($scope,$http,$auth,$cookies,$window,$timeout,appdata,TDMgr,Backend,Autologin,$firebaseAuth){
 
@@ -76,7 +77,8 @@ tdapp.controller("AuthCtrl",function($scope,$http,$auth,$cookies,$window,$timeou
 			locallogin();
 			return;
 		}
-		window.firebase.auth().signInWithEmailAndPassword(
+		//window.firebase.auth().signInWithEmailAndPassword(
+		firebase.auth().signInWithEmailAndPassword(
 			$scope.user.email,
 			$scope.user.password
 		).then(

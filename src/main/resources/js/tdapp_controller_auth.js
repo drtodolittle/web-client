@@ -4,7 +4,6 @@
 
 */
 var tdapp = require('./tdapp');
-var firebase = require('firebase');
 
 tdapp.controller("AuthCtrl",function($scope,$http,$auth,$cookies,$window,$timeout,appdata,TDMgr,Backend,Autologin,$firebaseAuth){
 
@@ -78,7 +77,8 @@ tdapp.controller("AuthCtrl",function($scope,$http,$auth,$cookies,$window,$timeou
 			locallogin();
 			return;
 		}
-		var ref = new Firebase("https://drtodolittle.firebaseio.com");
+		// var ref = new Firebase("https://drtodolittle.firebaseio.com");
+		var ref = window.fbref;
 		ref.authWithPassword({
 			email: $scope.user.email,
 			password: $scope.user.password

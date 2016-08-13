@@ -31,7 +31,8 @@ tdapp.controller("RegCtrl",function($scope,$http,$window,appdata){
 	
 	// Registration via firebase
 	$scope.doRegister = function(){
-		var ref = new Firebase("https://drtodolittle.firebaseio.com");
+		// var ref = new Firebase("https://drtodolittle.firebaseio.com");
+		var ref = window.fbref;
 		ref.createUser({
 			email: $scope.user.email,
 			password: $scope.user.password

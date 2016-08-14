@@ -65,12 +65,15 @@ tdapp.controller("AuthCtrl",function($scope,$http,$cookies,$window,$timeout,appd
 		var provider = new firebase.auth.GoogleAuthProvider();
 		firebase.auth().signInWithPopup(provider).then(function(result){
 			var token = result.credential.accessToken;
-			$scope.email = result.user.email;
-			$scope.currentuser = result.user.email;
+			appdata.currentuser = result.user.email;
+			appdata.fblogin = false;
+			console.log("Currentuser: "+appdata.currentuser);
+			console.log("Token: "+token);			
 			// Create cookie
 			var now = new Date();
 			var exp = new Date(now.getFullYear(), now.getMonth()+1, now.getDate());
-			$cookies.put(appdata.cookiename,token,{expires:exp});
+			$cookies.put(appdata.tokencookie,token,{expires:exp});
+			$cookies.put(appdata.usercookie,appdata.currentuser,{expires:exp});
 			// Modifiy headers
 			$http.defaults.headers.common['Authorization'] = "Basic " + token;
 			$scope.filtertag = 'All'; // set filtertag before calling Backend.getTodos()

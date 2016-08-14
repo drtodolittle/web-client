@@ -21,45 +21,44 @@ tdapp.controller("AuthCtrl",function($scope,$http,$cookies,$window,$timeout,appd
 			$window.location = "/#/main";
 		},1000);
 	}
-
-	function firebaseAuthentication(){
+	
+	$scope.dologin = function(){
+		$scope.errormsg = "";
+		if($window.location.host=="localhost"){
+			appdata.server = appdata.localserver;
+		}
+		if($scope.user==undefined){
+			$scope.errormsg = "Login-Error: Enter a valid E-Mail-Adress and a valid password!";
+			return;
+		}
 		firebase.auth().signInWithEmailAndPassword(
 			$scope.user.email,
 			$scope.user.password
 		).then(
 			function(data){
-				console.log("Login correct!");
+				appdata.fblogin = true;
+				appdata.currentuser = data.email;
+				var now = new Date();
+				var exp = new Date(now.getFullYear(), now.getMonth()+1, now.getDate());
+				$cookies.put(appdata.usercookie,appdata.currentuser,{expires:exp});
 				data.getToken().then(function(token){
-						console.log("Token: "+token);
-						// Create cookie
-						var now = new Date();
-						var exp = new Date(now.getFullYear(), now.getMonth()+1, now.getDate());
-						$cookies.put(appdata.cookiename,token,{expires:exp});
-						// Modifiy headers
-						$http.defaults.headers.common['Authorization'] = "Basic " + token;
-						$scope.filtertag = 'All'; // set filtertag before calling Backend.getTodos()
-						$scope.errormsg = "";
-						gomain();
+					// Create cookie
+					var now = new Date();
+					var exp = new Date(now.getFullYear(), now.getMonth()+1, now.getDate());
+					$cookies.put(appdata.tokencookie,token,{expires:exp});
+					// Modifiy headers
+					$http.defaults.headers.common['Authorization'] = "Basic " + token;
+					$scope.filtertag = 'All'; // set filtertag before calling Backend.getTodos()
+					$scope.errormsg = "";
+					gomain();
 				});
 			}
 		).catch(function(error){
-			$scope.errormsg = "Login-Error."
-			console.log("Authentication failed: ", error.message);			
-		});	
-	}
-	
-	function locallogin(){ // Communication with localhost json-server
-		$window.location = "/#/working";
-		appdata.server = appdata.localserver;
-		firebaseAuthentication();
-	}
-
-	$scope.dologin = function(){
-		if($window.location.host=="localhost"){
-			locallogin();
-			return;
-		}
-		firebaseAuthentication();
+			$window.location = "/#/login";
+			$scope.errormsg = "Login-Error: "+error.message;
+			console.log($scope.errormsg);
+			$scope.$apply();
+		});
 	}
 
 	$scope.dologinWithGoogle = function(){
@@ -67,6 +66,7 @@ tdapp.controller("AuthCtrl",function($scope,$http,$cookies,$window,$timeout,appd
 		firebase.auth().signInWithPopup(provider).then(function(result){
 			var token = result.credential.accessToken;
 			$scope.email = result.user.email;
+			$scope.currentuser = result.user.email;
 			// Create cookie
 			var now = new Date();
 			var exp = new Date(now.getFullYear(), now.getMonth()+1, now.getDate());
@@ -77,9 +77,9 @@ tdapp.controller("AuthCtrl",function($scope,$http,$cookies,$window,$timeout,appd
 			$scope.errormsg = "";
 			gomain();			
 		}).catch(function(error){
-			var errorMessage = error.message;
-			$scope.errormsg = "Login-Error."
-			console.log("Authentication failed: ", errorMessage);		  
+			$scope.errormsg = "Login-Error: "+error.message;
+			console.log($scope.errormsg);
+			$scope.$apply();
 		});	
 	}	
 	
@@ -129,7 +129,7 @@ tdapp.controller("AuthCtrl",function($scope,$http,$cookies,$window,$timeout,appd
 
 	// Finish
 
-	$("#liusername").focus()
+	$("#liusername").focus();
 
 	Autologin.check(); // do automatic login if cookie/token is available
 });

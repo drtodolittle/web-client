@@ -55,8 +55,18 @@ tdapp.controller("MainCtrl",function($scope,$timeout,$interval,$http,$cookies,$w
 	$scope.dologout = function(){
 		$(".todota").css("visibility","hidden");
 		$(".todotab").css("visibility","hidden");
-		$cookies.remove(appdata.cookiename);
+		$cookies.remove(appdata.tokencookie);
+		$cookies.remove(appdata.usercookie);
 		TDMgr.clearTodos();
+		appdata.currentuser = "n/a";
+		appdata.firebaselogin = false;
+		
+		firebase.auth().signOut().then(function(){
+			console.log("Logout done!");
+		}, function(error){
+			console.log("Logout-Error: "+error);
+		});
+		
 		$window.location = "/#/working";
 		$timeout(function(){
 			$window.location = "/#/login";

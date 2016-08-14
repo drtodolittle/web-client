@@ -51,11 +51,14 @@ tdapp.config(function($routeProvider,$compileProvider) {
 tdapp.value(
 	"appdata",{
 		"appname":"drtodolittle",
-		"appnick":"derdr",
-		"cookiename":"derdr",
+		"appnickname":"derdr",
+		"tokencookie":"derdrtoken",
+		"usercookie":"derdruser",
 		"localserver" : "http://localhost:3000/api/todos",
 		"server" : window.location.origin + "/api/todos",
-		"userservice" : window.location.origin + "/api/user"
+		"currentuser" : "n/a",
+		"fblogin" : false,
+		"fbuser" : undefined
 	}
 );
 

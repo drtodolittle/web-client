@@ -11,8 +11,9 @@ tdapp.service('Autologin',function($http,$window,$location,$cookies,appdata,TDMg
 		_scope = scope;
 	}
 	this.check = function(){
-		var token = $cookies.get(appdata.cookiename);
-		if (token!=undefined){
+		var token = $cookies.get(appdata.tokencookie);
+		var user = $cookies.get(appdata.usercookie);
+		if (token!=undefined && user!=undefined){
 			$location = "/#/working";
 			_scope.errormsg = "";
 			$http.defaults.headers.common['Authorization'] = "Basic " + token;
@@ -26,10 +27,10 @@ tdapp.service('Autologin',function($http,$window,$location,$cookies,appdata,TDMg
 				_scope.tags = TDMgr.getTags();
 				_scope.todos = TDMgr.getTodosByTag(_scope.filtertag);			
 			}
-			$location = "/#/main";
+			appdata.currentuser = user;
+			appdata.fblogin = true;
 		} else {
-			// if($location.$$url=="/main") $window.location = "/#/login";
 			$window.location = "/#/login";
-		}	
-	}
+		}
+	}	
 });

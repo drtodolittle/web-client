@@ -21,22 +21,7 @@ tdapp.controller("AuthCtrl",function($scope,$http,$cookies,$window,$timeout,appd
 		},1000);
 	}
 
-	function locallogin(){ // No basic authentication (just communicate with localhost)
-		$window.location = "/#/working";
-		appdata.server = appdata.localserver;
-		var now = new Date();
-		var exp = new Date(now.getFullYear(), now.getMonth()+1, now.getDate());
-		$cookies.put(appdata.cookiename,'bla',{expires:exp});
-		$scope.filtertag = 'All'; // set filtertag before calling Backend.getTodos()
-		$scope.errormsg = "";
-		gomain();
-	}
-
-	$scope.dologin = function(){
-		if($window.location.host=="localhost"){
-			locallogin();
-			return;
-		}
+	function firebaseAuthentication(){
 		firebase.auth().signInWithEmailAndPassword(
 			$scope.user.email,
 			$scope.user.password
@@ -59,12 +44,25 @@ tdapp.controller("AuthCtrl",function($scope,$http,$cookies,$window,$timeout,appd
 		).catch(function(error){
 			$scope.errormsg = "Login-Error."
 			console.log("Authentication failed: ", error.message);			
-		});			
+		});	
+	}
+	
+	function locallogin(){ // Communication with localhost json-server
+		$window.location = "/#/working";
+		appdata.server = appdata.localserver;
+		firebaseAuthentication();
+	}
+
+	$scope.dologin = function(){
+		if($window.location.host=="localhost"){
+			locallogin();
+			return;
+		}
+		firebaseAuthentication();
 	}
 
 	$scope.dologinWithGoogle = function(){
 		var auth = $firebaseAuth();
-		// Login with Firebase/Google
 		auth.$signInWithPopup("google").then(
 			function(firebaseUser){
 				console.log("Signed in as: ", firebaseUser.user.email);

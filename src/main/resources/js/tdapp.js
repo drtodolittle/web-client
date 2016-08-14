@@ -3,7 +3,8 @@
 	tdapp.js
 
 */
-var tdapp = angular.module('tdapp',['ngCookies','ngRoute','firebase']);
+//var tdapp = angular.module('tdapp',['ngCookies','ngRoute','firebase']);
+var tdapp = angular.module('tdapp',['ngCookies','ngRoute']);
 
 tdapp.config(function($routeProvider,$compileProvider) {
 	$routeProvider

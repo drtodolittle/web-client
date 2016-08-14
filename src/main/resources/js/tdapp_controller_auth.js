@@ -6,7 +6,8 @@
 var tdapp = require('./tdapp');
 var firebase = require('./tdapp_firebase');
 
-tdapp.controller("AuthCtrl",function($scope,$http,$cookies,$window,$timeout,appdata,TDMgr,Backend,Autologin,$firebaseAuth){
+//tdapp.controller("AuthCtrl",function($scope,$http,$cookies,$window,$timeout,appdata,TDMgr,Backend,Autologin,$firebaseAuth){
+tdapp.controller("AuthCtrl",function($scope,$http,$cookies,$window,$timeout,appdata,TDMgr,Backend,Autologin){
 
 	// Injection
 
@@ -62,6 +63,28 @@ tdapp.controller("AuthCtrl",function($scope,$http,$cookies,$window,$timeout,appd
 	}
 
 	$scope.dologinWithGoogle = function(){
+		var provider = new firebase.auth.GoogleAuthProvider();
+		firebase.auth().signInWithPopup(provider).then(function(result){
+			var token = result.credential.accessToken;
+			$scope.email = result.user.email;
+			// Create cookie
+			var now = new Date();
+			var exp = new Date(now.getFullYear(), now.getMonth()+1, now.getDate());
+			$cookies.put(appdata.cookiename,token,{expires:exp});
+			// Modifiy headers
+			$http.defaults.headers.common['Authorization'] = "Basic " + token;
+			$scope.filtertag = 'All'; // set filtertag before calling Backend.getTodos()
+			$scope.errormsg = "";
+			gomain();			
+		}).catch(function(error){
+			var errorMessage = error.message;
+			$scope.errormsg = "Login-Error."
+			console.log("Authentication failed: ", errorMessage);		  
+		});	
+	}	
+	
+	/* Old
+	$scope.dologinWithGoogle = function(){
 		var auth = $firebaseAuth();
 		auth.$signInWithPopup("google").then(
 			function(firebaseUser){
@@ -86,6 +109,7 @@ tdapp.controller("AuthCtrl",function($scope,$http,$cookies,$window,$timeout,appd
 			console.log("Authentication failed: ", error);
 		});
 	}
+	*/
 
 	// Keyboard
 

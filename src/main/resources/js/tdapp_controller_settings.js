@@ -66,29 +66,7 @@ tdapp.controller("SettingsCtrl",function($scope,$http,$window,$cookies,$timeout,
 			$scope.$apply();
 		});		
 	}
-	
-	/* Old
-	$scope.doChPwd = function(){
-		$http({
-			method:"put",
-			url: appdata.userservice,
-			header: "application/json",
-			data: $scope.user
-		}).then(
-			function successCallback(res) {
-				$cookies.remove(appdata.cookiename);
-				alert("Change password initiated. Please login again.");
-				$window.location = "/";
-			}
-			,
-			function errorCallback(res){
-				$scope.errormsg = 'Error!';
-				console.log(JSON.stringify(res));			
-			}
-		);
-	}
-	*/
-	
+		
 	// Check for login, redirect if not logged in
 	
 	if ($cookies.get(appdata.tokencookie)==undefined){

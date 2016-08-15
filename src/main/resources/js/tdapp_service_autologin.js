@@ -21,7 +21,7 @@ tdapp.service('Autologin',function($http,$window,$location,$cookies,appdata,TDMg
 			if($window.location.hostname=="localhost"){
 				appdata.server = appdata.localserver;
 			}
-			_scope.filtertag = 'All'; // set filtertag before calling Backend.getTodos()
+			_scope.filtertag = 'All'; // Set filtertag before calling Backend.getTodos()
 			if(TDMgr.getTodos().length==0){
 				Backend.getTodos();
 			} else {

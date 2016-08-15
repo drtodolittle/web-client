@@ -6,7 +6,6 @@
 var tdapp = require('./tdapp');
 var firebase = require('./tdapp_firebase');
 
-//tdapp.controller("AuthCtrl",function($scope,$http,$cookies,$window,$timeout,appdata,TDMgr,Backend,Autologin,$firebaseAuth){
 tdapp.controller("AuthCtrl",function($scope,$http,$cookies,$window,$timeout,appdata,TDMgr,Backend,Autologin){
 
 	// Injection
@@ -49,7 +48,7 @@ tdapp.controller("AuthCtrl",function($scope,$http,$cookies,$window,$timeout,appd
 					$cookies.put(appdata.tokencookie,token,{expires:exp});
 					// Modifiy headers
 					$http.defaults.headers.common['Authorization'] = "Basic " + token;
-					$scope.filtertag = 'All'; // set filtertag before calling Backend.getTodos()
+					$scope.filtertag = 'All'; // Set filtertag before calling Backend.getTodos()
 					$scope.errormsg = "";
 					gomain();
 				});
@@ -78,7 +77,7 @@ tdapp.controller("AuthCtrl",function($scope,$http,$cookies,$window,$timeout,appd
 					$cookies.put(appdata.lipcookie,"google",{expires:exp});
 					// Modifiy headers
 					$http.defaults.headers.common['Authorization'] = "Basic " + token;
-					$scope.filtertag = 'All'; // set filtertag before calling Backend.getTodos()
+					$scope.filtertag = 'All'; // Set filtertag before calling Backend.getTodos()
 					$scope.errormsg = "";
 					gomain();
 				});
@@ -89,34 +88,6 @@ tdapp.controller("AuthCtrl",function($scope,$http,$cookies,$window,$timeout,appd
 			$scope.$apply();
 		});	
 	}	
-	
-	/* Old
-	$scope.dologinWithGoogle = function(){
-		var auth = $firebaseAuth();
-		auth.$signInWithPopup("google").then(
-			function(firebaseUser){
-				console.log("Signed in as: ", firebaseUser.user.email);
-				console.log("Credentials: ", firebaseUser.credential);
-				$scope.email = firebaseUser.user.email;
-				firebaseUser.user.getToken(false).then(function(idToken){
-					console.log("Token: ", idToken);			
-					// Create cookie
-					var now = new Date();
-					var exp = new Date(now.getFullYear(), now.getMonth()+1, now.getDate());
-					$cookies.put(appdata.cookiename,idToken,{expires:exp});
-					// Modifiy headers
-					$http.defaults.headers.common['Authorization'] = "Basic " + idToken;
-					$scope.filtertag = 'All'; // set filtertag before calling Backend.getTodos()
-					$scope.errormsg = "";
-					gomain();
-				});
-			}
-		).catch(function(error){
-			$scope.errormsg = "Login-Error."
-			console.log("Authentication failed: ", error);
-		});
-	}
-	*/
 
 	// Keyboard
 
@@ -138,5 +109,5 @@ tdapp.controller("AuthCtrl",function($scope,$http,$cookies,$window,$timeout,appd
 
 	$("#liusername").focus();
 
-	Autologin.check(); // do automatic login if cookie/token is available
+	Autologin.check(); // Do automatic login if cookies are available
 });

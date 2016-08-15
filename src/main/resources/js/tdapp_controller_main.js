@@ -176,5 +176,5 @@ tdapp.controller("MainCtrl",function($scope,$timeout,$interval,$http,$cookies,$w
 
 	// Finish
 	
-	Autologin.check(); // do automatic login if cookie/token is available
+	Autologin.check(); // Do automatic login if cookies are available
 });

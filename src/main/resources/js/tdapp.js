@@ -54,6 +54,7 @@ tdapp.value(
 		"appnickname":"derdr",
 		"tokencookie":"derdrtoken",
 		"usercookie":"derdruser",
+		"lipcookie":"derdrlip",
 		"localserver" : "http://localhost:3000/api/todos",
 		"server" : window.location.origin + "/api/todos",
 		"currentuser" : "n/a",

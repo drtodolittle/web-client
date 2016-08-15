@@ -41,6 +41,7 @@ tdapp.controller("AuthCtrl",function($scope,$http,$cookies,$window,$timeout,appd
 				var now = new Date();
 				var exp = new Date(now.getFullYear(), now.getMonth()+1, now.getDate());
 				$cookies.put(appdata.usercookie,appdata.currentuser,{expires:exp});
+				$cookies.put(appdata.lipcookie,"fbcore",{expires:exp});
 				data.getToken().then(function(token){
 					// Create cookie
 					var now = new Date();
@@ -65,7 +66,7 @@ tdapp.controller("AuthCtrl",function($scope,$http,$cookies,$window,$timeout,appd
 		var provider = new firebase.auth.GoogleAuthProvider();
 		firebase.auth().signInWithPopup(provider).then(function(result){
 			appdata.currentuser = result.user.email;
-			appdata.fblogin = false;
+			appdata.fblogin = false;			
 			var user = firebase.auth().currentUser;
 			if(user){
 				user.getToken().then(function(token){
@@ -74,6 +75,7 @@ tdapp.controller("AuthCtrl",function($scope,$http,$cookies,$window,$timeout,appd
 					var exp = new Date(now.getFullYear(), now.getMonth()+1, now.getDate());
 					$cookies.put(appdata.tokencookie,token,{expires:exp});
 					$cookies.put(appdata.usercookie,appdata.currentuser,{expires:exp});
+					$cookies.put(appdata.lipcookie,"google",{expires:exp});
 					// Modifiy headers
 					$http.defaults.headers.common['Authorization'] = "Basic " + token;
 					$scope.filtertag = 'All'; // set filtertag before calling Backend.getTodos()

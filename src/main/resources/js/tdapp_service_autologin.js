@@ -13,7 +13,8 @@ tdapp.service('Autologin',function($http,$window,$location,$cookies,appdata,TDMg
 	this.check = function(){
 		var token = $cookies.get(appdata.tokencookie);
 		var user = $cookies.get(appdata.usercookie);
-		if (token!=undefined && user!=undefined){
+		var lip = $cookies.get(appdata.lipcookie);
+		if (token!=undefined && user!=undefined && lip!=undefined){
 			$location = "/#/working";
 			_scope.errormsg = "";
 			$http.defaults.headers.common['Authorization'] = "Basic " + token;
@@ -28,7 +29,9 @@ tdapp.service('Autologin',function($http,$window,$location,$cookies,appdata,TDMg
 				_scope.todos = TDMgr.getTodosByTag(_scope.filtertag);			
 			}
 			appdata.currentuser = user;
-			appdata.fblogin = true;
+			if(lip=="fbcore"){
+				appdata.fblogin = true;
+			}
 		} else {
 			$window.location = "/#/login";
 		}

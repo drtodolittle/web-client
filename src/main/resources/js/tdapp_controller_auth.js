@@ -64,11 +64,12 @@ tdapp.controller("AuthCtrl",function($scope,$http,$cookies,$window,$timeout,appd
 	$scope.dologinWithGoogle = function(){
 		var provider = new firebase.auth.GoogleAuthProvider();
 		firebase.auth().signInWithPopup(provider).then(function(result){
-			var token = result.credential.accessToken;
+			//var token = result.credential.accessToken;
+			var token = result.credential;
 			appdata.currentuser = result.user.email;
 			appdata.fblogin = false;
 			console.log("Currentuser: "+appdata.currentuser);
-			console.log("Token: "+token);			
+			console.log("Token: "+token);
 			// Create cookie
 			var now = new Date();
 			var exp = new Date(now.getFullYear(), now.getMonth()+1, now.getDate());

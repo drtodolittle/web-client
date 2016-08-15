@@ -64,6 +64,25 @@ tdapp.controller("AuthCtrl",function($scope,$http,$cookies,$window,$timeout,appd
 	$scope.dologinWithGoogle = function(){
 		var provider = new firebase.auth.GoogleAuthProvider();
 		firebase.auth().signInWithPopup(provider).then(function(result){
+			appdata.currentuser = result.user.email;
+			appdata.fblogin = false;
+			firebase.auth().onAuthStateChanged(function(user){
+				if(user){
+					user.getToken().then(function(token){
+						// Create cookie
+						var now = new Date();
+						var exp = new Date(now.getFullYear(), now.getMonth()+1, now.getDate());
+						$cookies.put(appdata.tokencookie,token,{expires:exp});
+						$cookies.put(appdata.usercookie,appdata.currentuser,{expires:exp});
+						// Modifiy headers
+						$http.defaults.headers.common['Authorization'] = "Basic " + token;
+						$scope.filtertag = 'All'; // set filtertag before calling Backend.getTodos()
+						$scope.errormsg = "";
+						gomain();
+					});
+				}
+			});
+			/*
 			var token = result.credential.idToken;
 			appdata.currentuser = result.user.email;
 			appdata.fblogin = false;
@@ -77,6 +96,7 @@ tdapp.controller("AuthCtrl",function($scope,$http,$cookies,$window,$timeout,appd
 			$scope.filtertag = 'All'; // set filtertag before calling Backend.getTodos()
 			$scope.errormsg = "";
 			gomain();
+			*/
 		}).catch(function(error){
 			$scope.errormsg = "Login-Error: "+error.message;
 			console.log($scope.errormsg);

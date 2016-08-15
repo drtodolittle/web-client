@@ -63,7 +63,7 @@ tdapp.controller("MainCtrl",function($scope,$timeout,$interval,$http,$cookies,$w
 		appdata.firebaselogin = false;
 		
 		firebase.auth().signOut().then(function(){}).catch(function(error){
-			console.log("Logout-Error: "+error);
+			console.log("Logout-Error: "+error.message);
 		});
 		
 		$window.location = "/#/working";

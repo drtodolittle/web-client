@@ -36,10 +36,10 @@ tdapp.controller("SettingsCtrl",function($scope,$http,$window,$cookies,$timeout,
 		if(
 			$scope.user==undefined ||
 			$scope.user.email==undefined ||
-			$scope.user.oldPassword==undefined ||
-			$scope.user.newPassword==undefined
+			$scope.user.firstname==undefined ||
+			$scope.user.lastname==undefined
 		){
-			$scope.errormsg = "Error: Enter valid data";
+			$scope.errormsg = "Error: Enter valid data.";
 			return;
 		}
 		firebase.auth().signInWithEmailAndPassword(
@@ -56,13 +56,11 @@ tdapp.controller("SettingsCtrl",function($scope,$http,$window,$cookies,$timeout,
 					}
 				).catch(function(error){
 					$scope.errormsg = "Error: "+error.message;
-					console.log("Error: ", error.message);
 					$scope.$apply();			
 				});	
 			}
 		).catch(function(error){
 			$scope.errormsg = "Error: "+error.message;
-			console.log($scope.errormsg);
 			$scope.$apply();
 		});		
 	}

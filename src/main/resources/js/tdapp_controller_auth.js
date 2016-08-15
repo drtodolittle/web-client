@@ -26,13 +26,20 @@ tdapp.controller("AuthCtrl",function($scope,$http,$cookies,$window,$timeout,appd
 		if($window.location.host=="localhost"){
 			appdata.server = appdata.localserver;
 		}
-		if($scope.user==undefined){
+		if(
+			$scope.user==undefined ||
+			$scope.user.email==undefined ||
+			$scope.user.password==undefined
+		){
 			$scope.errormsg = "Login-Error: Enter a valid E-Mail-Adress and a valid password!";
 			return;
 		}
+		var user = $scope.user.email;
+		var password = $scope.user.password;
+		$window.location = "/#/working";
 		firebase.auth().signInWithEmailAndPassword(
-			$scope.user.email,
-			$scope.user.password
+			user,
+			password
 		).then(
 			function(data){
 				appdata.fblogin = true;
@@ -49,20 +56,26 @@ tdapp.controller("AuthCtrl",function($scope,$http,$cookies,$window,$timeout,appd
 					// Modifiy headers
 					$http.defaults.headers.common['Authorization'] = "Basic " + token;
 					$scope.filtertag = 'All'; // Set filtertag before calling Backend.getTodos()
+					appdata.errormsg = "";
 					$scope.errormsg = "";
 					gomain();
+				}).catch(function(error){
+					$cookies.remove(appdata.tokencookie);
+					$cookies.remove(appdata.usercookie);
+					$cookies.remove(appdata.lipcookie);
+					appdata.errormsg = "Login-Error: "+error.message;
+					$window.location = "/#/login";
 				});
 			}
 		).catch(function(error){
+			appdata.errormsg = "Login-Error: "+error.message;
 			$window.location = "/#/login";
-			$scope.errormsg = "Login-Error: "+error.message;
-			console.log($scope.errormsg);
-			$scope.$apply();
 		});
 	}
 
 	$scope.dologinWithGoogle = function(){
 		var provider = new firebase.auth.GoogleAuthProvider();
+		$window.location = "/#/working";
 		firebase.auth().signInWithPopup(provider).then(function(result){
 			appdata.currentuser = result.user.email;
 			appdata.fblogin = false;			
@@ -79,13 +92,19 @@ tdapp.controller("AuthCtrl",function($scope,$http,$cookies,$window,$timeout,appd
 					$http.defaults.headers.common['Authorization'] = "Basic " + token;
 					$scope.filtertag = 'All'; // Set filtertag before calling Backend.getTodos()
 					$scope.errormsg = "";
+					appdata.errormsg = "";
 					gomain();
+				}).catch(function(error){
+					appdata.errormsg = "Login-Error: "+error.message;
+					$window.location = "/#/login";
 				});
+			} else {
+				appdata.errormsg = "Login-Error: Not logged in.";
+				$window.location = "/#/login";
 			}
 		}).catch(function(error){
-			$scope.errormsg = "Login-Error: "+error.message;
-			console.log($scope.errormsg);
-			$scope.$apply();
+			appdata.errormsg = "Login-Error: "+error.message;
+			$window.location = "/#/login";
 		});	
 	}	
 
@@ -108,6 +127,7 @@ tdapp.controller("AuthCtrl",function($scope,$http,$cookies,$window,$timeout,appd
 	// Finish
 
 	$("#liusername").focus();
-
+	$scope.errormsg = appdata.errormsg;
+	
 	Autologin.check(); // Do automatic login if cookies are available
 });

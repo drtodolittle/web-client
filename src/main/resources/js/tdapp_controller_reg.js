@@ -11,6 +11,15 @@ tdapp.controller("RegCtrl",function($scope,$http,$window,appdata){
 	// Register
 	
 	$scope.doRegister = function(){
+		if(
+			$scope.user==undefined ||
+			$scope.user.email==undefined ||
+			$scope.user.firstname==undefined ||
+			$scope.user.lastname==undefined
+		){
+			$scope.errormsg = "Error: Enter valid data.";
+			return;
+		}
 		firebase.auth().createUserWithEmailAndPassword(
 			$scope.user.email,
 			$scope.user.password
@@ -21,9 +30,8 @@ tdapp.controller("RegCtrl",function($scope,$http,$window,appdata){
 				$window.location = "/#/login";
 			}
 		).catch(function(error){
-			var errorCode = error.code;
 			var errorMessage = error.message;
-			console.log("Error: "+errorCode+": "+errorMessage);
+			console.log("Error: "+errorMessage);
 		});	
 	}
 

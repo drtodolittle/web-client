@@ -58,7 +58,7 @@ tdapp.value(
 		"server" : window.location.origin + "/api/todos",
 		"currentuser" : "n/a",
 		"fblogin" : false,
-		"fbuser" : undefined
+		"errormsg" : ""
 	}
 );
 

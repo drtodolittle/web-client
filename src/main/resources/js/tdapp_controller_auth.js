@@ -37,10 +37,7 @@ tdapp.controller("AuthCtrl",function($scope,$http,$cookies,$window,$timeout,appd
 		var user = $scope.user.email;
 		var password = $scope.user.password;
 		$window.location = "/#/working";
-		firebase.auth().signInWithEmailAndPassword(
-			user,
-			password
-		).then(
+		firebase.auth().signInWithEmailAndPassword(user,password).then(
 			function(data){
 				appdata.fblogin = true;
 				appdata.currentuser = data.email;

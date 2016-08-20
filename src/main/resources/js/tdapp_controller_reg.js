@@ -14,24 +14,26 @@ tdapp.controller("RegCtrl",function($scope,$http,$window,appdata){
 		if(
 			$scope.user==undefined ||
 			$scope.user.email==undefined ||
-			$scope.user.firstname==undefined ||
-			$scope.user.lastname==undefined
+			$scope.user.password== undefined
 		){
-			$scope.errormsg = "Error: Enter valid data.";
+			$scope.errormsg = "Registration-Error: Enter valid data.";
 			return;
 		}
-		firebase.auth().createUserWithEmailAndPassword(
-			$scope.user.email,
-			$scope.user.password
-		).then(
+		var email = $scope.user.email;
+		var password = $scope.user.password;
+		firebase.auth().createUserWithEmailAndPassword(email,password).then(
 			function(data){
-				console.log("Registration successful.");
-				alert('Registration successful. Please login.');
-				$window.location = "/#/login";
+				auth.sendPasswordResetEmail(email).then(function(){
+					alert('Registration successful. A registration email is waiting for you.');
+					$window.location = "/#/login";
+				},function(error){
+					var errorMessage = error.message;
+					$scope.errormsg = "Registration-Error: "+errorMessage;
+				});				
 			}
 		).catch(function(error){
 			var errorMessage = error.message;
-			console.log("Error: "+errorMessage);
+			$scope.errormsg = "Registration-Error: "+errorMessage;
 		});	
 	}
 

@@ -39,6 +39,11 @@ tdapp.controller("AuthCtrl",function($scope,$http,$cookies,$window,$timeout,appd
 		$window.location = "/#/working";
 		firebase.auth().signInWithEmailAndPassword(user,password).then(
 			function(data){
+				if(!data.emailVerified){
+					throw {
+						message:"Your have to verify you E-Mail-Adress before you can log in."
+					};
+				}
 				appdata.fblogin = true;
 				appdata.currentuser = data.email;
 				var now = new Date();

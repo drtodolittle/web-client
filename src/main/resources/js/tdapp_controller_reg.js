@@ -33,15 +33,6 @@ tdapp.controller("RegCtrl",function($scope,$http,$window,appdata){
 					$scope.errormsg = "Registration-Error: "+error.message;
 					$scope.$apply();
 				});
-				/*
-				firebase.auth().sendPasswordResetEmail(email).then(function(){
-					alert('Registration successful. A registration email is waiting for you.');
-					$window.location = "/#/login";
-				},function(error){
-					$scope.errormsg = "Registration-Error: "+error.message;
-					$scope.$apply();	
-				});
-				*/
 			}
 		).catch(function(error){
 			var errorMessage = error.message;

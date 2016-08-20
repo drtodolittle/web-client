@@ -23,17 +23,19 @@ tdapp.controller("RegCtrl",function($scope,$http,$window,appdata){
 		var password = $scope.user.password;
 		firebase.auth().createUserWithEmailAndPassword(email,password).then(
 			function(data){
-				auth.sendPasswordResetEmail(email).then(function(){
+				firebase.auth().sendPasswordResetEmail(email).then(function(){
 					alert('Registration successful. A registration email is waiting for you.');
 					$window.location = "/#/login";
 				},function(error){
 					var errorMessage = error.message;
 					$scope.errormsg = "Registration-Error: "+errorMessage;
+					$scope.$apply();	
 				});				
 			}
 		).catch(function(error){
 			var errorMessage = error.message;
 			$scope.errormsg = "Registration-Error: "+errorMessage;
+			$scope.$apply();
 		});	
 	}
 

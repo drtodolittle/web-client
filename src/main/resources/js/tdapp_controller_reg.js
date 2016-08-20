@@ -27,6 +27,8 @@ tdapp.controller("RegCtrl",function($scope,$http,$window,appdata){
 				user.sendEmailVerification()
 				.then(function(){
 					alert('Registration successful. A registration email is waiting for you.');
+					appdata.errormsg = "";
+					$scope.errormsg = "";
 					$window.location = "/#/login";
 				})
 				.catch(function(err){
@@ -35,8 +37,7 @@ tdapp.controller("RegCtrl",function($scope,$http,$window,appdata){
 				});
 			}
 		).catch(function(error){
-			var errorMessage = error.message;
-			$scope.errormsg = "Registration-Error: "+errorMessage;
+			$scope.errormsg = "Registration-Error: "+error.message;
 			$scope.$apply();
 		});	
 	}

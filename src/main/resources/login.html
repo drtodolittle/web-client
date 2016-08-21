@@ -7,9 +7,12 @@
 	<br>
 	<input type="password" ng-model="user.password" name="lipass" placeholder="Password" class="lipass fnt16" ng-keydown="loginKeydown($event);" tabindex=2></input>
 	<div>&nbsp;</div>
-	<button class="btn btn-default bwidth196" type="button" ng-click="doLogin()">Login</button>
+	<button id="libut" class="btn btn-default bwidth196" type="button" ng-click="doLogin()">Login</button>
+	<div class="fnt12 fp" ng-click="goResetPwd()"><a class="fp">Forgot your password?</a></div>
+	<div>&nbsp;</div>
 	<div class="fnt12">or</div>
 	<button class="btn btn-default bwidth196" type="button" ng-click="doLoginWithGoogle()">Login with Google</button>
+	<div>&nbsp;</div>
 	<div class="fnt12">or</div>
 	<button class="btn btn-default bwidth196" type="button" ng-click="goRegister()">Register</button>
 	<div>&nbsp;</div>

@@ -8,6 +8,12 @@ var firebase = require('./tdapp_firebase');
 
 tdapp.controller("RegCtrl",function($scope,$http,$window,appdata){
 
+	// Go login
+	
+	$scope.goLogin = function(){
+		$window.location = "/#/login";
+	}
+
 	// Register
 	
 	$scope.doRegister = function(){

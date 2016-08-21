@@ -164,7 +164,14 @@ body,div,p,span{
 	cursor:pointer;
 	background-color:#cccccc;
 }
-
+.fp{
+	color:#888888;
+}
+.fp:hover{
+	color:#000000;
+	cursor:pointer;
+	text-decoration:none;
+}
 /*
   ToDoElements ----------------------------------------
 */

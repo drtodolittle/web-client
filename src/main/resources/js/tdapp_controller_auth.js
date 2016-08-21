@@ -12,6 +12,12 @@ tdapp.controller("AuthCtrl",function($scope,$http,$cookies,$window,$timeout,appd
 
 	Autologin.setScope($scope);
 	Backend.setScope($scope);
+
+	// Reset password
+	
+	$scope.goResetPwd = function(){
+		$window.location = "/#/resetpwd";
+	}
 	
 	// Login
 
@@ -22,6 +28,7 @@ tdapp.controller("AuthCtrl",function($scope,$http,$cookies,$window,$timeout,appd
 	}
 	
 	$scope.doLogin = function(){
+		$('#libut').blur();
 		$scope.errormsg = "";
 		if($window.location.host=="localhost"){
 			appdata.server = appdata.localserver;

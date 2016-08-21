@@ -20,25 +20,29 @@ tdapp.config(function($routeProvider,$compileProvider) {
             })		
 			.when('/main', {
                 templateUrl : 'main.html',
-				controller: 'MainCtrl'
+				controller : 'MainCtrl'
             })
 			.when('/register', {
                 templateUrl : 'register.html',
 				controller : 'RegCtrl'
             })
-			.when('/chpwd', {
-                templateUrl : 'chpwd.html',
-				controller : 'SettingsCtrl'
+			.when('/resetpwd', {
+                templateUrl : 'resetpwd.html',
+				controller : 'ResetPwdCtrl'
             })
 			.when('/settings', {
                 templateUrl : 'settings.html',
 				controller : 'SettingsCtrl'
             })
-			.when('/error', {
-                templateUrl : 'error.html'
+			.when('/chpwd', {
+                templateUrl : 'chpwd.html',
+				controller : 'SettingsCtrl'
             })
 			.when('/egg', {
                 templateUrl : 'egg.html'
+            })
+			.when('/error', {
+                templateUrl : 'error.html'
             })
 			.otherwise({
 				redirectTo: '/error'

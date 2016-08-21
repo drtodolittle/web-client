@@ -1,18 +1,14 @@
 ﻿<!-- Change password -->
 <div class="customnavbar fnt16">
-<span ng-click="gosettings();"><img class="mo" src="images/arrow-left-3x.png" alt="main"></img></span>
+<span ng-click="goSettings();"><img class="mo" src="images/arrow-left-3x.png" alt="main"></img></span>
 </div>
 <center>
 	<div>&nbsp;</div>
 	<div class="fnt16">Change Password</div>
 	<div>&nbsp;</div>
-	<input id="liusername" type="text" ng-model="user.email" name="liusername" placeholder="E-Mail/Username" class="liuser fnt16" tabindex=7></input>
+	<input type="password" ng-model="oldPassword" name="lipass" placeholder="Old password" class="lipass fnt16" tabindex=8></input>
 	<br>
-	<input type="password" ng-model="user.oldPassword" name="lipass" placeholder="Old password" class="lipass fnt16" tabindex=8></input>
-	<br>
-	<input type="password" ng-model="user.newPassword" name="lipass" placeholder="New password" class="lipass fnt16" tabindex=8></input>
-	<br>
-	<input type="password" ng-model="user.retypeNewPassword" name="lipass" placeholder="Retype new password" class="lipass fnt16" tabindex=8></input>
+	<input type="password" ng-model="newPassword" name="lipass" placeholder="New password" class="lipass fnt16" tabindex=8></input>
 	<div>&nbsp;</div>
 	<button class="btn btn-default bwidth196" type="button" ng-click="doChPwd();">Change<br>Password</button>
 	<div>&nbsp;</div>

@@ -19,7 +19,7 @@ tdapp.controller("MainCtrl",function($scope,$timeout,$interval,$http,$cookies,$w
 
 	// Go to settings
 
-	$scope.gosettings = function(){
+	$scope.goSettings = function(){
 		$window.location = "/#/settings";
 	}
 	
@@ -52,27 +52,11 @@ tdapp.controller("MainCtrl",function($scope,$timeout,$interval,$http,$cookies,$w
 
 	// Logout
 	
-	$scope.dologout = function(){
-		$(".todota").css("visibility","hidden");
-		$(".todotab").css("visibility","hidden");
-		$cookies.remove(appdata.tokencookie);
-		$cookies.remove(appdata.usercookie);
-		$cookies.remove(appdata.lipcookie);
-		TDMgr.clearTodos();
-		appdata.currentuser = "n/a";
-		appdata.firebaselogin = false;
-		
-		firebase.auth().signOut().then(function(){}).catch(function(error){
-			console.log("Logout-Error: "+error.message);
-		});
-		
+	$scope.doLogout = function(){
 		$window.location = "/#/working";
 		$timeout(function(){
-			$window.location = "/#/login";
-		},1000);
-		$timeout(function(){
-			$("#liusername").focus();
-		},1128);
+			Autologin.doLogout();
+		},1000);		
 	}	
 	
 	// Keyboard

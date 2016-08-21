@@ -7,11 +7,11 @@
 	<br>
 	<input type="password" ng-model="user.password" name="lipass" placeholder="Password" class="lipass fnt16" ng-keydown="loginKeydown($event);" tabindex=2></input>
 	<div>&nbsp;</div>
-	<button class="btn btn-default bwidth196" type="button" ng-click="dologin()">Login</button>
+	<button class="btn btn-default bwidth196" type="button" ng-click="doLogin()">Login</button>
 	<div class="fnt12">or</div>
-	<button class="btn btn-default bwidth196" type="button" ng-click="dologinWithGoogle()">Login with Google</button>
+	<button class="btn btn-default bwidth196" type="button" ng-click="doLoginWithGoogle()">Login with Google</button>
 	<div class="fnt12">or</div>
-	<button class="btn btn-default bwidth196" type="button" ng-click="showRegister()">Register</button>
+	<button class="btn btn-default bwidth196" type="button" ng-click="goRegister()">Register</button>
 	<div>&nbsp;</div>
 	<div class="flash">{{ errormsg }}</div>
 </center>

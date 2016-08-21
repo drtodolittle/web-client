@@ -5,10 +5,22 @@
 */
 var tdapp = require('./tdapp');
 
-tdapp.service('Autologin',function($http,$window,$location,$cookies,appdata,TDMgr,Backend){
+tdapp.service('Autologin',function($http,$window,$location,$cookies,$timeout,appdata,TDMgr,Backend){
 	var _scope;
 	this.setScope = function(scope){
 		_scope = scope;
+	}
+	this.doLogout = function(){	
+		$cookies.remove(appdata.tokencookie);
+		$cookies.remove(appdata.usercookie);
+		$cookies.remove(appdata.lipcookie);
+		TDMgr.clearTodos();
+		appdata.currentuser = "n/a";
+		appdata.firebaselogin = false;
+		$window.location = "/#/login";
+		$timeout(function(){
+			$("#liusername").focus();
+		},128);	
 	}
 	this.check = function(){
 		var token = $cookies.get(appdata.tokencookie);
@@ -35,5 +47,5 @@ tdapp.service('Autologin',function($http,$window,$location,$cookies,appdata,TDMg
 		} else {
 			$window.location = "/#/login";
 		}
-	}	
+	}
 });

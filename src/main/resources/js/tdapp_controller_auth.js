@@ -15,13 +15,13 @@ tdapp.controller("AuthCtrl",function($scope,$http,$cookies,$window,$timeout,appd
 	
 	// Login
 
-	function gomain(){
+	function goMain(){
 		$timeout(function(){
 			$window.location = "/#/main";
 		},1000);
 	}
 	
-	$scope.dologin = function(){
+	$scope.doLogin = function(){
 		$scope.errormsg = "";
 		if($window.location.host=="localhost"){
 			appdata.server = appdata.localserver;
@@ -60,22 +60,19 @@ tdapp.controller("AuthCtrl",function($scope,$http,$cookies,$window,$timeout,appd
 					$scope.filtertag = 'All'; // Set filtertag before calling Backend.getTodos()
 					appdata.errormsg = "";
 					$scope.errormsg = "";
-					gomain();
+					goMain();
 				}).catch(function(error){
-					$cookies.remove(appdata.tokencookie);
-					$cookies.remove(appdata.usercookie);
-					$cookies.remove(appdata.lipcookie);
 					appdata.errormsg = "Login-Error: "+error.message;
-					$window.location = "/#/login";
+					Autologin.doLogout();
 				});
 			}
 		).catch(function(error){
 			appdata.errormsg = "Login-Error: "+error.message;
-			$window.location = "/#/login";
+			Autologin.doLogout();
 		});
 	}
 
-	$scope.dologinWithGoogle = function(){
+	$scope.doLoginWithGoogle = function(){
 		var provider = new firebase.auth.GoogleAuthProvider();
 		$window.location = "/#/working";
 		firebase.auth().signInWithPopup(provider).then(function(result){
@@ -95,18 +92,18 @@ tdapp.controller("AuthCtrl",function($scope,$http,$cookies,$window,$timeout,appd
 					$scope.filtertag = 'All'; // Set filtertag before calling Backend.getTodos()
 					$scope.errormsg = "";
 					appdata.errormsg = "";
-					gomain();
+					goMain();
 				}).catch(function(error){
 					appdata.errormsg = "Login-Error: "+error.message;
-					$window.location = "/#/login";
+					Autologin.doLogout();
 				});
 			} else {
 				appdata.errormsg = "Login-Error: Not logged in.";
-				$window.location = "/#/login";
+				Autologin.doLogout();
 			}
 		}).catch(function(error){
 			appdata.errormsg = "Login-Error: "+error.message;
-			$window.location = "/#/login";
+			Autologin.doLogout();
 		});	
 	}	
 
@@ -116,13 +113,13 @@ tdapp.controller("AuthCtrl",function($scope,$http,$cookies,$window,$timeout,appd
 		var k = e.keyCode;
 		if(k==13){//ret
 			e.preventDefault();
-			$scope.dologin();
+			$scope.doLogin();
 		}
 	}
 
 	// Register
 
-	$scope.showRegister = function(){
+	$scope.goRegister = function(){
 		$window.location = "/#/register";
 	};
 

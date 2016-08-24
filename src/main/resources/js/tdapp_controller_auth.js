@@ -14,11 +14,11 @@ tdapp.controller("AuthCtrl",function($scope,$http,$cookies,$window,$timeout,appd
 	Backend.setScope($scope);
 
 	// Reset password
-	
+
 	$scope.goResetPwd = function(){
 		$window.location = "/#/resetpwd";
 	}
-	
+
 	// Login
 
 	function goMain(){
@@ -26,7 +26,7 @@ tdapp.controller("AuthCtrl",function($scope,$http,$cookies,$window,$timeout,appd
 			$window.location = "/#/main";
 		},1000);
 	}
-	
+
 	$scope.doLogin = function(){
 		$('#libut').blur();
 		$scope.errormsg = "";
@@ -46,11 +46,11 @@ tdapp.controller("AuthCtrl",function($scope,$http,$cookies,$window,$timeout,appd
 		$window.location = "/#/working";
 		firebase.auth().signInWithEmailAndPassword(user,password).then(
 			function(data){
-				if(!data.emailVerified){
-					throw {
-						message:"Your have to verify you E-Mail-Adress before you can log in."
-					};
-				}
+				//if(!data.emailVerified){
+				//	throw {
+				//		message:"Your have to verify you E-Mail-Adress before you can log in."
+				//	};
+				//}
 				appdata.fblogin = true;
 				appdata.currentuser = data.email;
 				var now = new Date();
@@ -84,7 +84,7 @@ tdapp.controller("AuthCtrl",function($scope,$http,$cookies,$window,$timeout,appd
 		$window.location = "/#/working";
 		firebase.auth().signInWithPopup(provider).then(function(result){
 			appdata.currentuser = result.user.email;
-			appdata.fblogin = false;			
+			appdata.fblogin = false;
 			var user = firebase.auth().currentUser;
 			if(user){
 				user.getToken().then(function(token){
@@ -111,8 +111,8 @@ tdapp.controller("AuthCtrl",function($scope,$http,$cookies,$window,$timeout,appd
 		}).catch(function(error){
 			appdata.errormsg = "Login-Error: "+error.message;
 			Autologin.doLogout();
-		});	
-	}	
+		});
+	}
 
 	// Keyboard
 
@@ -134,6 +134,6 @@ tdapp.controller("AuthCtrl",function($scope,$http,$cookies,$window,$timeout,appd
 
 	$("#liusername").focus();
 	$scope.errormsg = appdata.errormsg;
-	
+
 	Autologin.check(); // Do automatic login if cookies are available
 });

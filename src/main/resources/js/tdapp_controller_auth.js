@@ -19,6 +19,18 @@ tdapp.controller("AuthCtrl",function($scope,$http,$cookies,$window,$timeout,appd
 		$window.location = "/#/resetpwd";
 	}
 
+	// Remember me
+	$scope.doRememberMe = function(){
+		var chked =  $('#rememberme').prop('checked');
+		if(!chked){
+			$('#rememberme').prop("checked", true);
+			appdata.rememberme = true;
+		} else {
+			$('#rememberme').prop("checked", false);
+			appdata.rememberme = false;
+		}
+	}
+
 	// Login
 
 	function goMain(){
@@ -28,6 +40,7 @@ tdapp.controller("AuthCtrl",function($scope,$http,$cookies,$window,$timeout,appd
 	}
 
 	$scope.doLogin = function(){
+		appdata.rememberme = $('#rememberme').prop('checked');
 		$('#libut').blur();
 		$scope.errormsg = "";
 		if($window.location.host=="localhost"){
@@ -51,25 +64,29 @@ tdapp.controller("AuthCtrl",function($scope,$http,$cookies,$window,$timeout,appd
 				//		message:"Your have to verify you E-Mail-Adress before you can log in."
 				//	};
 				//}
-				appdata.fblogin = true;
-				appdata.currentuser = data.email;
-				var now = new Date();
-				var exp = new Date(now.getFullYear(), now.getMonth()+1, now.getDate());
-				$cookies.put(appdata.usercookie,appdata.currentuser,{expires:exp});
-				$cookies.put(appdata.lipcookie,"fbcore",{expires:exp});
-				data.getToken().then(function(token){
+				appdata.lip = "fbcore";
+				appdata.user = data.email;
+				data.getToken().then(function(_token){
 					// Create cookie
-					var now = new Date();
-					var exp = new Date(now.getFullYear(), now.getMonth()+1, now.getDate());
-					$cookies.put(appdata.tokencookie,token,{expires:exp});
+					if(appdata.rememberme){
+						var now = new Date();
+						var exp = new Date(now.getFullYear(), now.getMonth()+1, now.getDate());
+						var cookiedata = {
+							token : _token,
+							user : appdata.user,
+							lip : "fbcore"
+						};
+						$cookies.put(appdata.derdrcookie,JSON.stringify(cookiedata),{expires:exp});
+					}
+					appdata.token = _token;
 					// Modifiy headers
-					$http.defaults.headers.common['Authorization'] = "Basic " + token;
+					$http.defaults.headers.common['Authorization'] = "Basic " + _token;
 					$scope.filtertag = 'All'; // Set filtertag before calling Backend.getTodos()
 					appdata.errormsg = "";
 					$scope.errormsg = "";
 					goMain();
 				}).catch(function(error){
-					appdata.errormsg = "Login-Error: "+error.message;
+					appdata.errormsg = "Login-Error: " + error.message;
 					Autologin.doLogout();
 				});
 			}
@@ -83,19 +100,26 @@ tdapp.controller("AuthCtrl",function($scope,$http,$cookies,$window,$timeout,appd
 		var provider = new firebase.auth.GoogleAuthProvider();
 		$window.location = "/#/working";
 		firebase.auth().signInWithPopup(provider).then(function(result){
-			appdata.currentuser = result.user.email;
-			appdata.fblogin = false;
+			appdata.user = result.user.email;
+			appdata.lip = "google";
 			var user = firebase.auth().currentUser;
 			if(user){
-				user.getToken().then(function(token){
+				user.getToken().then(function(_token){
 					// Create cookie
 					var now = new Date();
 					var exp = new Date(now.getFullYear(), now.getMonth()+1, now.getDate());
-					$cookies.put(appdata.tokencookie,token,{expires:exp});
-					$cookies.put(appdata.usercookie,appdata.currentuser,{expires:exp});
-					$cookies.put(appdata.lipcookie,"google",{expires:exp});
+					if(appdata.rememberme){
+						var now = new Date();
+						var exp = new Date(now.getFullYear(), now.getMonth()+1, now.getDate());
+						var cookiedata = {
+							token : _token,
+							user : appdata.user,
+							lip : "google"
+						};
+						$cookies.put(appdata.derdrcookie,JSON.stringify(cookiedata),{expires:exp});
+					}
 					// Modifiy headers
-					$http.defaults.headers.common['Authorization'] = "Basic " + token;
+					$http.defaults.headers.common['Authorization'] = "Basic " + _token;
 					$scope.filtertag = 'All'; // Set filtertag before calling Backend.getTodos()
 					$scope.errormsg = "";
 					appdata.errormsg = "";
@@ -133,6 +157,7 @@ tdapp.controller("AuthCtrl",function($scope,$http,$cookies,$window,$timeout,appd
 	// Finish
 
 	$("#liusername").focus();
+
 	$scope.errormsg = appdata.errormsg;
 
 	Autologin.check(); // Do automatic login if cookies are available

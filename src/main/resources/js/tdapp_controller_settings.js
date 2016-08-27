@@ -8,11 +8,6 @@ var firebase = require('./tdapp_firebase');
 
 tdapp.controller("SettingsCtrl",function($scope,$http,$window,$cookies,$timeout,appdata,TDMgr,Autologin){
 
-	// Get current user
-
-	$scope.currentuser = appdata.currentuser;
-	$scope.fblogin = appdata.fblogin;
-
 	// Go main
 
 	$scope.goMain = function(){
@@ -58,13 +53,13 @@ tdapp.controller("SettingsCtrl",function($scope,$http,$window,$cookies,$timeout,
 						$window.location = "/#/settings";
 					}
 				).catch(function(error){
-					var errmsg = "Error: "+error.message;
+					var errmsg = "Error: " + error.message;
 					$appdata.errormsg = errmsg;
 					Autologin.doLogout();
 				});
 			}
 		).catch(function(error){
-			var errmsg = "Error: "+error.message;
+			var errmsg = "Error: " + error.message;
 			$appdata.errormsg = errmsg;
 			Autologin.doLogout();
 		});
@@ -92,13 +87,26 @@ tdapp.controller("SettingsCtrl",function($scope,$http,$window,$cookies,$timeout,
 
 	// Check for login, redirect if not logged in
 
-	if ($cookies.get(appdata.tokencookie)==undefined){
-		Autologin.doLogout();
+	if(
+		appdata.user==undefined &&
+		appdata.token==undefined
+	){
+		var _dr = $cookies.get(appdata.derdrcookie);
+		if (_dr==undefined){
+			Autologin.doLogout();
+		} else {
+			var dr = JSON.parse(_dr);
+			appdata.user = dr.user;
+			appdata.token = dr.token;
+			appdata.lip = dr.lip;
+			if(dr.lip=="fbcore"){
+				appdata.fblogin = true;
+			}
+		}
 	}
 
-	if($cookies.get(appdata.usercookie)!=undefined){
-		$scope.currentuser = $cookies.get(appdata.usercookie);
-	}
+	$scope.user = appdata.user;
+	$scope.lip = appdata.lip;
 
 	$('#oldpassword').focus();
 

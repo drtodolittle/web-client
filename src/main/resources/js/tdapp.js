@@ -14,10 +14,10 @@ tdapp.config(function($routeProvider,$compileProvider) {
 			.when('/login', {
                 templateUrl : 'login.html',
 				controller : 'AuthCtrl'
-            })		
+            })
 			.when('/working', {
                 templateUrl : 'working.html'
-            })		
+            })
 			.when('/main', {
                 templateUrl : 'main.html',
 				controller : 'MainCtrl'
@@ -53,16 +53,16 @@ tdapp.config(function($routeProvider,$compileProvider) {
 
 tdapp.value(
 	"appdata",{
-		"appname":"drtodolittle",
-		"appnickname":"derdr",
-		"tokencookie":"derdrtoken",
-		"usercookie":"derdruser",
-		"lipcookie":"derdrlip",
-		"localserver" : "http://localhost:3000/api/todos",
-		"server" : window.location.origin + "/api/todos",
-		"currentuser" : "n/a",
-		"fblogin" : false,
-		"errormsg" : ""
+		appname : "drtodolittle",
+		appnickname : "derdr",
+		localserver : "http://localhost:3000/api/todos",
+		server : window.location.origin + "/api/todos",
+		derdrcookie : "derdrcookie",
+		rememberme : undefined,
+		token : undefined,
+		user : undefined,
+		lip : undefined,
+		errormsg : ""
 	}
 );
 

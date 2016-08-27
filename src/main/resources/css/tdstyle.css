@@ -159,6 +159,9 @@ body,div,p,span{
 .fp{
 	color:#888888;
 }
+.rm{
+	color:#888888;
+}
 .fp:hover{
 	color:#5090ff;
 	cursor:pointer;

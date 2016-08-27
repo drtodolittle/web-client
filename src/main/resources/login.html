@@ -27,7 +27,20 @@
 		tabindex="3">
 		Login
 	</button>
-	<div class="fnt12 fp" ng-click="goResetPwd()"><a class="fp">Forgot your password?</a></div>
+	<div class="fnt12" ng-click="goResetPwd()"><a class="fp">Forgot your password?</a></div>
+	<div class="input-group" style="position:relative">
+		<span>
+			<input
+				id="rememberme"
+				type="checkbox"
+				style="position:absolute;">
+			</input>
+		</span>
+		<span
+			style="margin-left:18px">
+			<a class="fnt12 fp" ng-click="doRememberMe()">Remember me</a>
+		</span>
+	</div>
 	<div>&nbsp;</div>
 	<div class="fnt10">or</div>
 	<button

@@ -22,7 +22,7 @@ tdapp.service('Backend',function($http,$timeout,$window,$location,appdata,TDMgr)
 			}
 			,
 			function errorCallback(res){
-				console.log("Error: "+JSON.stringify(res));			
+				console.log("Error: "+JSON.stringify(res));
 			}
 		);
 	}
@@ -37,7 +37,7 @@ tdapp.service('Backend',function($http,$timeout,$window,$location,appdata,TDMgr)
 			}
 			,
 			function errorCallback(res){
-				console.log("Error: "+JSON.stringify(res));			
+				console.log("Error: "+JSON.stringify(res));
 			}
 		);
 	}
@@ -52,10 +52,10 @@ tdapp.service('Backend',function($http,$timeout,$window,$location,appdata,TDMgr)
 			}
 			,
 			function errorCallback(res){
-				console.log("Error: "+JSON.stringify(res));			
+				console.log("Error: "+JSON.stringify(res));
 			}
 		);
-	}	
+	}
 	this.doneTodo = function(obj){
 		$http({
 			method:"get",
@@ -65,7 +65,7 @@ tdapp.service('Backend',function($http,$timeout,$window,$location,appdata,TDMgr)
 			}
 			,
 			function errorCallback(res){
-				console.log("Error: "+JSON.stringify(res));			
+				console.log("Error: "+JSON.stringify(res));
 			}
 		);
 	}
@@ -78,7 +78,7 @@ tdapp.service('Backend',function($http,$timeout,$window,$location,appdata,TDMgr)
 			}
 			,
 			function errorCallback(res){
-				console.log("Error: "+JSON.stringify(res));			
+				console.log("Error: "+JSON.stringify(res));
 			}
 		);
 	}
@@ -107,8 +107,8 @@ tdapp.service('Backend',function($http,$timeout,$window,$location,appdata,TDMgr)
 			function(res) {
 				console.log("Error: "+JSON.stringify(res));
 				_scope.errormsg="Server not available!";
-				_scope.dologout();
+				_scope.doLogout();
 			}
 		);
-	}	
+	}
 });

@@ -11,7 +11,6 @@ tdapp.controller("AuthCtrl",function($scope,$http,$cookies,$window,$timeout,appd
 	// Injection
 
 	Autologin.setScope($scope);
-	Autologin.setHttp($http);
 	Backend.setScope($scope);
 
 	// Reset password
@@ -109,20 +108,19 @@ tdapp.controller("AuthCtrl",function($scope,$http,$cookies,$window,$timeout,appd
 					// Create cookie
 					var now = new Date();
 					var exp = new Date(now.getFullYear(), now.getMonth()+1, now.getDate());
-					var tok = _token;
 					if(appdata.rememberme){
 						var now = new Date();
 						var exp = new Date(now.getFullYear(), now.getMonth()+1, now.getDate());
 						var cookiedata = {
-							token : tok,
+							token : _token,
 							user : appdata.user,
 							lip : "google"
 						};
-						console.log(cookiedata);
 						$cookies.put(appdata.derdrcookie,JSON.stringify(cookiedata),{expires:exp});
 					}
 					// Modifiy headers
-					$http.defaults.headers.common['Authorization'] = "Basic " + tok;
+					appdata.token = _token;
+					$http.defaults.headers.common['Authorization'] = "Basic " + _token;
 					$scope.filtertag = 'All'; // Set filtertag before calling Backend.getTodos()
 					$scope.errormsg = "";
 					appdata.errormsg = "";

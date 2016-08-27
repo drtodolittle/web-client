@@ -3,9 +3,9 @@
 	<div>&nbsp;</div>
 	<div class="fnt32">Dr ToDo Little</div>
 	<div>&nbsp;</div>
-	<input id="liusername" type="text" ng-model="user.email" name="liusername" placeholder="E-Mail" class="liuser fnt16" ng-keydown="loginKeydown($event);" tabindex=1></input>
+	<input id="liusername" type="text" ng-model="user.email" name="liusername" placeholder="E-Mail" class="form-control liuser fnt16" ng-keydown="loginKeydown($event);" tabindex=1></input>
 	<br>
-	<input type="password" ng-model="user.password" name="lipass" placeholder="Password" class="lipass fnt16" ng-keydown="loginKeydown($event);" tabindex=2></input>
+	<input type="password" ng-model="user.password" name="lipass" placeholder="Password" class="form-control lipass fnt16" ng-keydown="loginKeydown($event);" tabindex=2></input>
 	<div>&nbsp;</div>
 	<button id="libut" class="btn btn-default bwidth196" type="button" ng-click="doLogin()">Login</button>
 	<div class="fnt12 fp" ng-click="goResetPwd()"><a class="fp">Forgot your password?</a></div>

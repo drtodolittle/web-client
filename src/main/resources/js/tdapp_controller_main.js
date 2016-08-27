@@ -11,33 +11,33 @@ tdapp.controller("MainCtrl",function($scope,$timeout,$interval,$http,$cookies,$w
 
 	Autologin.setScope($scope);
 	Backend.setScope($scope);
-	
+
 	// General Done Filter
-	
+
 	$scope.showdone = false;
-	$scope.showdonetext = "Show Done";	
+	$scope.showdonetext = "Show Done";
 
 	// Go to settings
 
 	$scope.goSettings = function(){
 		$window.location = "/#/settings";
 	}
-	
+
 	// Show and hide custommenu (animated via jquery)
-	
+
 	$scope.tmpcustommenu = 0;
 	$scope.showcustommenu = function(){
 		if($scope.tmpcustommenu==0){
 			$scope.tmpcustommenu=1;
 			$("#customnavbaricon").attr("src","images/arrow-left-3x.png");
-			if(navigator.userAgent.match(/(iPod|iPhone|iPad|Android)/)) {           
+			if(navigator.userAgent.match(/(iPod|iPhone|iPad|Android)/)) {
 				$('body').scrollTop(0);
-				$(".custommenu").animate({height:"140px"},500);				
+				$(".custommenu").animate({height:"140px"},500);
 			} else {
 				if($('html').scrollTop()>64){
 					$('html').animate({scrollTop:0},500,function(){
 						$(".custommenu").animate({height:"140px"},500);
-					});						
+					});
 				} else {
 					$('html').scrollTop(0);
 					$(".custommenu").animate({height:"140px"},500);
@@ -46,19 +46,19 @@ tdapp.controller("MainCtrl",function($scope,$timeout,$interval,$http,$cookies,$w
 		} else {
 			$scope.tmpcustommenu=0;
 			$("#customnavbaricon").attr("src","images/menu-3x.png");
-			$(".custommenu").animate({height:"0px"},500);			
+			$(".custommenu").animate({height:"0px"},500);
 		}
-	}	
+	}
 
 	// Logout
-	
+
 	$scope.doLogout = function(){
 		$window.location = "/#/working";
 		$timeout(function(){
 			Autologin.doLogout();
-		},1000);		
-	}	
-	
+		},1000);
+	}
+
 	// Keyboard
 
 	$scope.newtodoKeydown = function(e){
@@ -128,13 +128,13 @@ tdapp.controller("MainCtrl",function($scope,$timeout,$interval,$http,$cookies,$w
 		TDMgr.delTodo(obj);
 		$scope.todos = TDMgr.getTodosByTag($scope.filtertag,$scope.showdone);
 	}
-	
+
 	$scope.togDone = function(obj){
 		TDMgr.togPreDone(obj);
 		$timeout(function(){
 			TDMgr.togDone(obj); // Toggle todo local (within TDMgr)
 			if(obj.done){ // Toggle Todo on the server
-				Backend.doneTodo(obj);			
+				Backend.doneTodo(obj);
 			} else {
 				Backend.undoneTodo(obj);
 			}
@@ -143,7 +143,7 @@ tdapp.controller("MainCtrl",function($scope,$timeout,$interval,$http,$cookies,$w
 	}
 
 	// Filter function
-	
+
 	$scope.togShowdone = function(){
 		$scope.showdone = !$scope.showdone;
 		if($scope.showdone){
@@ -153,12 +153,14 @@ tdapp.controller("MainCtrl",function($scope,$timeout,$interval,$http,$cookies,$w
 		}
 		$scope.todos=TDMgr.getTodosByTag($scope.filtertag,$scope.showdone);
 	}
-	
+
 	// Tags
-	
+
 	$scope.getTodosByTag = TDMgr.getTodosByTag;
 
 	// Finish
-	
+
 	Autologin.check(); // Do automatic login if cookies are available
+
+	$("#todotxta").focus();
 });

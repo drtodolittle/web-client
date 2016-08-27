@@ -1,20 +1,49 @@
 ﻿<!-- Login -->
 <center>
-	<div>&nbsp;</div>
-	<div class="fnt32">Dr ToDo Little</div>
-	<div>&nbsp;</div>
-	<input id="liusername" type="text" ng-model="user.email" name="liusername" placeholder="E-Mail" class="form-control liuser fnt16" ng-keydown="loginKeydown($event);" tabindex=1></input>
-	<br>
-	<input type="password" ng-model="user.password" name="lipass" placeholder="Password" class="form-control lipass fnt16" ng-keydown="loginKeydown($event);" tabindex=2></input>
-	<div>&nbsp;</div>
-	<button id="libut" class="btn btn-default bwidth196" type="button" ng-click="doLogin()">Login</button>
+	<div class="logo fnt32">Dr ToDo Little</div>
+	<input
+		id="liusername"
+		type="text"
+		ng-model="user.email"
+		placeholder="E-Mail"
+		class="form-control liuser fnt16"
+		ng-keydown="loginKeydown($event)"
+		tabindex="1">
+	</input>
+	<input
+		id="lipass"
+		type="password"
+		ng-model="user.password"
+		placeholder="Password"
+		class="form-control lipass fnt16"
+		ng-keydown="loginKeydown($event)"
+		tabindex="2">
+	</input>
+	<button
+		id="libut"
+		class="btn btn-default bwidth196"
+		type="button"
+		ng-click="doLogin()"
+		tabindex="3">
+		Login
+	</button>
 	<div class="fnt12 fp" ng-click="goResetPwd()"><a class="fp">Forgot your password?</a></div>
 	<div>&nbsp;</div>
-	<div class="fnt12">or</div>
-	<button class="btn btn-default bwidth196" type="button" ng-click="doLoginWithGoogle()">Login with Google</button>
+	<div class="fnt10">or</div>
+	<button
+		class="btn btn-default bwidth196"
+		type="button"
+		ng-click="doLoginWithGoogle()">
+		Login with Google
+	</button>
 	<div>&nbsp;</div>
-	<div class="fnt12">or</div>
-	<button class="btn btn-default bwidth196" type="button" ng-click="goRegister()">Register</button>
+	<div class="fnt10">or</div>
+	<button
+		class="btn btn-default bwidth196"
+		type="button"
+		ng-click="goRegister()">
+		Register
+	</button>
 	<div>&nbsp;</div>
 	<div class="flash">{{ errormsg }}</div>
 </center>

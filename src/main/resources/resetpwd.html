@@ -1,15 +1,31 @@
 ﻿<!-- Reset password -->
 <center>
-	<div>&nbsp;</div>
-	<div class="fnt32">Dr ToDo Little</div>
-	<div class="fnt16">Reset Password</div>
-	<div>&nbsp;</div>
-	<input id="liusername" type="text" ng-model="email" name="liusername" placeholder="E-Mail" class="liuser fnt16" ng-keydown="doResetPwdKeydown($event);"></input>
-	<div>&nbsp;</div>
-	<button id="rb" class="btn btn-default bwidth196" type="button" ng-click="doResetPwd();">Reset</button>
+	<div class="logo fnt32">Dr ToDo Little</div>
+	<div class="sublogo fnt16">Reset password</div>
+	<input
+		id="liusername"
+		type="text"
+		ng-model="email"
+		name="liusername"
+		placeholder="E-Mail"
+		class="form-control liuser fnt16"
+		ng-keydown="doResetPwdKeydown($event)">
+	</input>
+	<button
+		id="rb"
+		class="btn btn-default bwidth196"
+		type="button"
+		ng-click="doResetPwd()">
+		Reset
+	</button>
 	<div>&nbsp;</div>
 	<div class="fnt12">or</div>
-	<button class="btn btn-default bwidth196" type="button" ng-click="goLogin()">Go to Login</button>
+	<button
+		class="btn btn-default bwidth196"
+		type="button"
+		ng-click="goLogin()">
+		Go to Login
+	</button>
 	<div>&nbsp;</div>
 	<div class="flash">{{errormsg}}</div>
 </center>

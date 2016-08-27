@@ -55,6 +55,13 @@ body,div,p,span{
 /*
   Misc ----------------------------------------
 */
+.logo{
+	margin-top:16px;
+	margin-bottom:16px;
+}
+.sublogo{
+	margin-bottom:24px;
+}
 .header{
 	padding:32px;
 }
@@ -86,7 +93,7 @@ body,div,p,span{
 	font-size:10px;
 }
 .bwidth196{
-	width:164px;
+	width:196px;
 }
 .custommenu{
 	background-color:#eeeeee;
@@ -136,38 +143,24 @@ body,div,p,span{
 .liuser{
 	color:#000000;
 	resize:none;
-	width:16em;
+	width:196px;
 	height:32px;
-	padding:4px;
-	margin:4px;
-	border:solid 1px;
-	border-color: #aaaaaa;
+	padding:8px;
+	margin:8px;
 }
 .lipass{
 	color:#000000;
 	resize:none;
-	width:16em;
+	width:196px;
 	height:32px;
-	padding:4px;
-	margin:4px;
-	border:solid 1px;
-	border-color: #aaaaaa;
-}
-.libut{
-	width:16em;
-	background-color:#888888;
-	padding:6px;
-	margin:4px;
-}
-.libut:hover{
-	cursor:pointer;
-	background-color:#cccccc;
+	padding:8px;
+	margin:8px;
 }
 .fp{
 	color:#888888;
 }
 .fp:hover{
-	color:#000000;
+	color:#5090ff;
 	cursor:pointer;
 	text-decoration:none;
 }

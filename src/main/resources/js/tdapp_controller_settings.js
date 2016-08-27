@@ -9,12 +9,12 @@ var firebase = require('./tdapp_firebase');
 tdapp.controller("SettingsCtrl",function($scope,$http,$window,$cookies,$timeout,appdata,TDMgr,Autologin){
 
 	// Get current user
-	
+
 	$scope.currentuser = appdata.currentuser;
 	$scope.fblogin = appdata.fblogin;
 
 	// Go main
-	
+
 	$scope.goMain = function(){
 		$window.location = "/#/main";
 	}
@@ -23,14 +23,14 @@ tdapp.controller("SettingsCtrl",function($scope,$http,$window,$cookies,$timeout,
 
 	$scope.goSettings = function(){
 		$window.location = "/#/settings";
-	}	
-	
+	}
+
 	// Change passwrod
 
 	$scope.goChPwd = function(){
 		$window.location = "/#/chpwd";
 	}
-	
+
 	$scope.doChPwd = function(){
 		$scope.errormsg = "";
 		var user = firebase.auth().currentUser;
@@ -61,17 +61,17 @@ tdapp.controller("SettingsCtrl",function($scope,$http,$window,$cookies,$timeout,
 					var errmsg = "Error: "+error.message;
 					$appdata.errormsg = errmsg;
 					Autologin.doLogout();
-				});	
+				});
 			}
 		).catch(function(error){
 			var errmsg = "Error: "+error.message;
 			$appdata.errormsg = errmsg;
 			Autologin.doLogout();
-		});		
+		});
 	}
 
 	// Reset password
-	
+
 	$scope.doResetPwd = function(){
 		var user = firebase.auth().currentUser;
 		if(user){
@@ -79,7 +79,7 @@ tdapp.controller("SettingsCtrl",function($scope,$http,$window,$cookies,$timeout,
 			var email = user.email;
 			firebase.auth().sendPasswordResetEmail(email).then(function(){
 				alert("An email is waiting for you to reset your password.");
-				Autologin.doLogout();				
+				Autologin.doLogout();
 			},function(error){
 				alert("Password reset error: "+error.message);
 				Autologin.doLogout();
@@ -87,17 +87,19 @@ tdapp.controller("SettingsCtrl",function($scope,$http,$window,$cookies,$timeout,
 		} else {
 			appdata.errormsg = "An error has occured. Login again!";
 			Autologin.doLogout();
-		}	
+		}
 	}
-	
+
 	// Check for login, redirect if not logged in
-	
+
 	if ($cookies.get(appdata.tokencookie)==undefined){
 		Autologin.doLogout();
 	}
-	
+
 	if($cookies.get(appdata.usercookie)!=undefined){
 		$scope.currentuser = $cookies.get(appdata.usercookie);
 	}
-	
+
+	$('#oldpassword').focus();
+
 });

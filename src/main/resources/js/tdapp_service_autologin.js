@@ -48,7 +48,7 @@ tdapp.service('Autologin',function($http,$window,$location,$cookies,$timeout,app
 				if($window.location.hostname=="localhost"){
 					appdata.server = appdata.localserver;
 				}
-				$http.defaults.headers.common['Authorization'] = "Basic " + appdata.token;
+				$http.defaults.headers.common['Authorization'] = "Basic " + _dr.token;
 				this.getAllTodos();
 			} else {
 				$window.location = "/#/login";

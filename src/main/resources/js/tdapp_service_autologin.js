@@ -6,9 +6,12 @@
 var tdapp = require('./tdapp');
 
 tdapp.service('Autologin',function($http,$window,$location,$cookies,$timeout,appdata,TDMgr,Backend){
-	var _scope;
+	var _scope,_http;
 	this.setScope = function(scope){
 		_scope = scope;
+	}
+	this.setHttp = function(http){
+		_http = http;
 	}
 	this.getAllTodos = function(){
 		_scope.filtertag = 'All'; // Set filtertag before calling Backend.getTodos()
@@ -48,7 +51,7 @@ tdapp.service('Autologin',function($http,$window,$location,$cookies,$timeout,app
 				if($window.location.hostname=="localhost"){
 					appdata.server = appdata.localserver;
 				}
-				$http.defaults.headers.common['Authorization'] = "Basic " + _dr.token;
+				_http.defaults.headers.common['Authorization'] = "Basic " + appdata.token;
 				this.getAllTodos();
 			} else {
 				$window.location = "/#/login";
@@ -57,7 +60,7 @@ tdapp.service('Autologin',function($http,$window,$location,$cookies,$timeout,app
 			if($window.location.hostname=="localhost"){
 				appdata.server = appdata.localserver;
 			}
-			$http.defaults.headers.common['Authorization'] = "Basic " + appdata.token;
+			_http.defaults.headers.common['Authorization'] = "Basic " + appdata.token;
 			this.getAllTodos();
 		}
 	}

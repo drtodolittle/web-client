@@ -11,6 +11,7 @@ tdapp.controller("AuthCtrl",function($scope,$http,$cookies,$window,$timeout,appd
 	// Injection
 
 	Autologin.setScope($scope);
+	Autologin.setHttp($http);
 	Backend.setScope($scope);
 
 	// Reset password

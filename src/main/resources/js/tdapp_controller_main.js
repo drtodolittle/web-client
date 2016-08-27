@@ -10,6 +10,7 @@ tdapp.controller("MainCtrl",function($scope,$timeout,$interval,$http,$cookies,$w
 	// Injections
 
 	Autologin.setScope($scope);
+	Autologin.setHttp($http);	
 	Backend.setScope($scope);
 
 	// General Done Filter

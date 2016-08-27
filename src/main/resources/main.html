@@ -5,11 +5,12 @@
 <!-- Menu -->
 <center>
 <div id='custommenu' class="fnt16 custommenu">
-	<br>
-	<button class="btn btn-default bwidth196" type="button" ng-click="goSettings()">Settings</button>
-	<br><br>
-	<button class="btn btn-default bwidth196" type="button" ng-click="doLogout()">Logout</button>
-	<br><br>
+	<div style="margin-bottom:16px; margin-top:24px;">
+		<button class="btn btn-default bwidth196" type="button" ng-click="goSettings()">Settings</button>
+	</div>
+	<div>
+		<button class="btn btn-default bwidth196" type="button" ng-click="doLogout()">Logout</button>
+	</div>
 </div>
 </center>
 
@@ -23,10 +24,6 @@
 		<span class="caret"></span>
 	  </button>
 	  <ul class="dropdown-menu" aria-labelledby="filter1">
-		<!-- 16.04.2016 _ Old Filter (Backup)
-		<li><a href="/#/main" ng-click="todos=getTodosByTag('Open');filtertag='Open'">Open</a></li>
-		<li><a href="/#/main" ng-click="todos=getTodosByTag('Done');filtertag='Done'">Done</a></li>
-		-->
 		<li><a href="/#/main" ng-click="todos=getTodosByTag('',showdone);filtertag='All'">All</a></li>
 		<li ng-repeat="tag in tags">
 			<a href="/#/main" ng-click="$parent.filtertag=tag;$parent.showdone=showdone;$parent.todos=$parent.getTodosByTag(tag,showdone)">{{tag}}</a>
@@ -57,9 +54,25 @@
 	</div>
 </div>
 
-<!-- Navbar + New Add-->
+<!-- Navbar -->
 <div class="customnavbar fnt16">
-<span ng-click="showcustommenu();" class="pull-left"><img id="customnavbaricon" class="mo" src="images/menu-3x.png" alt="custommenu"></img></span>
-<textarea id="todotxta" ng-model="newtodotxt" ng-keydown="newtodoKeydown($event);" class="todota_ex" placeholder="New ToDo..."></textarea>
-<!-- <span class=""><input id="todotxta" ng-model="newtodotxt" ng-keydown="newtodoKeydown($event);" class="form-control todota_ex2" placeholder="New ToDo..."></input></span> -->
+	<div class="row">
+	    <div class="col-lg-4 col-lg-offset-4">
+	        <div class="input-group">
+				<span
+					class="input-group-btn mo"
+					style="padding-right:8px;">
+					<img id="customnavbaricon" class="mo" src="images/menu-3x.png" ng-click="showcustommenu()"></img>
+				</span>
+				<input
+				id="todotxta"
+				ng-model="newtodotxt"
+				ng-keydown="newtodoKeydown($event)"
+				class="form-control"
+				placeholder="New ToDo...">
+				</input>
+				<span class="input-group-btn" style="padding-right:16px;"></span>
+	        </div>
+    	</div>
+	</div>
 </div>

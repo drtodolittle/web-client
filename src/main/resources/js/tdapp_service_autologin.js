@@ -39,7 +39,7 @@ tdapp.service('Autologin',function($http,$window,$location,$cookies,$timeout,app
 		){
 			var dr = $cookies.get(appdata.derdrcookie);
 			if(dr!=undefined){
-				$window.location = "/#/working";
+				// $window.location = "/#/working";
 				_scope.errormsg = "";
 				var _dr = JSON.parse(dr);
 				appdata.token = _dr.token;

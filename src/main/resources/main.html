@@ -54,7 +54,8 @@
 	</div>
 </div>
 
-<!-- Navbar -->
+<!-- Navbar (alternativ one)-->
+<!--
 <div class="customnavbar fnt16">
 	<div class="row">
 	    <div class="col-lg-4 col-lg-offset-4">
@@ -75,4 +76,30 @@
 	        </div>
     	</div>
 	</div>
+</div>
+-->
+
+<!-- Navbar (alternative two) -->
+<div class="customnavbar fnt16">
+	<table>
+		<tr>
+			<td>
+				<img
+					id="customnavbaricon"
+					class="mo"
+					src="images/menu-3x.png"
+					ng-click="showcustommenu()">
+				</img>
+			</td>
+			<td style="width:100%;padding-left:8px;padding-right:12px;">
+				<input
+					id="todotxta"
+					ng-model="newtodotxt"
+					ng-keydown="newtodoKeydown($event)"
+					class="form-control"
+					placeholder="New ToDo...">
+				</input>
+			</td>
+		</tr>
+	</table>
 </div>

@@ -60,7 +60,7 @@ tdapp.controller("AuthCtrl",function($scope,$http,$cookies,$window,$timeout,appd
 		appdata.lip = "firebase";
 		firebase.auth().signInWithEmailAndPassword(user,password).then(
 			function(res){
-				//if(!data.emailVerified){
+				//if(!res.emailVerified){
 				//	throw {
 				//		message:"Your have to verify you E-Mail-Adress before you can log in."
 				//	};
@@ -148,7 +148,7 @@ tdapp.controller("AuthCtrl",function($scope,$http,$cookies,$window,$timeout,appd
 	// Register
 
 	$scope.goRegister = function(){
-		$appdata.errormsg = "";
+		appdata.errormsg = "";
 		$('#libutreg').blur();
 		$window.location = "/#/register";
 	};

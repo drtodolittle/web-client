@@ -99,9 +99,6 @@ tdapp.controller("SettingsCtrl",function($scope,$http,$window,$cookies,$timeout,
 			appdata.user = dr.user;
 			appdata.token = dr.token;
 			appdata.lip = dr.lip;
-			if(dr.lip=="fbcore"){
-				appdata.fblogin = true;
-			}
 		}
 	}
 

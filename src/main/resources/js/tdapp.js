@@ -53,11 +53,11 @@ tdapp.config(function($routeProvider,$compileProvider) {
 
 tdapp.value(
 	"appdata",{
-		appname : "drtodolittle",
-		appnickname : "derdr",
+		name : "drtodolittle",
+		nickname : "derdr",
+		cookiename : "derdrcookie",
 		localserver : "http://localhost:3000/api/todos",
 		server : window.location.origin + "/api/todos",
-		derdrcookie : "derdrcookie",
 		rememberme : undefined,
 		token : undefined,
 		user : undefined,

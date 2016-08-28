@@ -9,13 +9,13 @@ var firebase = require('./tdapp_firebase');
 tdapp.controller("ResetPwdCtrl",function($scope,$window,appdata,Autologin){
 
 	// Go login
-	
+
 	$scope.goLogin = function(){
 		$window.location = "/#/login";
 	}
 
 	// Reset password
-	
+
 	$scope.doResetPwd = function(){
 		$('#rb').blur();
 		$scope.errormsg = "";
@@ -49,7 +49,9 @@ tdapp.controller("ResetPwdCtrl",function($scope,$window,appdata,Autologin){
 
 	// Finish
 
-	$("#liusername").focus();
+	$("#liuser").focus();
+
 	$scope.errormsg = appdata.errormsg;
-	
+	$scope.email = appdata.tmpuser;
+
 });

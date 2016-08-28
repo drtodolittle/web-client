@@ -2,9 +2,9 @@
 <center>
 	<div class="logo fnt32">Dr ToDo Little</div>
 	<input
-		id="liusername"
+		id="liuser"
 		type="text"
-		ng-model="user.email"
+		ng-model="email"
 		placeholder="E-Mail"
 		class="form-control liuser fnt16"
 		ng-keydown="loginKeydown($event)"
@@ -13,12 +13,26 @@
 	<input
 		id="lipass"
 		type="password"
-		ng-model="user.password"
+		ng-model="password"
 		placeholder="Password"
 		class="form-control lipass fnt16"
 		ng-keydown="loginKeydown($event)"
 		tabindex="2">
 	</input>
+	<div class="input-group" style="position:relative">
+		<span>
+			<input
+				id="rememberme"
+				type="checkbox"
+				style="position:absolute;"
+				tabindex="3">
+			</input>
+		</span>
+		<span
+			style="margin-left:18px">
+			<a class="fnt12 fp" ng-click="doRememberMe()">Remember me</a>
+		</span>
+	</div>
 	<button
 		id="libut"
 		class="btn btn-default bwidth196"
@@ -27,23 +41,13 @@
 		tabindex="3">
 		Login
 	</button>
-	<div class="fnt12" ng-click="goResetPwd()"><a class="fp">Forgot your password?</a></div>
-	<div class="input-group" style="position:relative">
-		<span>
-			<input
-				id="rememberme"
-				type="checkbox"
-				style="position:absolute;">
-			</input>
-		</span>
-		<span
-			style="margin-left:18px">
-			<a class="fnt12 fp" ng-click="doRememberMe()">Remember me</a>
-		</span>
+	<div class="fnt12" ng-click="goResetPwd()">
+		<a class="fp">Forgot your password?</a>
 	</div>
 	<div>&nbsp;</div>
 	<div class="fnt10">or</div>
 	<button
+		id="libutgoogle"
 		class="btn btn-default bwidth196"
 		type="button"
 		ng-click="doLoginWithGoogle()">
@@ -52,6 +56,7 @@
 	<div>&nbsp;</div>
 	<div class="fnt10">or</div>
 	<button
+		id="libutreg"
 		class="btn btn-default bwidth196"
 		type="button"
 		ng-click="goRegister()">

@@ -6,10 +6,16 @@
 var tdapp = require('./tdapp');
 
 tdapp.service('Autologin',function($http,$window,$location,$cookies,$timeout,appdata,TDMgr,Backend){
+
+	// Injection
+
 	var _scope;
 	this.setScope = function(scope){
 		_scope = scope;
 	}
+
+	//  Get todos
+
 	this.getAllTodos = function(){
 		_scope.filtertag = 'All'; // Set filtertag before calling Backend.getTodos()
 		if(TDMgr.getTodos().length==0){
@@ -19,8 +25,11 @@ tdapp.service('Autologin',function($http,$window,$location,$cookies,$timeout,app
 			_scope.todos = TDMgr.getTodosByTag(_scope.filtertag);
 		}
 	}
+
+	// Logout (with undef appdata)
+
 	this.doLogout = function(){
-		$cookies.remove(appdata.derdrcookie);
+		$cookies.remove(appdata.cookiename);
 		TDMgr.clearTodos();
 		appdata.user = undefined;
 		appdata.lip = undefined;
@@ -28,37 +37,37 @@ tdapp.service('Autologin',function($http,$window,$location,$cookies,$timeout,app
 		appdata.rememberme = undefined;
 		$window.location = "/#/login";
 		$timeout(function(){
-			$("#liusername").focus();
+			$("#liuser").focus();
 		},128);
 	}
+
+	// Check (autologin if possible)
+
 	this.check = function(){
+		if($window.location.hostname=="localhost"){
+			appdata.server = appdata.localserver;
+		}
 		if(
 			appdata.user == undefined &&
 			appdata.token == undefined &&
 			appdata.lip == undefined
 		){
-			var dr = $cookies.get(appdata.derdrcookie);
-			if(dr!=undefined){
-				// $window.location = "/#/working";
+			var drcookie = $cookies.get(appdata.cookiename);
+			if(drcookie!=undefined){
 				_scope.errormsg = "";
-				var _dr = JSON.parse(dr);
-				appdata.token = _dr.token;
-				appdata.user = _dr.user;
-				appdata.lip = _dr.lip;
-				if($window.location.hostname=="localhost"){
-					appdata.server = appdata.localserver;
-				}
+				var dr = JSON.parse(drcookie);
+				appdata.token = dr.token;
+				appdata.user = dr.user;
+				appdata.lip = dr.lip;
 				$http.defaults.headers.common['Authorization'] = "Basic " + appdata.token;
 				this.getAllTodos();
 			} else {
 				$window.location = "/#/login";
 			}
 		} else {
-			if($window.location.hostname=="localhost"){
-				appdata.server = appdata.localserver;
-			}
 			$http.defaults.headers.common['Authorization'] = "Basic " + appdata.token;
 			this.getAllTodos();
 		}
 	}
+
 });

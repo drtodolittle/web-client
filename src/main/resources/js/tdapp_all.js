@@ -1,13 +1,13 @@
 /*
 
 	tdapp_all.js
-	
+
 */
 require('./tdapp.js');
 require('./tdapp_firebase.js');
 require('./tdapp_factories.js');
-require('./tdapp_service_backend.js');
 require('./tdapp_service_autologin.js');
+require('./tdapp_service_backend.js');
 require('./tdapp_controller_reg.js');
 require('./tdapp_controller_settings.js');
 require('./tdapp_controller_resetpwd.js');

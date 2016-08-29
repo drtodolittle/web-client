@@ -6,7 +6,7 @@
 var tdapp = require('./tdapp');
 var firebase = require('./tdapp_firebase');
 
-tdapp.service('Backend',function($http,$timeout,$window,$location,appdata,TDMgr,Autologin){
+tdapp.service('Backend',function($http,$timeout,$window,$location,appdata,TDMgr){
 	var _scope;
 	this.setScope = function(scope){
 		_scope = scope;
@@ -108,7 +108,6 @@ tdapp.service('Backend',function($http,$timeout,$window,$location,appdata,TDMgr,
 			function(res) {
 				console.log("Error: " + JSON.stringify(res));
 				_scope.errormsg="Server not available!";
-				Autologin.doLogout();
 			}
 		);
 	}

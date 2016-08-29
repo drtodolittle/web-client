@@ -72,6 +72,7 @@ tdapp.controller("MainCtrl",function($scope,$timeout,$interval,$http,$cookies,$w
 				newtodo.done = false;
 				$scope.newtodotxt = "";
 				Backend.postTodo(newtodo);
+				Backend.incTodosCount();
 				TDMgr.addTodoObj(newtodo);
 				if($scope.showdone){
 					$scope.showdone = false;
@@ -126,6 +127,7 @@ tdapp.controller("MainCtrl",function($scope,$timeout,$interval,$http,$cookies,$w
 	$scope.deltodo = function(obj){ // No animation
 		obj.deleted = true;
 		Backend.delTodo(obj);
+		Backend.decTodosCount();
 		TDMgr.delTodo(obj);
 		$scope.todos = TDMgr.getTodosByTag($scope.filtertag,$scope.showdone);
 	}

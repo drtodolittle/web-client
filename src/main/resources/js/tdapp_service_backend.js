@@ -4,6 +4,7 @@
 
 */
 var tdapp = require('./tdapp');
+var firebase = require('./tdapp_firebase');
 
 tdapp.service('Backend',function($http,$timeout,$window,$location,appdata,TDMgr){
 	var _scope;
@@ -111,4 +112,28 @@ tdapp.service('Backend',function($http,$timeout,$window,$location,appdata,TDMgr)
 			}
 		);
 	}
+
+	// Firebase realtime database
+
+	this.incTodosCount = function(){
+		firebase.database().ref('/data/misc/todoscount').transaction(
+			function(data){
+				data += 1;
+			}
+		)
+		.catch(function(error){
+			console.log("Error: " + error.message);
+		})
+	}
+	this.decTodosCount = function(){
+		firebase.database().ref('/data/misc/todoscount').transaction(
+			function(data){
+				data -= 1;
+			}
+		)
+		.catch(function(error){
+			console.log("Error: " + error.message);
+		})
+	}
+
 });

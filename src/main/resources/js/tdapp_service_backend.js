@@ -6,7 +6,7 @@
 var tdapp = require('./tdapp');
 var firebase = require('./tdapp_firebase');
 
-tdapp.service('Backend',function($http,$timeout,$window,$location,appdata,TDMgr){
+tdapp.service('Backend',function($http,$timeout,$window,$location,appdata,TDMgr,Autologin){
 	var _scope;
 	this.setScope = function(scope){
 		_scope = scope;
@@ -23,7 +23,7 @@ tdapp.service('Backend',function($http,$timeout,$window,$location,appdata,TDMgr)
 			}
 			,
 			function errorCallback(res){
-				console.log("Error: "+JSON.stringify(res));
+				console.log("Error: " + JSON.stringify(res));
 			}
 		);
 	}
@@ -38,7 +38,7 @@ tdapp.service('Backend',function($http,$timeout,$window,$location,appdata,TDMgr)
 			}
 			,
 			function errorCallback(res){
-				console.log("Error: "+JSON.stringify(res));
+				console.log("Error: " + JSON.stringify(res));
 			}
 		);
 	}
@@ -53,7 +53,7 @@ tdapp.service('Backend',function($http,$timeout,$window,$location,appdata,TDMgr)
 			}
 			,
 			function errorCallback(res){
-				console.log("Error: "+JSON.stringify(res));
+				console.log("Error: " + JSON.stringify(res));
 			}
 		);
 	}
@@ -66,7 +66,7 @@ tdapp.service('Backend',function($http,$timeout,$window,$location,appdata,TDMgr)
 			}
 			,
 			function errorCallback(res){
-				console.log("Error: "+JSON.stringify(res));
+				console.log("Error: " + JSON.stringify(res));
 			}
 		);
 	}
@@ -79,7 +79,7 @@ tdapp.service('Backend',function($http,$timeout,$window,$location,appdata,TDMgr)
 			}
 			,
 			function errorCallback(res){
-				console.log("Error: "+JSON.stringify(res));
+				console.log("Error: " + JSON.stringify(res));
 			}
 		);
 	}
@@ -106,9 +106,9 @@ tdapp.service('Backend',function($http,$timeout,$window,$location,appdata,TDMgr)
 			}
 			,
 			function(res) {
-				console.log("Error: "+JSON.stringify(res));
+				console.log("Error: " + JSON.stringify(res));
 				_scope.errormsg="Server not available!";
-				_scope.doLogout();
+				Autologin.doLogout();
 			}
 		);
 	}

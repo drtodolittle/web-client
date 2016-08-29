@@ -115,21 +115,27 @@ tdapp.service('Backend',function($http,$timeout,$window,$location,appdata,TDMgr)
 	// Firebase realtime database
 
 	this.incTodosCount = function(){
-		firebase.database().ref('/data/misc/todoscount').transaction(
+		firebase.database().ref('/data/todoscount').transaction(
 			function(data){
 				data += 1;
 			}
 		)
+		.then(function(){
+			console.log('incTodosCount ok.')
+		})
 		.catch(function(error){
 			console.log("Error: " + error.message);
 		})
 	}
 	this.decTodosCount = function(){
-		firebase.database().ref('/data/misc/todoscount').transaction(
+		firebase.database().ref('/data/todoscount').transaction(
 			function(data){
 				data -= 1;
 			}
 		)
+		.then(function(){
+			console.log('decTodosCount ok.')
+		})
 		.catch(function(error){
 			console.log("Error: " + error.message);
 		})

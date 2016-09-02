@@ -123,6 +123,7 @@ function(
 						TDMgr.tags.splice(TDMgr.tags.indexOf(oldtag),1);
 					}
 				}
+				$scope.tags = (TDMgr.getTags()).sort();
 				$scope.todos = TDMgr.getTodosByTag($scope.filtertag,$scope.showdone);
 			}
 		}

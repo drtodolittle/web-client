@@ -8,7 +8,7 @@ var tdapp = require('./tdapp');
 tdapp.factory("TDMgr",function(){ // ToDoManager
 	var fact = {};
 	fact.todos = [];
-	fact.tags = [];	
+	fact.tags = [];
 	fact.checkForHashtag = function(obj){
 		if(obj.topic==undefined){
 			return;
@@ -27,7 +27,7 @@ tdapp.factory("TDMgr",function(){ // ToDoManager
 			if(tag!=undefined && fact.tags.indexOf(tag)<0){
 				fact.tags.push(tag);
 			}
-			s = obj.topic.indexOf('#', s+1);		
+			s = obj.topic.indexOf('#', s+1);
 		}
 	}
 	fact.getTags = function(){
@@ -52,7 +52,7 @@ tdapp.factory("TDMgr",function(){ // ToDoManager
 					}
 				});
 			}
-			return ret;		
+			return ret;
 		}
 		var tagged = [];
 		fact.todos.forEach(function(obj){
@@ -72,7 +72,7 @@ tdapp.factory("TDMgr",function(){ // ToDoManager
 		if(todolist.length>0){
 			fact.todos.forEach(function(obj){
 				fact.checkForHashtag(obj);
-			});		
+			});
 		}
 	}
 	fact.clearTodos = function(){
@@ -81,7 +81,7 @@ tdapp.factory("TDMgr",function(){ // ToDoManager
 		}
 		while(fact.tags.length>0){
 			fact.tags.pop();
-		}		
+		}
 	}
 	fact.getTodoById = function(id){
 		var ret = undefined;
@@ -94,7 +94,7 @@ tdapp.factory("TDMgr",function(){ // ToDoManager
 	}
 	fact.addTodoObj = function(obj){
 		obj.predone = obj.done;
-		fact.checkForHashtag(obj);		
+		fact.checkForHashtag(obj);
 		fact.todos.unshift(obj);
 		return obj;
 	}
@@ -113,7 +113,7 @@ tdapp.factory("TDMgr",function(){ // ToDoManager
 				if( ttd.length==0 ){
 					fact.tags.splice(fact.tags.indexOf(tag),1);
 				}
-			}		
+			}
 		}
 	}
 	fact.togPreDone = function(item){
@@ -137,6 +137,6 @@ tdapp.factory("TDMgr",function(){ // ToDoManager
 			todo.done = true;
 			todo.predone = todo.done;
 		}
-	}	
+	}
 	return fact;
 });

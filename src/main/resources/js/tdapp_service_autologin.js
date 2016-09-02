@@ -31,7 +31,7 @@ function(
 		_scope.filtertag = 'All'; // Set filtertag before calling Backend.getTodos()
 		Backend.getTodos(
 			function(){
-				_scope.tags = TDMgr.getTags();
+				_scope.tags = (TDMgr.getTags()).sort();
 				_scope.todos = TDMgr.getTodosByTag(_scope.filtertag,_scope.showdone);
 				if(
 					$routeParams.type!=undefined &&

@@ -117,9 +117,7 @@ tdapp.service('Backend',function($http,$timeout,$window,$location,appdata,TDMgr)
 	this.incTodosCount = function(){
 		firebase.database().ref('/data/todoscount').transaction(
 			function(data){
-				if(data){
-					data += 1;
-				}
+				data += 1;
 				return data;
 			}
 		)
@@ -130,9 +128,7 @@ tdapp.service('Backend',function($http,$timeout,$window,$location,appdata,TDMgr)
 	this.decTodosCount = function(){
 		firebase.database().ref('/data/todoscount').transaction(
 			function(data){
-				if(data){
-					data -= 1;
-				}
+				data -= 1;
 				return data;
 			}
 		)

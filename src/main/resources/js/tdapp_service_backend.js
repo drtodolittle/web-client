@@ -117,12 +117,12 @@ tdapp.service('Backend',function($http,$timeout,$window,$location,appdata,TDMgr)
 	this.incTodosCount = function(){
 		firebase.database().ref('/data/todoscount').transaction(
 			function(data){
-				data += 1;
+				if(data){
+					data += 1;
+				}
+				return data;
 			}
 		)
-		.then(function(){
-			console.log('incTodosCount ok.')
-		})
 		.catch(function(error){
 			console.log("Error: " + error.message);
 		})
@@ -130,12 +130,12 @@ tdapp.service('Backend',function($http,$timeout,$window,$location,appdata,TDMgr)
 	this.decTodosCount = function(){
 		firebase.database().ref('/data/todoscount').transaction(
 			function(data){
-				data -= 1;
+				if(data){
+					data -= 1;
+				}
+				return data;
 			}
 		)
-		.then(function(){
-			console.log('decTodosCount ok.')
-		})
 		.catch(function(error){
 			console.log("Error: " + error.message);
 		})

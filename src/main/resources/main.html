@@ -47,6 +47,7 @@
 				<div class="mo" ng-click="deltodo(todo);"><img src="images/del.png" style="width:24px;height:24px;" />
 				</div>
 			</div>
+			<p class="fnt10" style="color:#cccccc">ID:{{todo.id}}</p>
 			<h4 class="list-group-item-heading" contenteditable="true" ng-keydown="todolineKeydown($event,todo.id);" id="todoid{{todo.id}}">{{todo.topic}}</h4>
 		  </div>
 		</div>

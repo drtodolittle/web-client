@@ -5,7 +5,8 @@
 */
 var tdapp = angular.module('tdapp',['ngCookies','ngRoute']);
 
-tdapp.config(function($routeProvider,$compileProvider) {
+tdapp.config(function($routeProvider,$locationProvider,$compileProvider) {
+	// Routing
 	$routeProvider
             .when('/', {
                 templateUrl : 'login.html',
@@ -22,6 +23,10 @@ tdapp.config(function($routeProvider,$compileProvider) {
                 templateUrl : 'main.html',
 				controller : 'MainCtrl'
             })
+			.when('/main/:type/:id', {
+				templateUrl : 'main.html',
+				controller: 'MainCtrl'
+			})
 			.when('/register', {
                 templateUrl : 'register.html',
 				controller : 'RegCtrl'
@@ -49,6 +54,8 @@ tdapp.config(function($routeProvider,$compileProvider) {
 			});
 	// Performance improvement
 	$compileProvider.debugInfoEnabled(false);
+	// Disable hashbang urls
+	// $locationProvider.html5Mode(true);
 })
 
 tdapp.value(

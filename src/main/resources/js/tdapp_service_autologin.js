@@ -5,7 +5,17 @@
 */
 var tdapp = require('./tdapp');
 
-tdapp.service('Autologin',function($http,$window,$location,$cookies,$timeout,appdata,TDMgr,Backend){
+tdapp.service('Autologin',
+function(
+	$http,
+	$window,
+	$location,
+	$cookies,
+	$timeout,
+	$compile,
+	$routeParams,
+	appdata,TDMgr,Backend
+){
 
 	// Injection
 
@@ -18,12 +28,44 @@ tdapp.service('Autologin',function($http,$window,$location,$cookies,$timeout,app
 
 	this.getAllTodos = function(){
 		_scope.filtertag = 'All'; // Set filtertag before calling Backend.getTodos()
+		Backend.getTodos(
+			function(){
+				_scope.tags = TDMgr.getTags();
+				_scope.todos = TDMgr.getTodosByTag(_scope.filtertag,_scope.showdone);
+				if(
+					$routeParams.type!=undefined &&
+					$routeParams.id!=undefined &&
+					$routeParams.type=="todo"
+				){
+					var todo = TDMgr.getTodoById($routeParams.id)
+					if(todo!=undefined){
+						var todos = [];
+						todos.push(todo);
+						_scope.todos = todos;
+					} else {
+						_scope.todos = [];
+					}
+				}
+				if(
+					$routeParams.type!=undefined &&
+					$routeParams.id!=undefined &&
+					$routeParams.type=="tag"
+				){
+					_scope.todos = TDMgr.getTodosByTag("#"+$routeParams.id,false);
+				}
+				if(typeof window.orientation == 'undefined'){ // Workaround for mobile devices
+					$("#todotxta").blur().focus();
+				}
+			}
+		);
+		/*
 		if(TDMgr.getTodos().length==0){
 			Backend.getTodos();
 		} else {
 			_scope.tags = TDMgr.getTags();
-			_scope.todos = TDMgr.getTodosByTag(_scope.filtertag);
+			_scope.todos = TDMgr.getTodosByTag(_scope.filtertag,_scope.showdone);
 		}
+		*/
 	}
 
 	// Logout (with undef appdata)
@@ -36,6 +78,7 @@ tdapp.service('Autologin',function($http,$window,$location,$cookies,$timeout,app
 		appdata.token = undefined;
 		appdata.rememberme = undefined;
 		$window.location = "/#/login";
+		// TODO: Firebase logout
 		$timeout(function(){
 			$("#liuser").focus();
 		},128);

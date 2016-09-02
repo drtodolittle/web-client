@@ -83,7 +83,7 @@ tdapp.service('Backend',function($http,$timeout,$window,$location,appdata,TDMgr)
 			}
 		);
 	}
-	this.getTodos = function(){
+	this.getTodos = function(_callback){
 		$http({
 			method:"get",
 			url: appdata.server
@@ -93,6 +93,8 @@ tdapp.service('Backend',function($http,$timeout,$window,$location,appdata,TDMgr)
 				res.data.forEach(function(o){
 					TDMgr.addTodoObj(o);
 				});
+				_callback();
+				/*
 				$timeout(function(){
 					_scope.tags = TDMgr.getTags();
 					_scope.todos = TDMgr.getTodosByTag(_scope.filtertag);
@@ -103,6 +105,7 @@ tdapp.service('Backend',function($http,$timeout,$window,$location,appdata,TDMgr)
 						$("#todotxta").blur().focus();
 					}
 				},1128);
+				*/
 			}
 			,
 			function(res) {

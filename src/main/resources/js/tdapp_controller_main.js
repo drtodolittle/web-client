@@ -5,7 +5,17 @@
 */
 var tdapp = require('./tdapp');
 
-tdapp.controller("MainCtrl",function($scope,$timeout,$interval,$http,$cookies,$window,appdata,TDMgr,Backend,Autologin){
+tdapp.controller("MainCtrl",
+function(
+	$scope,
+	$timeout,
+	$interval,
+	$http,
+	$cookies,
+	$window,
+	$routeParams,
+	appdata,TDMgr,Backend,Autologin)
+{
 
 	// Injections
 
@@ -166,4 +176,5 @@ tdapp.controller("MainCtrl",function($scope,$timeout,$interval,$http,$cookies,$w
 	Autologin.check(); // Do automatic login if cookies are available
 
 	$("#todotxta").focus();
+
 });

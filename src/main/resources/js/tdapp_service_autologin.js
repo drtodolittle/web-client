@@ -4,6 +4,7 @@
 
 */
 var tdapp = require('./tdapp');
+var firebase = require('./tdapp_firebase');
 
 tdapp.service('Autologin',
 function(
@@ -78,7 +79,10 @@ function(
 		appdata.token = undefined;
 		appdata.rememberme = undefined;
 		$window.location = "/#/login";
-		// TODO: Firebase logout
+		firebase.auth().signOut()
+		.catch(function(err){
+			console.log("Error: " + err.message);
+		})
 		$timeout(function(){
 			$("#liuser").focus();
 		},128);

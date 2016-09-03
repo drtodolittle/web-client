@@ -58,14 +58,11 @@ tdapp.controller("AuthCtrl",function($scope,$http,$cookies,$window,$timeout,appd
 		var password = $scope.password;
 		$window.location = "/#/working";
 		appdata.lip = "firebase";
-		firebase.auth().signInWithEmailAndPassword(user,password).then(
-			function(res){
-				//if(!res.emailVerified){
-				//	throw {
-				//		message:"Your have to verify you E-Mail-Adress before you can log in."
-				//	};
-				//}
-				appdata.user = res.email;
+		firebase.auth().signInWithEmailAndPassword(user,password)
+		.then(function(res){
+			var uid = res.uid;
+			appdata.user = res.email;
+			var continueWithWork = function(){
 				res.getToken().then(function(res){
 					if(appdata.rememberme){
 						var now = new Date();
@@ -83,15 +80,56 @@ tdapp.controller("AuthCtrl",function($scope,$http,$cookies,$window,$timeout,appd
 					$scope.errormsg = "";
 					appdata.errormsg = "";
 					goMain();
-				}).catch(function(error){
+				})
+				.catch(function(error){
 					appdata.errormsg = "Login-Error: " + error.message;
 					Autologin.doLogout(); // Will undef appdata
-				});
+				})
+			} // continueWithWork
+			if(!res.emailVerified){
+				firebase.database().ref('/data/user/'+uid).once('value')
+				.then(function(res){
+					var update = {};
+					update['/data/user/'+uid] = {
+						currentdate : firebase.database.ServerValue.TIMESTAMP,
+						createdate : res.val().createdate
+					};
+					firebase.database().ref().update(update)
+					.then(function(){
+						firebase.database().ref('/data/user/'+uid).once('value')
+						.then(function(res){
+							var createdate = res.val().createdate;
+							var currentdate = res.val().currentdate;
+							//if((createdate+1000)<currentdate){ // 1s
+							if((createdate+1000*60*60*24)<currentdate){ // 24h
+								appdata.errormsg = "Login-Error: You now have to verify your email to use Dr ToDo Little.";
+								Autologin.doLogout();
+							} else {
+								continueWithWork();
+							}
+						})
+						.catch(function(error){
+							appdata.errormsg = "Login-Error: " + error.message;
+							Autologin.doLogout(); // Will undef appdata
+						})
+					})
+					.catch(function(error){
+						appdata.errormsg = "Login-Error: " + error.message;
+						Autologin.doLogout(); // Will undef appdata
+					})
+				}) // emailVerified
+				.catch(function(error){
+					appdata.errormsg = "Login-Error: " + error.message;
+					Autologin.doLogout(); // Will undef appdata
+				})
+			} else {
+				continueWithWork();
 			}
-		).catch(function(error){
+		}) // signInWithEmailAndPassword
+		.catch(function(error){
 			appdata.errormsg = "Login-Error: " + error.message;
 			Autologin.doLogout(); // Will undef appdata
-		});
+		})
 	}
 
 	$scope.doLoginWithGoogle = function(){

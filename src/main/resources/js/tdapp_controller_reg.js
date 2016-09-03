@@ -14,6 +14,30 @@ tdapp.controller("RegCtrl",function($scope,$http,$window,appdata,Backend){
 		$window.location = "/#/login";
 	}
 
+	// Database
+
+	function saveUser(){
+		var uid = firebase.auth().currentUser.uid;
+		if(uid!=undefined){
+			firebase.database().ref('/data/user/'+uid).set({
+				createdate : firebase.database.ServerValue.TIMESTAMP,
+				currentdate : 0
+			})
+			/*
+			var key = firebase.database().ref().child('/data/user/'+uid).push().key;
+			var update = {};
+			update['/data/user/'+uid+'/'+key] = {
+				userid : uid,
+				createdate : firebase.database.ServerValue.TIMESTAMP
+			};
+			firebase.database().ref().update(update)
+			*/
+			.catch(function(err){
+				console.log("Error: " + err.message);
+			});
+		}
+	}
+
 	// Register
 
 	$scope.doRegister = function(){
@@ -33,11 +57,6 @@ tdapp.controller("RegCtrl",function($scope,$http,$window,appdata,Backend){
 				user.sendEmailVerification()
 				.then(function(){
 					// Prepare for work
-					var msg = ""
-					msg += "Registration successful! \n";
-					msg += "A verification email is waiting for you. \n";
-					msg += "You can go on using Dr ToDo Little now! ";
-					alert(msg);					
 					user.getToken().then(function(res){
 						appdata.token = res;
 						appdata.user = user.email;
@@ -52,16 +71,27 @@ tdapp.controller("RegCtrl",function($scope,$http,$window,appdata,Backend){
 						$scope.filtertag = "All"; // Set filtertag before calling Backend.getTodos()
 						$scope.errormsg = "";
 						appdata.errormsg = "";
+						saveUser();
+						var msg = ""
+						msg += "Registration successful! \n";
+						msg += "A verification email is waiting for you. \n";
+						msg += "But you can go on using Dr ToDo Little now \n";
+						msg += "for 24 hours without verification.";
+						alert(msg);
 						$window.location = "/#/main"
+					})
+					.catch(function(err){
+						$scope.errormsg = "Registration-Error: " + err.message;
+						$scope.$apply()
 					})
 				})
 				.catch(function(err){
-					$scope.errormsg = "Registration-Error: " + error.message;
-					$scope.$apply();
+					$scope.errormsg = "Registration-Error: " + err.message;
+					$scope.$apply()
 				})
 			}
-		).catch(function(error){
-			$scope.errormsg = "Registration-Error: " + error.message;
+		).catch(function(err){
+			$scope.errormsg = "Registration-Error: " + err.message;
 			$scope.$apply();
 		});
 	}

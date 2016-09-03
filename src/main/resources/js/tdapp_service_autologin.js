@@ -57,6 +57,7 @@ function(
 				if(typeof window.orientation == 'undefined'){ // Workaround for mobile devices
 					$("#todotxta").blur().focus();
 				}
+				$window.location = "/#/main";
 			}
 		);
 		/*

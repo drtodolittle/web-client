@@ -19,19 +19,10 @@ tdapp.controller("RegCtrl",function($scope,$http,$window,appdata,Backend){
 	function saveUser(){
 		var uid = firebase.auth().currentUser.uid;
 		if(uid!=undefined){
-			firebase.database().ref('/data/user/'+uid).set({
-				createdate : firebase.database.ServerValue.TIMESTAMP,
-				currentdate : 0
+			firebase.database().ref('/data/reg/'+uid).set({
+				regts : firebase.database.ServerValue.TIMESTAMP, // Registration timestamp
+				llts : 0 // Last login timestamp
 			})
-			/*
-			var key = firebase.database().ref().child('/data/user/'+uid).push().key;
-			var update = {};
-			update['/data/user/'+uid+'/'+key] = {
-				userid : uid,
-				createdate : firebase.database.ServerValue.TIMESTAMP
-			};
-			firebase.database().ref().update(update)
-			*/
 			.catch(function(err){
 				console.log("Error: " + err.message);
 			});

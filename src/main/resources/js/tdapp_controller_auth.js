@@ -87,21 +87,23 @@ tdapp.controller("AuthCtrl",function($scope,$http,$cookies,$window,$timeout,appd
 				})
 			} // continueWithWork
 			if(!res.emailVerified){
-				firebase.database().ref('/data/user/'+uid).once('value')
+				firebase.database().ref('/data/reg/'+uid).once('value')
 				.then(function(res){
+					if(res==null || res==undefined){
+						throw { message : 'Invalid userdata on server.' }
+					}
 					var update = {};
-					update['/data/user/'+uid] = {
-						currentdate : firebase.database.ServerValue.TIMESTAMP,
-						createdate : res.val().createdate
+					update['/data/reg/'+uid] = {
+						regts : res.val().regts,
+						llts : firebase.database.ServerValue.TIMESTAMP
 					};
 					firebase.database().ref().update(update)
 					.then(function(){
-						firebase.database().ref('/data/user/'+uid).once('value')
+						firebase.database().ref('/data/reg/'+uid).once('value')
 						.then(function(res){
-							var createdate = res.val().createdate;
-							var currentdate = res.val().currentdate;
-							//if((createdate+1000)<currentdate){ // 1s
-							if((createdate+1000*60*60*24)<currentdate){ // 24h
+							var regts = res.val().regts;
+							var llts = res.val().llts;
+							if((regts+1000*60*60*24)<llts){ // 24h
 								appdata.errormsg = "Login-Error: You now have to verify your email to use Dr ToDo Little.";
 								Autologin.doLogout();
 							} else {

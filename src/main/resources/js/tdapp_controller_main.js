@@ -82,7 +82,7 @@ function(
 				newtodo.done = false;
 				$scope.newtodotxt = "";
 				Backend.postTodo(newtodo);
-				Backend.incTodosCount();
+				Backend.incTodosTotal();
 				TDMgr.addTodoObj(newtodo);
 				if($scope.showdone){
 					$scope.showdone = false;
@@ -138,7 +138,7 @@ function(
 	$scope.deltodo = function(obj){ // No animation
 		obj.deleted = true;
 		Backend.delTodo(obj);
-		Backend.decTodosCount();
+		Backend.incTodosDeleted();
 		TDMgr.delTodo(obj);
 		$scope.todos = TDMgr.getTodosByTag($scope.filtertag,$scope.showdone);
 	}
@@ -149,8 +149,10 @@ function(
 			TDMgr.togDone(obj); // Toggle todo local (within TDMgr)
 			if(obj.done){ // Toggle Todo on the server
 				Backend.doneTodo(obj);
+				Backend.incTodosDone();
 			} else {
 				Backend.undoneTodo(obj);
+				Backend.incTodosUndone();
 			}
 			$scope.todos = TDMgr.getTodosByTag($scope.filtertag,$scope.showdone);
 		},1000);

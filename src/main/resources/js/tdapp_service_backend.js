@@ -117,8 +117,8 @@ tdapp.service('Backend',function($http,$timeout,$window,$location,appdata,TDMgr)
 
 	// Firebase realtime database
 
-	this.incTodosCount = function(){
-		firebase.database().ref('/data/todoscount').transaction(
+	this.incTodosTotal = function(){
+		firebase.database().ref('/data/misc/todos/total').transaction(
 			function(data){
 				data += 1;
 				return data;
@@ -128,10 +128,10 @@ tdapp.service('Backend',function($http,$timeout,$window,$location,appdata,TDMgr)
 			console.log("Error: " + error.message);
 		})
 	}
-	this.decTodosCount = function(){
-		firebase.database().ref('/data/todoscount').transaction(
+	this.incTodosDeleted = function(){
+		firebase.database().ref('/data/misc/todos/deleted').transaction(
 			function(data){
-				data -= 1;
+				data += 1;
 				return data;
 			}
 		)
@@ -139,5 +139,28 @@ tdapp.service('Backend',function($http,$timeout,$window,$location,appdata,TDMgr)
 			console.log("Error: " + error.message);
 		})
 	}
+	this.incTodosDone = function(){
+		firebase.database().ref('/data/misc/todos/done').transaction(
+			function(data){
+				data += 1;
+				return data;
+			}
+		)
+		.catch(function(error){
+			console.log("Error: " + error.message);
+		})
+	}
+	this.incTodosUndone = function(){
+		firebase.database().ref('/data/misc/todos/undone').transaction(
+			function(data){
+				data += 1;
+				return data;
+			}
+		)
+		.catch(function(error){
+			console.log("Error: " + error.message);
+		})
+	}
+
 
 });

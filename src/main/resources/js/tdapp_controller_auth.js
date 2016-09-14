@@ -75,7 +75,7 @@ tdapp.controller("AuthCtrl",function($scope,$http,$cookies,$window,$timeout,appd
 						$cookies.put(appdata.cookiename,JSON.stringify(cookie),{expires:exp});
 					}
 					appdata.token = res;
-					$http.defaults.headers.common['Authorization'] = "Basic " + res;
+					$http.defaults.headers.common['Authorization'] = "Bearer " + res;
 					$scope.filtertag = "All"; // Set filtertag before calling Backend.getTodos()
 					$scope.errormsg = "";
 					appdata.errormsg = "";
@@ -156,7 +156,7 @@ tdapp.controller("AuthCtrl",function($scope,$http,$cookies,$window,$timeout,appd
 						$cookies.put(appdata.cookiename,JSON.stringify(cookiedata),{expires:exp});
 					}
 					appdata.token = res;
-					$http.defaults.headers.common['Authorization'] = "Basic " + res;
+					$http.defaults.headers.common['Authorization'] = "Bearer " + res;
 					$scope.filtertag = 'All'; // Set filtertag before calling Backend.getTodos()
 					$scope.errormsg = "";
 					appdata.errormsg = "";

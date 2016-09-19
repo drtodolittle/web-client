@@ -54,20 +54,18 @@ function(
 				){
 					_scope.todos = TDMgr.getTodosByTag("#"+$routeParams.id,false);
 				}
+				if(
+					$routeParams.type==undefined &&
+					$routeParams.id==undefined &&
+					$routeParams.type==undefined
+				){
+					$window.location = "/#/main";
+				}
 				if(typeof window.orientation == 'undefined'){ // Workaround for mobile devices
 					$("#todotxta").blur().focus();
 				}
-				// $window.location = "/#/main";
 			}
-		);
-		/*
-		if(TDMgr.getTodos().length==0){
-			Backend.getTodos();
-		} else {
-			_scope.tags = TDMgr.getTags();
-			_scope.todos = TDMgr.getTodosByTag(_scope.filtertag,_scope.showdone);
-		}
-		*/
+		)
 	}
 
 	// Logout (with undef appdata)
@@ -107,13 +105,13 @@ function(
 				appdata.token = dr.token;
 				appdata.user = dr.user;
 				appdata.lip = dr.lip;
-				$http.defaults.headers.common['Authorization'] = "Basic " + appdata.token;
+				$http.defaults.headers.common['Authorization'] = "Bearer " + appdata.token;
 				this.getAllTodos();
 			} else {
 				$window.location = "/#/login";
 			}
 		} else {
-			$http.defaults.headers.common['Authorization'] = "Basic " + appdata.token;
+			$http.defaults.headers.common['Authorization'] = "Bearer " + appdata.token;
 			this.getAllTodos();
 		}
 	}

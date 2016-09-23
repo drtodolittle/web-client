@@ -36,11 +36,11 @@
 </div>
 <!-- List (new) -->
 <div class="container list-group" >
-	<ul class="list-group" style="padding-left:16px">
+	<ul class="list-group fnt16" style="padding-left:16px">
 	<li
 		class="list-group-item"
 		style="padding:16px"
-		contenteditable="true"
+		contenteditable="false"
 		ng-keydown="todolineKeydown($event,todo.id)"
 		ng-repeat="todo in todos">
 		<span id="todoid{{todo.id}}">
@@ -49,16 +49,24 @@
 					<span ng-if="todo.predone==false" class="mo glyphicon glyphicon-unchecked"></span>
 					<span ng-if="todo.predone==true" class="mo glyphicon glyphicon-check"></span>
 				</span>
-				<span class="colred fnt16">
+				<span class="colgrey fnt16 m8">
+					<span
+						class="mo glyphicon glyphicon glyphicon-pencil"
+						contenteditable="false"
+						ng-click="edittodo(todo)">
+					</span>
+				</span>
+				<span class="colred fnt16 m8">
 					<span
 						class="mo glyphicon glyphicon-remove"
 						contenteditable="false"
 						ng-click=deltodo(todo)>
 					</span>
 				</span>
-
 			</span>
-			{{todo.topic}}
+			<span id="todocontent{{todo.id}}">
+				{{todo.topic}}
+			</span>
 		</span>
 	</li>
 	</ul>
@@ -136,3 +144,17 @@
 		</tr>
 	</table>
 </div>
+
+<!-- modal -->
+<div id="todoeditmodal" class="modal fade" tabindex="-1" role="dialog">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-body">
+        <p id="todocontentmodal" contenteditable="true"></p>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-default" data-dismiss="modal" ng-click="saveedittodo()">Done</button>
+      </div>
+    </div><!-- /.modal-content -->
+  </div><!-- /.modal-dialog -->
+</div><!-- /.modal -->

@@ -107,7 +107,10 @@ function(
 		var k = e.keyCode;
 		if(k==13){//ret
 			e.preventDefault();
-			var currentTodo = $('#todoid'+id);
+			// Old (with contenteditable)
+			// var currentTodo = $('#todoid'+id)
+			// New (with modal dialog)
+			var currentTodo = $('#todocontent'+id)
 			// Correct contenteditable behaviour
 			currentTodo.html(currentTodo.html().replace('<br>',''));
 			currentTodo.blur();
@@ -135,7 +138,7 @@ function(
 		$("#todoid"+id).focus();
 	}
 
-	$scope.deltodo = function(obj){ // No animation
+	$scope.deltodo = function(obj){
 		obj.deleted = true;
 		$('#todoid'+obj.id).parent().blur().fadeOut();
 		$timeout(function(){
@@ -144,6 +147,28 @@ function(
 			TDMgr.delTodo(obj);
 		},500)
 		$scope.todos = TDMgr.getTodosByTag($scope.filtertag,$scope.showdone);
+	}
+
+	$scope.edittodo = function(obj){
+		$('#todocontentmodal').text(obj.topic)
+		$('#todocontentmodal').attr('todoid',obj.id)
+		$('#todoeditmodal').modal()
+		$timeout(function(){
+			$('#todocontentmodal').focus().select()
+		},500)
+	}
+
+	$scope.saveedittodo = function(){
+		var id = $('#todocontentmodal').attr('todoid')
+		var html =  $('#todocontentmodal').html()
+		$('#todocontent'+id).html(html)
+		$scope.todolineKeydown(
+			{
+				keyCode:13,
+				preventDefault:function(){}
+			},
+			id
+		)
 	}
 
 	$scope.togDone = function(obj){

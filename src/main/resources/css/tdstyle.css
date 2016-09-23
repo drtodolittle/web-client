@@ -3,12 +3,23 @@
 	tdstyle.css
 
 */
-
 body,div,p,span{
 	padding:0px;
 	margin:0px;
 }
 
+/*
+  Colors ----------------------------------------
+*/
+.colgrey{
+	color:#808080
+}
+.colgreen{
+	color:#40a040
+}
+.colred{
+	color:#a04040
+}
 /*
   Fonts ----------------------------------------
 */
@@ -36,6 +47,9 @@ body,div,p,span{
 /*
   Margins ----------------------------------------
 */
+.m8{
+	margin:8px;
+}
 .mt8{
 	margin-top:8px;
 }

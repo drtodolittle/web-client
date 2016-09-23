@@ -137,14 +137,18 @@ function(
 
 	$scope.deltodo = function(obj){ // No animation
 		obj.deleted = true;
-		Backend.delTodo(obj);
-		Backend.incTodosDeleted();
-		TDMgr.delTodo(obj);
+		$('#todoid'+obj.id).parent().blur().fadeOut();
+		$timeout(function(){
+			Backend.delTodo(obj);
+			Backend.incTodosDeleted();
+			TDMgr.delTodo(obj);
+		},500)
 		$scope.todos = TDMgr.getTodosByTag($scope.filtertag,$scope.showdone);
 	}
 
 	$scope.togDone = function(obj){
 		TDMgr.togPreDone(obj);
+		$('#todoid'+obj.id).parent().blur().fadeOut();
 		$timeout(function(){
 			TDMgr.togDone(obj); // Toggle todo local (within TDMgr)
 			if(obj.done){ // Toggle Todo on the server
@@ -155,7 +159,7 @@ function(
 				Backend.incTodosUndone();
 			}
 			$scope.todos = TDMgr.getTodosByTag($scope.filtertag,$scope.showdone);
-		},1000);
+		},500);
 	}
 
 	// Filter function

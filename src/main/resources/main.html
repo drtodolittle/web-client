@@ -16,7 +16,7 @@
 
 <div>&nbsp;</div>
 
-<!-- List -->
+<!-- Filter/Done/Open -->
 <div class="container">
 	<div class="dropdown pull-left">
 	  <button class="btn btn-default dropdown-toggle" type="button" id="filter1" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
@@ -34,6 +34,37 @@
 	  <button class="btn btn-default" type="button" ng-click="togShowdone()">{{showdonetext}}</button>
 	</div>
 </div>
+<!-- List (new) -->
+<div class="container list-group" >
+	<ul class="list-group" style="padding-left:16px">
+	<li
+		class="list-group-item"
+		style="padding:16px"
+		contenteditable="true"
+		ng-keydown="todolineKeydown($event,todo.id)"
+		ng-repeat="todo in todos">
+		<span id="todoid{{todo.id}}">
+			<span class="pull-right">
+				<span class="mo m8 colgreen fnt16" ng-click="togDone(todo)" contenteditable="false">
+					<span ng-if="todo.predone==false" class="mo glyphicon glyphicon-unchecked"></span>
+					<span ng-if="todo.predone==true" class="mo glyphicon glyphicon-check"></span>
+				</span>
+				<span class="colred fnt16">
+					<span
+						class="mo glyphicon glyphicon-remove"
+						contenteditable="false"
+						ng-click=deltodo(todo)>
+					</span>
+				</span>
+
+			</span>
+			{{todo.topic}}
+		</span>
+	</li>
+	</ul>
+</div>
+
+<!-- Old list
 <div class="container">
 	<div class="bootcards-list">
 	  <div class="panel panel-default">
@@ -54,6 +85,7 @@
 	  </div>
 	</div>
 </div>
+-->
 
 <!-- Navbar (alternativ one)-->
 <!--

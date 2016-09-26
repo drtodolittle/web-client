@@ -3,21 +3,18 @@
 	tdapp_controller_auth.js
 
 */
-var tdapp = require('./tdapp');
-var firebase = require('./tdapp_firebase');
-
-tdapp.controller("AuthCtrl",function($scope,$http,$cookies,$window,$timeout,appdata,TDMgr,Backend,Autologin){
+tdapp.controller("AuthCtrl",function($scope,$http,$cookies,$location,$timeout,appdata,autologinservice){
 
 	// Injection
 
-	Autologin.setScope($scope);
-	Backend.setScope($scope);
+	autologinservice.setScope($scope);
+
 
 	// Reset password
 
 	$scope.goResetPwd = function(){
 		appdata.errormsg = "";
-		$window.location = "/#/resetpwd";
+		$location.path("/resetpwd");
 	}
 
 	// Remember me
@@ -38,7 +35,7 @@ tdapp.controller("AuthCtrl",function($scope,$http,$cookies,$window,$timeout,appd
 	function goMain(){
 		appdata.errormsg = "";
 		$timeout(function(){
-			$window.location = "/#/main";
+			$location.path("/");
 		},1000);
 	}
 
@@ -56,7 +53,7 @@ tdapp.controller("AuthCtrl",function($scope,$http,$cookies,$window,$timeout,appd
 		var user = $scope.email;
 		appdata.tmpuser = user;
 		var password = $scope.password;
-		$window.location = "/#/working";
+		$location.path("/working");
 		appdata.lip = "firebase";
 		firebase.auth().signInWithEmailAndPassword(user,password)
 		.then(function(res){
@@ -76,14 +73,14 @@ tdapp.controller("AuthCtrl",function($scope,$http,$cookies,$window,$timeout,appd
 					}
 					appdata.token = res;
 					$http.defaults.headers.common['Authorization'] = "Bearer " + res;
-					$scope.filtertag = "All"; // Set filtertag before calling Backend.getTodos()
+					$scope.filtertag = "All"; // Set filtertag before calling backend.getTodos()
 					$scope.errormsg = "";
 					appdata.errormsg = "";
 					goMain();
 				})
 				.catch(function(error){
 					appdata.errormsg = "Login-Error: " + error.message;
-					Autologin.doLogout(); // Will undef appdata
+					autologinservice.doLogout(); // Will undef appdata
 				})
 			} // continueWithWork
 			if(!res.emailVerified){
@@ -105,24 +102,24 @@ tdapp.controller("AuthCtrl",function($scope,$http,$cookies,$window,$timeout,appd
 							var llts = res.val().llts;
 							if((regts+1000*60*60*24)<llts){ // 24h
 								appdata.errormsg = "Login-Error: You now have to verify your email to use Dr ToDo Little.";
-								Autologin.doLogout();
+								autologinservice.doLogout();
 							} else {
 								continueWithWork();
 							}
 						})
 						.catch(function(error){
 							appdata.errormsg = "Login-Error: " + error.message;
-							Autologin.doLogout(); // Will undef appdata
+							autologinservice.doLogout(); // Will undef appdata
 						})
 					})
 					.catch(function(error){
 						appdata.errormsg = "Login-Error: " + error.message;
-						Autologin.doLogout(); // Will undef appdata
+						autologinservice.doLogout(); // Will undef appdata
 					})
 				}) // emailVerified
 				.catch(function(error){
 					appdata.errormsg = "Login-Error: " + error.message;
-					Autologin.doLogout(); // Will undef appdata
+					autologinservice.doLogout(); // Will undef appdata
 				})
 			} else {
 				continueWithWork();
@@ -130,7 +127,7 @@ tdapp.controller("AuthCtrl",function($scope,$http,$cookies,$window,$timeout,appd
 		}) // signInWithEmailAndPassword
 		.catch(function(error){
 			appdata.errormsg = "Login-Error: " + error.message;
-			Autologin.doLogout(); // Will undef appdata
+			autologinservice.doLogout(); // Will undef appdata
 		})
 	}
 
@@ -138,7 +135,7 @@ tdapp.controller("AuthCtrl",function($scope,$http,$cookies,$window,$timeout,appd
 		$('#libutgoogle').blur();
 		appdata.lip = "google";
 		var provider = new firebase.auth.GoogleAuthProvider();
-		$window.location = "/#/working";
+		$location.path("/working");
 		firebase.auth().signInWithPopup(provider).then(function(res){
 			appdata.user = res.user.email;
 			appdata.lip = "google";
@@ -157,21 +154,21 @@ tdapp.controller("AuthCtrl",function($scope,$http,$cookies,$window,$timeout,appd
 					}
 					appdata.token = res;
 					$http.defaults.headers.common['Authorization'] = "Bearer " + res;
-					$scope.filtertag = 'All'; // Set filtertag before calling Backend.getTodos()
+					$scope.filtertag = 'All'; // Set filtertag before calling backend.getTodos()
 					$scope.errormsg = "";
 					appdata.errormsg = "";
 					goMain();
 				}).catch(function(error){
 					appdata.errormsg = "Login-Error: " + error.message;
-					Autologin.doLogout(); // Will undef appdata
+					autologinservice.doLogout(); // Will undef appdata
 				});
 			} else {
 				appdata.errormsg = "Login-Error: Not logged in.";
-				Autologin.doLogout(); // Will undef appdata
+				autologinservice.doLogout(); // Will undef appdata
 			}
 		}).catch(function(error){
 			appdata.errormsg = "Login-Error: " + error.message;
-			Autologin.doLogout(); // Will undef appdata
+			autologinservice.doLogout(); // Will undef appdata
 		});
 	}
 
@@ -190,7 +187,7 @@ tdapp.controller("AuthCtrl",function($scope,$http,$cookies,$window,$timeout,appd
 	$scope.goRegister = function(){
 		appdata.errormsg = "";
 		$('#libutreg').blur();
-		$window.location = "/#/register";
+		$location.path("/register");
 	};
 
 	// Finish
@@ -198,7 +195,7 @@ tdapp.controller("AuthCtrl",function($scope,$http,$cookies,$window,$timeout,appd
 	$scope.errormsg = appdata.errormsg;
 	$scope.email = appdata.tmpuser;
 
-	Autologin.check(); // Do automatic login if cookies are available
+	autologinservice.check(); // Do automatic login if cookies are available
 
 	$("#liuser").focus();
 

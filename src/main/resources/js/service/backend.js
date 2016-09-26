@@ -1,12 +1,9 @@
 /*
 
-	tdapp_service_backend.js
+	backend.js
 
 */
-var tdapp = require('./tdapp');
-var firebase = require('./tdapp_firebase');
-
-tdapp.service('Backend',function($http,$timeout,$window,$location,appdata,TDMgr){
+tdapp.service('backend',function($http,$timeout,$location,appdata,todoservice){
 	var _scope;
 	this.setScope = function(scope){
 		_scope = scope;
@@ -89,15 +86,15 @@ tdapp.service('Backend',function($http,$timeout,$window,$location,appdata,TDMgr)
 			url: appdata.server
 		}).then(
 			function successCallback(res) {
-				TDMgr.clearTodos();
+				todoservice.clearTodos();
 				res.data.forEach(function(o){
-					TDMgr.addTodoObj(o);
+					todoservice.addTodoObj(o);
 				});
 				_callback();
 				/*
 				$timeout(function(){
-					_scope.tags = TDMgr.getTags();
-					_scope.todos = TDMgr.getTodosByTag(_scope.filtertag);
+					_scope.tags = todoservice.getTags();
+					_scope.todos = todoservice.getTodosByTag(_scope.filtertag);
 					$window.location = "/#/main";
 				},1000);
 				$timeout(function(){
@@ -108,8 +105,8 @@ tdapp.service('Backend',function($http,$timeout,$window,$location,appdata,TDMgr)
 				*/
 			}
 			,
-			function(res) {
-				console.log("Error: " + JSON.stringify(res));
+			function(response) {
+				console.log("Error: " + JSON.stringify(response));
 				_scope.errormsg="Server not available!";
 			}
 		);

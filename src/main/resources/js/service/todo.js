@@ -3,9 +3,8 @@
 	tdapp_factories.js
 
 */
-var tdapp = require('./tdapp');
 
-tdapp.factory("TDMgr",function(){ // ToDoManager
+tdapp.service("todoservice",function(){ // ToDoManager
 	var fact = {};
 	fact.todos = [];
 	fact.tags = [];

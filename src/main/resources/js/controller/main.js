@@ -3,8 +3,6 @@
 	tdapp_controller_main.js
 
 */
-var tdapp = require('./tdapp');
-
 tdapp.controller("MainCtrl",
 function(
 	$scope,
@@ -12,15 +10,15 @@ function(
 	$interval,
 	$http,
 	$cookies,
-	$window,
+	$location,
 	$routeParams,
-	appdata,TDMgr,Backend,Autologin)
+	appdata,todoservice,backend,autologinservice)
 {
 
 	// Injections
 
-	Autologin.setScope($scope);
-	Backend.setScope($scope);
+	autologinservice.setScope($scope);
+	backend.setScope($scope);
 
 	// General Done Filter
 
@@ -30,7 +28,7 @@ function(
 	// Go to settings
 
 	$scope.goSettings = function(){
-		$window.location = "/#/settings";
+		$location.path("/settings");
 	}
 
 	// Show and hide custommenu (animated via jquery)
@@ -64,9 +62,9 @@ function(
 	// Logout
 
 	$scope.doLogout = function(){
-		$window.location = "/#/working";
+		$location.path("/working");
 		$timeout(function(){
-			Autologin.doLogout();
+			autologinservice.doLogout();
 		},1000);
 	}
 
@@ -81,9 +79,9 @@ function(
 				newtodo.topic = $scope.newtodotxt;
 				newtodo.done = false;
 				$scope.newtodotxt = "";
-				Backend.postTodo(newtodo);
-				Backend.incTodosTotal();
-				TDMgr.addTodoObj(newtodo);
+				backend.postTodo(newtodo);
+				backend.incTodosTotal();
+				todoservice.addTodoObj(newtodo);
 				if($scope.showdone){
 					$scope.showdone = false;
 					$scope.showdonetext = "Show Done";
@@ -93,7 +91,7 @@ function(
 				} else {
 					$scope.filtertag = "All";
 				}
-				$scope.todos = TDMgr.getTodosByTag($scope.filtertag,$scope.showdone);
+				$scope.todos = todoservice.getTodosByTag($scope.filtertag,$scope.showdone);
 				window.scrollTo(0,0);
 				$("#todotxta").focus();
 			}
@@ -111,20 +109,20 @@ function(
 			// Correct contenteditable behaviour
 			currentTodo.html(currentTodo.html().replace('<br>',''));
 			currentTodo.blur();
-			var obj = TDMgr.getTodoById(id);
+			var obj = todoservice.getTodoById(id);
 			if(obj!=undefined){
 				obj.topic = currentTodo.html();
-				Backend.putTodo(obj);
+				backend.putTodo(obj);
 				var oldtag = obj.tag;
-				TDMgr.checkForHashtag(obj);
+				todoservice.checkForHashtag(obj);
 				if(oldtag!=undefined){
-					var ttd = TDMgr.getTodosByTag(oldtag);
+					var ttd = todoservice.getTodosByTag(oldtag);
 					if(ttd.length<=0){
-						TDMgr.tags.splice(TDMgr.tags.indexOf(oldtag),1);
+						todoservice.tags.splice(todoservice.tags.indexOf(oldtag),1);
 					}
 				}
-				$scope.tags = (TDMgr.getTags()).sort();
-				$scope.todos = TDMgr.getTodosByTag($scope.filtertag,$scope.showdone);
+				$scope.tags = (todoservice.getTags()).sort();
+				$scope.todos = todoservice.getTodosByTag($scope.filtertag,$scope.showdone);
 			}
 		}
 	}
@@ -137,24 +135,24 @@ function(
 
 	$scope.deltodo = function(obj){ // No animation
 		obj.deleted = true;
-		Backend.delTodo(obj);
-		Backend.incTodosDeleted();
-		TDMgr.delTodo(obj);
-		$scope.todos = TDMgr.getTodosByTag($scope.filtertag,$scope.showdone);
+		backend.delTodo(obj);
+		backend.incTodosDeleted();
+		todoservice.delTodo(obj);
+		$scope.todos = todoservice.getTodosByTag($scope.filtertag,$scope.showdone);
 	}
 
 	$scope.togDone = function(obj){
-		TDMgr.togPreDone(obj);
+		todoservice.togPreDone(obj);
 		$timeout(function(){
-			TDMgr.togDone(obj); // Toggle todo local (within TDMgr)
+			todoservice.togDone(obj); // Toggle todo local (within todoservice)
 			if(obj.done){ // Toggle Todo on the server
-				Backend.doneTodo(obj);
-				Backend.incTodosDone();
+				backend.doneTodo(obj);
+				backend.incTodosDone();
 			} else {
-				Backend.undoneTodo(obj);
-				Backend.incTodosUndone();
+				backend.undoneTodo(obj);
+				backend.incTodosUndone();
 			}
-			$scope.todos = TDMgr.getTodosByTag($scope.filtertag,$scope.showdone);
+			$scope.todos = todoservice.getTodosByTag($scope.filtertag,$scope.showdone);
 		},1000);
 	}
 
@@ -167,16 +165,16 @@ function(
 		} else {
 			$scope.showdonetext = "Show Done";
 		}
-		$scope.todos=TDMgr.getTodosByTag($scope.filtertag,$scope.showdone);
+		$scope.todos=todoservice.getTodosByTag($scope.filtertag,$scope.showdone);
 	}
 
 	// Tags
 
-	$scope.getTodosByTag = TDMgr.getTodosByTag;
+	$scope.getTodosByTag = todoservice.getTodosByTag;
 
 	// Finish
 
-	Autologin.check(); // Do automatic login if cookies are available
+	autologinservice.check(); // Do automatic login if cookies are available
 
 	$("#todotxta").focus();
 

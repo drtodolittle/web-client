@@ -3,19 +3,15 @@
 	tdapp_service_autologin.js
 
 */
-var tdapp = require('./tdapp');
-var firebase = require('./tdapp_firebase');
-
-tdapp.service('Autologin',
+tdapp.service('autologinservice',
 function(
 	$http,
-	$window,
 	$location,
 	$cookies,
 	$timeout,
 	$compile,
 	$routeParams,
-	appdata,TDMgr,Backend
+	appdata,todoservice,backend
 ){
 
 	// Injection
@@ -29,16 +25,16 @@ function(
 
 	this.getAllTodos = function(){
 		_scope.filtertag = 'All'; // Set filtertag before calling Backend.getTodos()
-		Backend.getTodos(
+		backend.getTodos(
 			function(){
-				_scope.tags = (TDMgr.getTags()).sort();
-				_scope.todos = TDMgr.getTodosByTag(_scope.filtertag,_scope.showdone);
+				_scope.tags = (todoservice.getTags()).sort();
+				_scope.todos = todoservice.getTodosByTag(_scope.filtertag,_scope.showdone)
 				if(
 					$routeParams.type!=undefined &&
 					$routeParams.id!=undefined &&
 					$routeParams.type=="todo"
 				){
-					var todo = TDMgr.getTodoById($routeParams.id)
+					var todo = todoservice.getTodoById($routeParams.id)
 					if(todo!=undefined){
 						var todos = [];
 						todos.push(todo);
@@ -52,14 +48,14 @@ function(
 					$routeParams.id!=undefined &&
 					$routeParams.type=="tag"
 				){
-					_scope.todos = TDMgr.getTodosByTag("#"+$routeParams.id,false);
+					_scope.todos = todoservice.getTodosByTag("#"+$routeParams.id,false);
 				}
 				if(
 					$routeParams.type==undefined &&
 					$routeParams.id==undefined &&
 					$routeParams.type==undefined
 				){
-					$window.location = "/#/main";
+					$location.path("/");
 				}
 				if(typeof window.orientation == 'undefined'){ // Workaround for mobile devices
 					$("#todotxta").blur().focus();
@@ -72,12 +68,12 @@ function(
 
 	this.doLogout = function(){
 		$cookies.remove(appdata.cookiename);
-		TDMgr.clearTodos();
+		todoservice.clearTodos();
 		appdata.user = undefined;
 		appdata.lip = undefined;
 		appdata.token = undefined;
 		appdata.rememberme = undefined;
-		$window.location = "/#/login";
+		$location.path("/login");
 		firebase.auth().signOut()
 		.catch(function(err){
 			console.log("Error: " + err.message);
@@ -90,9 +86,9 @@ function(
 	// Check (autologin if possible)
 
 	this.check = function(){
-		if($window.location.hostname=="localhost"){
-			appdata.server = appdata.localserver;
-		}
+//		if($window.location.hostname=="localhost"){
+//			appdata.server = appdata.localserver;
+//		}
 		if(
 			appdata.user == undefined &&
 			appdata.token == undefined &&
@@ -108,7 +104,7 @@ function(
 				$http.defaults.headers.common['Authorization'] = "Bearer " + appdata.token;
 				this.getAllTodos();
 			} else {
-				$window.location = "/#/login";
+				$location.path("/login");
 			}
 		} else {
 			$http.defaults.headers.common['Authorization'] = "Bearer " + appdata.token;

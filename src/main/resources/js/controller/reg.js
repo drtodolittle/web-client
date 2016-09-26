@@ -3,15 +3,12 @@
 	tdapp_controller_reg.js
 
 */
-var tdapp = require('./tdapp');
-var firebase = require('./tdapp_firebase');
-
-tdapp.controller("RegCtrl",function($scope,$http,$window,appdata,Backend){
+tdapp.controller("RegCtrl",function($scope,$http,$location,appdata,backend){
 
 	// Go login
 
 	$scope.goLogin = function(){
-		$window.location = "/#/login";
+		$location.path("/login");
 	}
 
 	// Database
@@ -57,9 +54,9 @@ tdapp.controller("RegCtrl",function($scope,$http,$window,appdata,Backend){
 						var welcometodo = {};
 						welcometodo.topic = "Welcome to Dr ToDo Little!";
 						welcometodo.done = false;
-						Backend.postTodo(welcometodo);
+						backend.postTodo(welcometodo);
 						// Continue...
-						$scope.filtertag = "All"; // Set filtertag before calling Backend.getTodos()
+						$scope.filtertag = "All"; // Set filtertag before calling backend.getTodos()
 						$scope.errormsg = "";
 						appdata.errormsg = "";
 						saveUser();
@@ -69,7 +66,7 @@ tdapp.controller("RegCtrl",function($scope,$http,$window,appdata,Backend){
 						msg += "But you can go on using Dr ToDo Little now \n";
 						msg += "for 24 hours without verification.";
 						alert(msg);
-						$window.location = "/#/main"
+						$location.path("/main")
 					})
 					.catch(function(err){
 						$scope.errormsg = "Registration-Error: " + err.message;

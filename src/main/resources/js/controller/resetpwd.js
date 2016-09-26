@@ -3,15 +3,12 @@
 	tdapp_controller_resetpwd.js
 
 */
-var tdapp = require('./tdapp');
-var firebase = require('./tdapp_firebase');
-
-tdapp.controller("ResetPwdCtrl",function($scope,$window,appdata,Autologin){
+tdapp.controller("ResetPwdCtrl",function($scope,$location,appdata,autologinservice){
 
 	// Go login
 
 	$scope.goLogin = function(){
-		$window.location = "/#/login";
+		$location.path("/login");
 	}
 
 	// Reset password
@@ -25,15 +22,15 @@ tdapp.controller("ResetPwdCtrl",function($scope,$window,appdata,Autologin){
 			return;
 		}
 		var email = $scope.email;
-		$window.location = "/#/working";
+		$location.path("/#/working");
 		firebase.auth().sendPasswordResetEmail(email).then(function(){
 			alert("An email is waiting for you to reset your password.");
 			appdata.errormsg = "";
-			Autologin.doLogout();
+			autologinservice.doLogout();
 		},function(error){
 			var errmsg = "Password reset error: "+error.message;
 			appdata.errormsg = errmsg;
-			$window.location = "/#/resetpwd";
+			$location.path("/resetpwd");
 		});
 	}
 

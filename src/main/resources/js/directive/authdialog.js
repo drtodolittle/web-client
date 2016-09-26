@@ -3,8 +3,39 @@ tdapp.directive('authdialog', function() {
   return {
     restrict: 'E',
     templateUrl: 'templates/dialog.html',
-    controller: function($scope, $firebaseAuth, autologinservice, $http, appdata, $location) {
-      //$scope.cdusermodal = true;
+    controller: function($scope, $firebaseAuth, autologinservice, $http, appdata, $location, $route, localStorageService) {
+
+      $scope.doLoginWithGoogle = function(){
+    		var provider = new firebase.auth.GoogleAuthProvider();
+    		firebase.auth().signInWithPopup(provider).then(function(res){
+    			appdata.user = res.user.email;
+    			appdata.lip = "google";
+    			var user = firebase.auth().currentUser;
+          $scope.close_dialog();
+    			if(user){
+    				user.getToken().then(function(res){
+              appdata.token = res;
+    					$http.defaults.headers.common['Authorization'] = "Bearer " + res;
+              if ($scope.rememberme) {
+                localStorageService.set("logintoken", res);
+              }
+    					$scope.filtertag = "All"; // Set filtertag before calling backend.getTodos()
+    					$scope.errormsg = "";
+    					appdata.errormsg = "";
+    					$route.reload();
+    				}).catch(function(error){
+    					appdata.errormsg = "Login-Error: " + error.message;
+    					autologinservice.doLogout(); // Will undef appdata
+    				});
+    			} else {
+    				appdata.errormsg = "Login-Error: Not logged in.";
+    				autologinservice.doLogout(); // Will undef appdata
+    			}
+    		}).catch(function(error){
+    			appdata.errormsg = "Login-Error: " + error.message;
+    			autologinservice.doLogout(); // Will undef appdata
+    		});
+    	}
 
       $scope.doLogin = function(){
         var auth = $firebaseAuth();
@@ -22,10 +53,13 @@ tdapp.directive('authdialog', function() {
     				res.getToken().then(function(res){
     					appdata.token = res;
     					$http.defaults.headers.common['Authorization'] = "Bearer " + res;
+              if ($scope.rememberme) {
+                localStorageService.set("logintoken", res);
+              }
     					$scope.filtertag = "All"; // Set filtertag before calling backend.getTodos()
     					$scope.errormsg = "";
     					appdata.errormsg = "";
-    					$location.path("/");
+    					$route.reload();
             })
     				.catch(function(error){
     					appdata.errormsg = "Login-Error: " + error.message;
@@ -43,7 +77,6 @@ tdapp.directive('authdialog', function() {
         $scope.cdusermodal = true;
         $scope.select_login();
       };
-
 
       $scope.select_login = function() {
         $scope.loginselected = true;
@@ -69,6 +102,8 @@ tdapp.directive('authdialog', function() {
         $scope.registerselected = false;
         $scope.resetselected = false;
       };
+
+      $scope.rememberme=true;
     }
   }
 });

@@ -3,11 +3,13 @@
 	backend.js
 
 */
-tdapp.service('backend',function($http,$timeout,$location,appdata,todoservice){
-	var _scope;
-	this.setScope = function(scope){
-		_scope = scope;
+tdapp.service('backend',function($http,appdata,todoservice,localStorageService){
+
+	var token = localStorageService.get("logintoken");
+	if (token != undefined) {
+		$http.defaults.headers.common['Authorization'] = "Bearer " + token;
 	}
+	
 	this.postTodo = function(obj){
 		$http({
 			method:"post",
@@ -90,24 +92,10 @@ tdapp.service('backend',function($http,$timeout,$location,appdata,todoservice){
 				res.data.forEach(function(o){
 					todoservice.addTodoObj(o);
 				});
-				_callback();
-				/*
-				$timeout(function(){
-					_scope.tags = todoservice.getTags();
-					_scope.todos = todoservice.getTodosByTag(_scope.filtertag);
-					$window.location = "/#/main";
-				},1000);
-				$timeout(function(){
-					if(typeof window.orientation == 'undefined'){ // Workaround
-						$("#todotxta").blur().focus();
-					}
-				},1128);
-				*/
-			}
-			,
+
+			},
 			function(response) {
 				console.log("Error: " + JSON.stringify(response));
-				_scope.errormsg="Server not available!";
 			}
 		);
 	}

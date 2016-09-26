@@ -36,7 +36,7 @@ tdapp.service("todoservice",function(){ // ToDoManager
 		return fact.todos;
 	}
 	fact.getTodosByTag = function(tag,done){
-		if(tag=='' || tag=='All'){
+		if(tag=='' || tag=='All' || tag == undefined){
 			var ret = [];
 			if(done){
 				fact.todos.forEach(function(obj){

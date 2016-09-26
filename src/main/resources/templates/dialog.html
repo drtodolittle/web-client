@@ -9,7 +9,7 @@
       <form class="cd-form">
         <p class="social-login">
           <span class="social-login-facebook"><a href="#"><i class="fa fa-facebook"></i> Facebook</a></span>
-          <span class="social-login-google"><a href="#"><i class="fa fa-google"></i> Google</a></span>
+          <span class="social-login-google"><a href="javascript:void(0);" ng-click="doLoginWithGoogle()"><i class="fa fa-google"></i> Google</a></span>
           <span class="social-login-twitter"><a href="#"><i class="fa fa-twitter"></i> Twitter</a></span>
         </p>
 
@@ -29,7 +29,7 @@
         </p>
 
         <p class="fieldset">
-          <input type="checkbox" id="remember-me" checked>
+          <input type="checkbox" id="remember-me" ng-model="rememberme">
           <label for="remember-me">Remember me</label>
         </p>
 

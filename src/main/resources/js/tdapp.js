@@ -3,7 +3,7 @@
 	tdapp.js
 
 */
-var tdapp = angular.module('tdapp',['ngCookies','ngRoute', 'firebase']);
+var tdapp = angular.module('tdapp',['ngCookies','ngRoute', 'firebase','LocalStorageModule']);
 
 tdapp.config(function($routeProvider,$locationProvider,$compileProvider,$httpProvider) {
 	// Routing
@@ -13,8 +13,7 @@ tdapp.config(function($routeProvider,$locationProvider,$compileProvider,$httpPro
 				controller : 'MainCtrl'
       })
 			.when('/login', {
-        templateUrl : 'login.html',
-				controller : 'AuthCtrl'
+        templateUrl : 'login.html'
       })
 			.when('/working', {
         templateUrl : 'working.html'

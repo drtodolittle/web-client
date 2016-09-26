@@ -1,8 +1,11 @@
-tdapp.service('logininterceptor', function($q, $location, $scope) {
+tdapp.service('logininterceptor', function($q, $rootScope, localStorageService) {
   return {
    'responseError': function(rejection) {
       if (rejection.status == 401) {
-        $scope.open_dialog();
+        if (localStorageService.get("logintoken") != undefined) {
+          localStorageService.remove("logintoken");
+        }
+        $rootScope.open_dialog();
       }
       return $q.reject(rejection);
     }

@@ -15,11 +15,6 @@ function(
 	appdata,todoservice,backend,autologinservice)
 {
 
-	// Injections
-
-	autologinservice.setScope($scope);
-	backend.setScope($scope);
-
 	// General Done Filter
 
 	$scope.showdone = false;
@@ -174,8 +169,8 @@ function(
 
 	// Finish
 
-	autologinservice.check(); // Do automatic login if cookies are available
-
+	//autologinservice.check(); // Do automatic login if cookies are available
+	backend.getTodos();
 	$("#todotxta").focus();
 
 });

@@ -6,7 +6,7 @@
 	tdapp.js
 
 */
-var tdapp = angular.module('tdapp',['ngCookies','ngRoute', 'firebase']);
+var tdapp = angular.module('tdapp',['ngCookies','ngRoute', 'firebase','LocalStorageModule']);
 
 tdapp.config(["$routeProvider", "$locationProvider", "$compileProvider", "$httpProvider", function($routeProvider,$locationProvider,$compileProvider,$httpProvider) {
 	// Routing
@@ -16,8 +16,7 @@ tdapp.config(["$routeProvider", "$locationProvider", "$compileProvider", "$httpP
 				controller : 'MainCtrl'
       })
 			.when('/login', {
-        templateUrl : 'login.html',
-				controller : 'AuthCtrl'
+        templateUrl : 'login.html'
       })
 			.when('/working', {
         templateUrl : 'working.html'
@@ -290,11 +289,6 @@ tdapp.controller("MainCtrl",
 	appdata,todoservice,backend,autologinservice)
 {
 
-	// Injections
-
-	autologinservice.setScope($scope);
-	backend.setScope($scope);
-
 	// General Done Filter
 
 	$scope.showdone = false;
@@ -449,8 +443,8 @@ tdapp.controller("MainCtrl",
 
 	// Finish
 
-	autologinservice.check(); // Do automatic login if cookies are available
-
+	//autologinservice.check(); // Do automatic login if cookies are available
+	backend.getTodos();
 	$("#todotxta").focus();
 
 }]);
@@ -724,8 +718,39 @@ tdapp.directive('authdialog', function() {
   return {
     restrict: 'E',
     templateUrl: 'templates/dialog.html',
-    controller: ["$scope", "$firebaseAuth", "autologinservice", "$http", "appdata", "$location", function($scope, $firebaseAuth, autologinservice, $http, appdata, $location) {
-      //$scope.cdusermodal = true;
+    controller: ["$scope", "$firebaseAuth", "autologinservice", "$http", "appdata", "$location", "$route", "localStorageService", function($scope, $firebaseAuth, autologinservice, $http, appdata, $location, $route, localStorageService) {
+
+      $scope.doLoginWithGoogle = function(){
+    		var provider = new firebase.auth.GoogleAuthProvider();
+    		firebase.auth().signInWithPopup(provider).then(function(res){
+    			appdata.user = res.user.email;
+    			appdata.lip = "google";
+    			var user = firebase.auth().currentUser;
+          $scope.close_dialog();
+    			if(user){
+    				user.getToken().then(function(res){
+              appdata.token = res;
+    					$http.defaults.headers.common['Authorization'] = "Bearer " + res;
+              if ($scope.rememberme) {
+                localStorageService.set("logintoken", res);
+              }
+    					$scope.filtertag = "All"; // Set filtertag before calling backend.getTodos()
+    					$scope.errormsg = "";
+    					appdata.errormsg = "";
+    					$route.reload();
+    				}).catch(function(error){
+    					appdata.errormsg = "Login-Error: " + error.message;
+    					autologinservice.doLogout(); // Will undef appdata
+    				});
+    			} else {
+    				appdata.errormsg = "Login-Error: Not logged in.";
+    				autologinservice.doLogout(); // Will undef appdata
+    			}
+    		}).catch(function(error){
+    			appdata.errormsg = "Login-Error: " + error.message;
+    			autologinservice.doLogout(); // Will undef appdata
+    		});
+    	}
 
       $scope.doLogin = function(){
         var auth = $firebaseAuth();
@@ -743,10 +768,13 @@ tdapp.directive('authdialog', function() {
     				res.getToken().then(function(res){
     					appdata.token = res;
     					$http.defaults.headers.common['Authorization'] = "Bearer " + res;
+              if ($scope.rememberme) {
+                localStorageService.set("logintoken", res);
+              }
     					$scope.filtertag = "All"; // Set filtertag before calling backend.getTodos()
     					$scope.errormsg = "";
     					appdata.errormsg = "";
-    					$location.path("/");
+    					$route.reload();
             })
     				.catch(function(error){
     					appdata.errormsg = "Login-Error: " + error.message;
@@ -764,7 +792,6 @@ tdapp.directive('authdialog', function() {
         $scope.cdusermodal = true;
         $scope.select_login();
       };
-
 
       $scope.select_login = function() {
         $scope.loginselected = true;
@@ -790,6 +817,8 @@ tdapp.directive('authdialog', function() {
         $scope.registerselected = false;
         $scope.resetselected = false;
       };
+
+      $scope.rememberme=true;
     }]
   }
 });
@@ -915,11 +944,13 @@ tdapp.service('autologinservice',
 	backend.js
 
 */
-tdapp.service('backend',["$http", "$timeout", "$location", "appdata", "todoservice", function($http,$timeout,$location,appdata,todoservice){
-	var _scope;
-	this.setScope = function(scope){
-		_scope = scope;
+tdapp.service('backend',["$http", "appdata", "todoservice", "localStorageService", function($http,appdata,todoservice,localStorageService){
+
+	var token = localStorageService.get("logintoken");
+	if (token != undefined) {
+		$http.defaults.headers.common['Authorization'] = "Bearer " + token;
 	}
+	
 	this.postTodo = function(obj){
 		$http({
 			method:"post",
@@ -1002,24 +1033,10 @@ tdapp.service('backend',["$http", "$timeout", "$location", "appdata", "todoservi
 				res.data.forEach(function(o){
 					todoservice.addTodoObj(o);
 				});
-				_callback();
-				/*
-				$timeout(function(){
-					_scope.tags = todoservice.getTags();
-					_scope.todos = todoservice.getTodosByTag(_scope.filtertag);
-					$window.location = "/#/main";
-				},1000);
-				$timeout(function(){
-					if(typeof window.orientation == 'undefined'){ // Workaround
-						$("#todotxta").blur().focus();
-					}
-				},1128);
-				*/
-			}
-			,
+
+			},
 			function(response) {
 				console.log("Error: " + JSON.stringify(response));
-				_scope.errormsg="Server not available!";
 			}
 		);
 	}
@@ -1074,11 +1091,14 @@ tdapp.service('backend',["$http", "$timeout", "$location", "appdata", "todoservi
 
 }]);
 
-tdapp.service('logininterceptor', ["$q", "$location", "$scope", function($q, $location, $scope) {
+tdapp.service('logininterceptor', ["$q", "$rootScope", "localStorageService", function($q, $rootScope, localStorageService) {
   return {
    'responseError': function(rejection) {
       if (rejection.status == 401) {
-        $scope.open_dialog();
+        if (localStorageService.get("logintoken") != undefined) {
+          localStorageService.remove("logintoken");
+        }
+        $rootScope.open_dialog();
       }
       return $q.reject(rejection);
     }
@@ -1150,7 +1170,7 @@ tdapp.service("todoservice",function(){ // ToDoManager
 		return fact.todos;
 	}
 	fact.getTodosByTag = function(tag,done){
-		if(tag=='' || tag=='All'){
+		if(tag=='' || tag=='All' || tag == undefined){
 			var ret = [];
 			if(done){
 				fact.todos.forEach(function(obj){

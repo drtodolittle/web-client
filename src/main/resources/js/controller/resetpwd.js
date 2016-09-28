@@ -3,7 +3,7 @@
 	tdapp_controller_resetpwd.js
 
 */
-tdapp.controller("ResetPwdCtrl",function($scope,$location,appdata,autologinservice){
+tdapp.controller("ResetPwdCtrl",function($scope,$location,appdata){
 
 	// Go login
 

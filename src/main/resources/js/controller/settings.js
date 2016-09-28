@@ -3,7 +3,7 @@
 	tdapp_controller_settings.js
 
 */
-tdapp.controller("SettingsCtrl",function($scope,$http,$location,$cookies,$timeout,appdata,autologinservice){
+tdapp.controller("SettingsCtrl",function($scope,$http,$location,$cookies,$timeout,appdata){
 
 	// Go main
 

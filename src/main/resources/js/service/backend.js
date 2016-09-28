@@ -3,13 +3,13 @@
 	backend.js
 
 */
-tdapp.service('backend',function($http,appdata,todoservice,localStorageService){
+tdapp.service('backend',function($http,appdata,localStorageService){
 
 	var token = localStorageService.get("logintoken");
 	if (token != undefined) {
 		$http.defaults.headers.common['Authorization'] = "Bearer " + token;
 	}
-	
+
 	this.postTodo = function(obj){
 		$http({
 			method:"post",
@@ -82,22 +82,11 @@ tdapp.service('backend',function($http,appdata,todoservice,localStorageService){
 			}
 		);
 	}
-	this.getTodos = function(_callback){
-		$http({
+	this.getTodos = function(){
+		return $http({
 			method:"get",
 			url: appdata.server
-		}).then(
-			function successCallback(res) {
-				todoservice.clearTodos();
-				res.data.forEach(function(o){
-					todoservice.addTodoObj(o);
-				});
-
-			},
-			function(response) {
-				console.log("Error: " + JSON.stringify(response));
-			}
-		);
+		});
 	}
 
 	// Firebase realtime database

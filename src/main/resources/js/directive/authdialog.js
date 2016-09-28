@@ -3,7 +3,7 @@ tdapp.directive('authdialog', function() {
   return {
     restrict: 'E',
     templateUrl: 'templates/dialog.html',
-    controller: function($scope, $firebaseAuth, autologinservice, $http, appdata, $location, $route, localStorageService) {
+    controller: function($scope, $firebaseAuth, $http, appdata, $location, $route, localStorageService) {
 
       $scope.doLoginWithGoogle = function(){
     		var provider = new firebase.auth.GoogleAuthProvider();

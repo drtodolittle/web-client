@@ -24,9 +24,9 @@
 		<span class="caret"></span>
 	  </button>
 	  <ul class="dropdown-menu" aria-labelledby="filter1">
-		<li><a href="/" ng-click="todos=getTodosByTag('',showdone);filtertag='All'">All</a></li>
+		<li><a href="/" ng-click="displaytodos('All')">All</a></li>
 		<li ng-repeat="tag in tags">
-			<a href="/" ng-click="$parent.filtertag=tag;$parent.showdone=showdone;$parent.todos=$parent.getTodosByTag(tag,showdone)">{{tag}}</a>
+			<a href="/" ng-click="displaytodos(tag)">{{tag}}</a>
 		</li>
 	  </ul>
 	</div>

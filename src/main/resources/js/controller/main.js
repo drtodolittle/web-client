@@ -7,21 +7,15 @@ tdapp.controller("MainCtrl",
 function(
 	$scope,
 	$timeout,
-	$interval,
-	$http,
-	$cookies,
 	$location,
-	$routeParams,
-	appdata,todoservice,backend,autologinservice)
+	todoservice)
 {
 
 	// General Done Filter
-
 	$scope.showdone = false;
 	$scope.showdonetext = "Show Done";
 
 	// Go to settings
-
 	$scope.goSettings = function(){
 		$location.path("/settings");
 	}
@@ -55,7 +49,6 @@ function(
 	}
 
 	// Logout
-
 	$scope.doLogout = function(){
 		$location.path("/working");
 		$timeout(function(){
@@ -64,7 +57,6 @@ function(
 	}
 
 	// Keyboard
-
 	$scope.newtodoKeydown = function(e){
 		var k = e.keyCode;
 		if(k==13){//ret
@@ -74,9 +66,7 @@ function(
 				newtodo.topic = $scope.newtodotxt;
 				newtodo.done = false;
 				$scope.newtodotxt = "";
-				backend.postTodo(newtodo);
-				backend.incTodosTotal();
-				todoservice.addTodoObj(newtodo);
+				todoservice.create(newtodo);
 				if($scope.showdone){
 					$scope.showdone = false;
 					$scope.showdonetext = "Show Done";
@@ -107,7 +97,7 @@ function(
 			var obj = todoservice.getTodoById(id);
 			if(obj!=undefined){
 				obj.topic = currentTodo.html();
-				backend.putTodo(obj);
+				todoservice.update(obj);
 				var oldtag = obj.tag;
 				todoservice.checkForHashtag(obj);
 				if(oldtag!=undefined){
@@ -122,16 +112,18 @@ function(
 		}
 	}
 
-	// Todo functions
+	$scope.displaytodos = function(tag) {
+		$scope.filtertag = tag;
+		$scope.todos = todoservice.getTodosByTag(tag,$scope.showdone);
+	}
 
+	// Todo functions
 	$scope.seltodoline = function(id){
 		$("#todoid"+id).focus();
 	}
 
 	$scope.deltodo = function(obj){ // No animation
 		obj.deleted = true;
-		backend.delTodo(obj);
-		backend.incTodosDeleted();
 		todoservice.delTodo(obj);
 		$scope.todos = todoservice.getTodosByTag($scope.filtertag,$scope.showdone);
 	}
@@ -140,13 +132,6 @@ function(
 		todoservice.togPreDone(obj);
 		$timeout(function(){
 			todoservice.togDone(obj); // Toggle todo local (within todoservice)
-			if(obj.done){ // Toggle Todo on the server
-				backend.doneTodo(obj);
-				backend.incTodosDone();
-			} else {
-				backend.undoneTodo(obj);
-				backend.incTodosUndone();
-			}
 			$scope.todos = todoservice.getTodosByTag($scope.filtertag,$scope.showdone);
 		},1000);
 	}
@@ -166,11 +151,12 @@ function(
 	// Tags
 
 	$scope.getTodosByTag = todoservice.getTodosByTag;
+	todoservice.getTodos().then(function(todos) {
+		$scope.todos = todoservice.getTodosByTag($scope.filtertag,$scope.showdone);
+		$scope.tags = todoservice.getTags();
+	});
 
 	// Finish
-
-	//autologinservice.check(); // Do automatic login if cookies are available
-	backend.getTodos();
 	$("#todotxta").focus();
 
 });

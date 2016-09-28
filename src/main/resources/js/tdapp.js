@@ -12,9 +12,6 @@ tdapp.config(function($routeProvider,$locationProvider,$compileProvider,$httpPro
         templateUrl : 'main.html',
 				controller : 'MainCtrl'
       })
-			.when('/login', {
-        templateUrl : 'login.html'
-      })
 			.when('/working', {
         templateUrl : 'working.html'
       })

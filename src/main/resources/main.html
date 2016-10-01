@@ -32,11 +32,13 @@
 		contenteditable="false"
 		ng-repeat="todo in todos">
 		<span id="todoid{{todo.id}}">
-			<span class="pull-right">
+			<span class="pull-left">
 				<span class="mo m8 colgreen fnt16" ng-click="togDone(todo)" contenteditable="false">
 					<span ng-if="todo.predone==false" class="mo glyphicon glyphicon-unchecked"></span>
 					<span ng-if="todo.predone==true" class="mo glyphicon glyphicon-check"></span>
 				</span>
+			</span>
+			<span class="pull-right">
 				<span class="colred fnt16 m8">
 					<span
 						class="mo glyphicon glyphicon-remove"

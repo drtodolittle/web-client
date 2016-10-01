@@ -3,12 +3,22 @@
 	tdapp_factories.js
 
 */
-var tdapp = require('./tdapp');
 
-tdapp.factory("TDMgr",function(){ // ToDoManager
+tdapp.service("todoservice",function(backend, $q){ // ToDoManager
 	var fact = {};
 	fact.todos = [];
 	fact.tags = [];
+
+	fact.create = function(newtodo) {
+		backend.postTodo(newtodo);
+		backend.incTodosTotal();
+	  fact.addTodoObj(newtodo);
+	}
+
+	fact.update = function(todo) {
+		backend.putTodo(todo);
+	}
+
 	fact.checkForHashtag = function(obj){
 		if(obj.topic==undefined){
 			return;
@@ -34,10 +44,18 @@ tdapp.factory("TDMgr",function(){ // ToDoManager
 		return fact.tags;
 	}
 	fact.getTodos = function(){
-		return fact.todos;
+		return $q(function(resolve, reject) {
+			backend.getTodos().then(function(response) {
+				fact.clearTodos();
+				response.data.forEach(function(todo){
+					fact.addTodoObj(todo);
+				});
+				resolve(fact.todos);
+			});
+		});
 	}
 	fact.getTodosByTag = function(tag,done){
-		if(tag=='' || tag=='All'){
+		if(tag=='' || tag=='All' || tag == undefined){
 			var ret = [];
 			if(done){
 				fact.todos.forEach(function(obj){
@@ -104,6 +122,9 @@ tdapp.factory("TDMgr",function(){ // ToDoManager
 		return obj;
 	}
 	fact.delTodo = function(item){
+		backend.delTodo(item);
+		backend.incTodosDeleted();
+
 		var idx = fact.todos.indexOf(item)
 		if(idx>=0){
 			var tag = item.tag;
@@ -127,6 +148,13 @@ tdapp.factory("TDMgr",function(){ // ToDoManager
 		}
 	}
 	fact.togDone = function(item){
+		if(item.done){ // Toggle Todo on the server
+			backend.doneTodo(item);
+			backend.incTodosDone();
+		} else {
+			backend.undoneTodo(item);
+			backend.incTodosUndone();
+		}
 		var idx = fact.todos.indexOf(item);
 		if( idx<0 ) return;
 		var todo = fact.todos[idx];

@@ -1,10 +1,15 @@
-﻿<!DOCTYPE html>
-<html lang="de">
+<!DOCTYPE html>
+<!--[if IE 8]> <html lang="en" class="ie8"> <![endif]-->
+<!--[if IE 9]> <html lang="en" class="ie9"> <![endif]-->
+<!--[if !IE]><!--> <html lang="en"> <!--<![endif]-->
 <head>
 	<title>Dr ToDo Little</title>
 	<meta charset="utf-8">
 	<meta http-equiv="X-UA-Compatible" content="IE=edge">
 	<meta name="viewport" content="width=device-width, initial-scale=1">
+
+	<base href="/">
+
 	<!-- Favicon -->
 	<link rel="shortcut icon" href="/favicon.ico" type="image/x-icon">
 	<link rel="icon" href="/favicon.ico" type="image/x-icon">
@@ -16,12 +21,45 @@
 		<link rel="stylesheet" media="all" type="text/css" href="css/tdstyle.css" />
 </head>
 <body ng-app="tdapp">
+	<nav class="navbar navbar-inverse sidebar" role="navigation" ng-controller="navigation">
+	    <div class="container-fluid">
+			<!-- Brand and toggle get grouped for better mobile display -->
+			<div class="navbar-header">
+				<button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#bs-sidebar-navbar-collapse-1">
+					<span class="sr-only">Toggle navigation</span>
+					<span class="icon-bar"></span>
+					<span class="icon-bar"></span>
+					<span class="icon-bar"></span>
+				</button>
+				<a class="navbar-brand" href="http://www.drtodolittle.de">Dr ToDo Little</a>
+			</div>
+			<!-- Collect the nav links, forms, and other content for toggling -->
+			<div class="collapse navbar-collapse" id="bs-sidebar-navbar-collapse-1">
+				<ul class="nav navbar-nav">
+					<li class="active"><a href="/">Home<span style="font-size:16px;" class="pull-right hidden-xs showopacity glyphicon glyphicon-home"></span></a></li>
+					<li ><a href="#">Profile<span style="font-size:16px;" class="pull-right hidden-xs showopacity glyphicon glyphicon-user"></span></a></li>
+					<li ><a href="/" ng-click="logout()">Logout<span style="font-size:16px;" class="pull-right hidden-xs showopacity glyphicon glyphicon-envelope"></span></a></li>
+					<li class="dropdown">
+						<a href="#" class="dropdown-toggle" data-toggle="dropdown">Settings <span class="caret"></span><span style="font-size:16px;" class="pull-right hidden-xs showopacity glyphicon glyphicon-cog"></span></a>
+						<ul class="dropdown-menu forAnimate" role="menu">
+							<li><a href="/" ng-click="changepassword()">Change Password</a></li>
+							<li><a href="/" ng-click="logout()">Logout</a></li>
+						</ul>
+					</li>
+				</ul>
+			</div>
+		</div>
+	</nav>
+	<div class="main">
+	<!-- Content Here -->
+	<authdialog></authdialog>
 	<div ng-view></div>
-	<!-- Libraries -->
+	</div>
+		<!-- Libraries -->
 		<!-- AngularJS -->
-			<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.5.0/angular.min.js"></script>
-			<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.5.0/angular-cookies.min.js"></script>
-			<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.5.0/angular-route.min.js"></script>
+			<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.5.7/angular.min.js"></script>
+			<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.5.7/angular-cookies.min.js"></script>
+			<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.5.7/angular-route.min.js"></script>
 		<!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
 			<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
 		<!-- Bootstrap -->
@@ -29,11 +67,39 @@
 		<!-- Firebase -->
 			<script src="https://www.gstatic.com/firebasejs/3.2.1/firebase.js"></script>
 		<!-- AngularFire -->
-		<!--
 			<script src="https://cdn.firebase.com/libs/angularfire/2.0.1/angularfire.min.js"></script>
-		-->
-		<!-- TDApp -->
-			<script src="js/tdapp.bundled.min.js"></script>
+			<script src="js/lib/angular-local-storage.min.js"></script>
+			<script src="js/lib/xeditable.min.js"></script>
+			<!-- TDApp -->
+			<script src="js/drtodolittle.js"></script>
+			<script>
+			function htmlbodyHeightUpdate(){
+var height3 = $( window ).height()
+var height1 = $('.nav').height()+50
+height2 = $('.main').height()
+if(height2 > height3){
+	$('html').height(Math.max(height1,height3,height2)+10);
+	$('body').height(Math.max(height1,height3,height2)+10);
+}
+else
+{
+	$('html').height(Math.max(height1,height3,height2));
+	$('body').height(Math.max(height1,height3,height2));
+}
+
+}
+$(document).ready(function () {
+htmlbodyHeightUpdate()
+$( window ).resize(function() {
+	htmlbodyHeightUpdate()
+});
+$( window ).scroll(function() {
+	height2 = $('.main').height()
+		htmlbodyHeightUpdate()
+});
+});
+</script>
+
 	<!-- Google analytics -->
 			<script>
 			  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){

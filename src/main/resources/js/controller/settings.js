@@ -3,34 +3,13 @@
 	tdapp_controller_settings.js
 
 */
-var tdapp = require('./tdapp');
-var firebase = require('./tdapp_firebase');
-
-tdapp.controller("SettingsCtrl",function($scope,$http,$window,$cookies,$timeout,appdata,TDMgr,Autologin){
-
-	// Go main
-
-	$scope.goMain = function(){
-		$window.location = "/#/main";
-	}
-
-	// Go settings
-
-	$scope.goSettings = function(){
-		$window.location = "/#/settings";
-	}
-
-	// Change passwrod
-
-	$scope.goChPwd = function(){
-		$window.location = "/#/chpwd";
-	}
+tdapp.controller("SettingsCtrl",function($scope,$http,$location,$cookies,$timeout,appdata){
 
 	$scope.doChPwd = function(){
 		$scope.errormsg = "";
 		var user = firebase.auth().currentUser;
 		if(!user){
-			Autologin.doLogout();
+			autologinservice.doLogout();
 		}
 		if(
 			$scope.oldPassword==undefined ||
@@ -39,7 +18,7 @@ tdapp.controller("SettingsCtrl",function($scope,$http,$window,$cookies,$timeout,
 			$scope.errormsg = "Error: Enter valid data.";
 			return;
 		}
-		$window.location = "/#/working";
+		$location.path("/working");
 		firebase.auth().signInWithEmailAndPassword(
 			user.email,
 			$scope.oldPassword
@@ -50,18 +29,18 @@ tdapp.controller("SettingsCtrl",function($scope,$http,$window,$cookies,$timeout,
 				).then(
 					function(){
 						alert("Password change done!");
-						$window.location = "/#/settings";
+						$location.path("/#/settings");
 					}
 				).catch(function(error){
 					var errmsg = "Error: " + error.message;
 					$appdata.errormsg = errmsg;
-					Autologin.doLogout();
+					autologinservice.doLogout();
 				});
 			}
 		).catch(function(error){
 			var errmsg = "Error: " + error.message;
 			$appdata.errormsg = errmsg;
-			Autologin.doLogout();
+			autologinservice.doLogout();
 		});
 	}
 
@@ -70,18 +49,18 @@ tdapp.controller("SettingsCtrl",function($scope,$http,$window,$cookies,$timeout,
 	$scope.doResetPwd = function(){
 		var user = firebase.auth().currentUser;
 		if(user){
-			$window.location = "/#/working";
+			$location.path("/working");
 			var email = user.email;
 			firebase.auth().sendPasswordResetEmail(email).then(function(){
 				alert("An email is waiting for you to reset your password.");
-				Autologin.doLogout();
+				autologinservice.doLogout();
 			},function(error){
 				alert("Password reset error: "+error.message);
-				Autologin.doLogout();
+				autologinservice.doLogout();
 			});
 		} else {
 			appdata.errormsg = "An error has occured. Login again!";
-			Autologin.doLogout();
+			autologinservice.doLogout();
 		}
 	}
 
@@ -93,7 +72,7 @@ tdapp.controller("SettingsCtrl",function($scope,$http,$window,$cookies,$timeout,
 	){
 		var _dr = $cookies.get(appdata.derdrcookie);
 		if (_dr==undefined){
-			Autologin.doLogout();
+			autologinservice.doLogout();
 		} else {
 			var dr = JSON.parse(_dr);
 			appdata.user = dr.user;

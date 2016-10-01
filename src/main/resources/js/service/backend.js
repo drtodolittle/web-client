@@ -1,16 +1,15 @@
 /*
 
-	tdapp_service_backend.js
+	backend.js
 
 */
-var tdapp = require('./tdapp');
-var firebase = require('./tdapp_firebase');
+tdapp.service('backend',function($http,appdata,localStorageService){
 
-tdapp.service('Backend',function($http,$timeout,$window,$location,appdata,TDMgr){
-	var _scope;
-	this.setScope = function(scope){
-		_scope = scope;
+	var token = localStorageService.get("logintoken");
+	if (token != undefined) {
+		$http.defaults.headers.common['Authorization'] = "Bearer " + token;
 	}
+
 	this.postTodo = function(obj){
 		$http({
 			method:"post",
@@ -83,36 +82,11 @@ tdapp.service('Backend',function($http,$timeout,$window,$location,appdata,TDMgr)
 			}
 		);
 	}
-	this.getTodos = function(_callback){
-		$http({
+	this.getTodos = function(){
+		return $http({
 			method:"get",
 			url: appdata.server
-		}).then(
-			function successCallback(res) {
-				TDMgr.clearTodos();
-				res.data.forEach(function(o){
-					TDMgr.addTodoObj(o);
-				});
-				_callback();
-				/*
-				$timeout(function(){
-					_scope.tags = TDMgr.getTags();
-					_scope.todos = TDMgr.getTodosByTag(_scope.filtertag);
-					$window.location = "/#/main";
-				},1000);
-				$timeout(function(){
-					if(typeof window.orientation == 'undefined'){ // Workaround
-						$("#todotxta").blur().focus();
-					}
-				},1128);
-				*/
-			}
-			,
-			function(res) {
-				console.log("Error: " + JSON.stringify(res));
-				_scope.errormsg="Server not available!";
-			}
-		);
+		});
 	}
 
 	// Firebase realtime database

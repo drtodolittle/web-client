@@ -3,72 +3,120 @@ tdapp.directive('authdialog', function() {
   return {
     restrict: 'E',
     templateUrl: 'templates/dialog.html',
-    controller: function($scope, $firebaseAuth, $http, appdata, $location, $route, localStorageService) {
+    controller: function($scope, $firebaseAuth, $http, $location, $route, localStorageService) {
 
-      $scope.doLoginWithGoogle = function(){
+      var auth = $firebaseAuth();
+
+      $scope.resetpwd = function() {
+
+        auth.$sendPasswordResetEmail($scope.email).then(function(){
+    			alert("An email is waiting for you to reset your password.");
+          $scope.select_login();
+    		},function(error){
+    			var errmsg = "Password reset error: "+error.message;
+    		});
+
+      }
+
+      $scope.register = function() {
+    		if( $scope.email==undefined || $scope.password== undefined ) {
+    			$scope.errormsg = "Registration-Error: Enter valid data.";
+    			return;
+    		}
+    		var email = $scope.email;
+    		var password = $scope.password;
+    		auth.createUserWithEmailAndPassword(email,password)
+          .then( function(data) {
+    				var user = auth.currentUser;
+    				user.sendEmailVerification()
+    				.then(function(){
+    					// Prepare for work
+    					user.getToken().then(function(res){
+    						$http.defaults.headers.common['Authorization'] = "Bearer " + res;
+    						// Create Welcome-Todo
+    						var welcometodo = {};
+    						welcometodo.topic = "Welcome to Dr ToDo Little!";
+    						welcometodo.done = false;
+    						backend.postTodo(welcometodo);
+    						// Continue...
+    						$scope.filtertag = "All"; // Set filtertag before calling backend.getTodos()
+    						$scope.errormsg = "";
+    						var msg = ""
+    						msg += "Registration successful! \n";
+    						msg += "A verification email is waiting for you. \n";
+    						msg += "But you can go on using Dr ToDo Little now \n";
+    						msg += "for 24 hours without verification.";
+    						alert(msg);
+    						$location.path("/");
+    					})
+    					.catch(function(err){
+    						$scope.errormsg = "Registration-Error: " + err.message;
+    						$scope.$apply();
+    					})
+    				})
+    				.catch(function(err){
+    					$scope.errormsg = "Registration-Error: " + err.message;
+    					$scope.$apply();
+    				})
+    			}
+    		).catch(function(err){
+    			$scope.errormsg = "Registration-Error: " + err.message;
+    			$scope.$apply();
+    		});
+    	}
+
+
+      $scope.loginWithGoogle = function(){
     		var provider = new firebase.auth.GoogleAuthProvider();
     		firebase.auth().signInWithPopup(provider).then(function(res){
-    			appdata.user = res.user.email;
-    			appdata.lip = "google";
     			var user = firebase.auth().currentUser;
           $scope.close_dialog();
     			if(user){
     				user.getToken().then(function(res){
-              appdata.token = res;
     					$http.defaults.headers.common['Authorization'] = "Bearer " + res;
               if ($scope.rememberme) {
                 localStorageService.set("logintoken", res);
               }
     					$scope.filtertag = "All"; // Set filtertag before calling backend.getTodos()
     					$scope.errormsg = "";
-    					appdata.errormsg = "";
     					$route.reload();
     				}).catch(function(error){
-    					appdata.errormsg = "Login-Error: " + error.message;
-    					autologinservice.doLogout(); // Will undef appdata
+              alert("Error: " + error);
     				});
     			} else {
-    				appdata.errormsg = "Login-Error: Not logged in.";
-    				autologinservice.doLogout(); // Will undef appdata
+            alert("Error: " + error);
     			}
     		}).catch(function(error){
-    			appdata.errormsg = "Login-Error: " + error.message;
-    			autologinservice.doLogout(); // Will undef appdata
+          alert("Error: " + error);
     		});
     	}
 
-      $scope.doLogin = function(){
+      $scope.login = function(){
         var auth = $firebaseAuth();
 
     		var user = $scope.email;
-    		appdata.tmpuser = user;
     		var password = $scope.password;
         $scope.close_dialog();
-
-    		appdata.lip = "firebase";
     		auth.$signInWithEmailAndPassword(user,password)
     		.then(function(res){
     			var uid = res.uid;
-    			appdata.user = res.email;
+
     				res.getToken().then(function(res){
-    					appdata.token = res;
+
     					$http.defaults.headers.common['Authorization'] = "Bearer " + res;
               if ($scope.rememberme) {
                 localStorageService.set("logintoken", res);
               }
     					$scope.filtertag = "All"; // Set filtertag before calling backend.getTodos()
     					$scope.errormsg = "";
-    					appdata.errormsg = "";
     					$route.reload();
             })
     				.catch(function(error){
-    					appdata.errormsg = "Login-Error: " + error.message;
-    					autologinservice.doLogout(); // Will undef appdata
-    				});
+              //todo Errorhandling
+            });
     		}) // signInWithEmailAndPassword
     		.catch(function(error){
-    			appdata.errormsg = "Login-Error: " + error.message;
-    			autologinservice.doLogout(); // Will undef appdata
+    			//todo Errorhandling
     		});
     	};
 

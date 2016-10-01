@@ -15,9 +15,6 @@ tdapp.config(["$routeProvider", "$locationProvider", "$compileProvider", "$httpP
         templateUrl : 'main.html',
 				controller : 'MainCtrl'
       })
-			.when('/login', {
-        templateUrl : 'login.html'
-      })
 			.when('/working', {
         templateUrl : 'working.html'
       })
@@ -71,274 +68,22 @@ tdapp.value(
 
 /*
 
-	tdapp_controller_auth.js
-
-*/
-tdapp.controller("AuthCtrl",["$scope", "$http", "$cookies", "$location", "$timeout", "appdata", "autologinservice", function($scope,$http,$cookies,$location,$timeout,appdata,autologinservice){
-
-	// Injection
-
-	autologinservice.setScope($scope);
-
-
-	// Reset password
-
-	$scope.goResetPwd = function(){
-		appdata.errormsg = "";
-		$location.path("/resetpwd");
-	}
-
-	// Remember me
-
-	$scope.doRememberMe = function(){
-		var chked =  $('#rememberme').prop('checked');
-		if(!chked){
-			$('#rememberme').prop("checked", true);
-			appdata.rememberme = true;
-		} else {
-			$('#rememberme').prop("checked", false);
-			appdata.rememberme = false;
-		}
-	}
-
-	// Login
-
-	function goMain(){
-		appdata.errormsg = "";
-		$timeout(function(){
-			$location.path("/");
-		},1000);
-	}
-
-	$scope.doLogin = function(){
-		$('#libut').blur();
-		$scope.errormsg = "";
-		appdata.rememberme = $('#rememberme').prop('checked');
-		if(
-			$scope.email==undefined ||
-			$scope.password==undefined
-		){
-			$scope.errormsg = "Login-Error: Enter a valid E-Mail-Adress and a valid password!";
-			return;
-		}
-		var user = $scope.email;
-		appdata.tmpuser = user;
-		var password = $scope.password;
-		$location.path("/working");
-		appdata.lip = "firebase";
-		firebase.auth().signInWithEmailAndPassword(user,password)
-		.then(function(res){
-			var uid = res.uid;
-			appdata.user = res.email;
-			var continueWithWork = function(){
-				res.getToken().then(function(res){
-					if(appdata.rememberme){
-						var now = new Date();
-						var exp = new Date(now.getFullYear(), now.getMonth()+1, now.getDate());
-						var cookie = {
-							token : res,
-							user : appdata.user,
-							lip : appdata.lip
-						}
-						$cookies.put(appdata.cookiename,JSON.stringify(cookie),{expires:exp});
-					}
-					appdata.token = res;
-					$http.defaults.headers.common['Authorization'] = "Bearer " + res;
-					$scope.filtertag = "All"; // Set filtertag before calling backend.getTodos()
-					$scope.errormsg = "";
-					appdata.errormsg = "";
-					goMain();
-				})
-				.catch(function(error){
-					appdata.errormsg = "Login-Error: " + error.message;
-					autologinservice.doLogout(); // Will undef appdata
-				})
-			} // continueWithWork
-			if(!res.emailVerified){
-				firebase.database().ref('/data/reg/'+uid).once('value')
-				.then(function(res){
-					if(res==null || res==undefined){
-						throw { message : 'Invalid userdata on server.' }
-					}
-					var update = {};
-					update['/data/reg/'+uid] = {
-						regts : res.val().regts,
-						llts : firebase.database.ServerValue.TIMESTAMP
-					};
-					firebase.database().ref().update(update)
-					.then(function(){
-						firebase.database().ref('/data/reg/'+uid).once('value')
-						.then(function(res){
-							var regts = res.val().regts;
-							var llts = res.val().llts;
-							if((regts+1000*60*60*24)<llts){ // 24h
-								appdata.errormsg = "Login-Error: You now have to verify your email to use Dr ToDo Little.";
-								autologinservice.doLogout();
-							} else {
-								continueWithWork();
-							}
-						})
-						.catch(function(error){
-							appdata.errormsg = "Login-Error: " + error.message;
-							autologinservice.doLogout(); // Will undef appdata
-						})
-					})
-					.catch(function(error){
-						appdata.errormsg = "Login-Error: " + error.message;
-						autologinservice.doLogout(); // Will undef appdata
-					})
-				}) // emailVerified
-				.catch(function(error){
-					appdata.errormsg = "Login-Error: " + error.message;
-					autologinservice.doLogout(); // Will undef appdata
-				})
-			} else {
-				continueWithWork();
-			}
-		}) // signInWithEmailAndPassword
-		.catch(function(error){
-			appdata.errormsg = "Login-Error: " + error.message;
-			autologinservice.doLogout(); // Will undef appdata
-		})
-	}
-
-	$scope.doLoginWithGoogle = function(){
-		$('#libutgoogle').blur();
-		appdata.lip = "google";
-		var provider = new firebase.auth.GoogleAuthProvider();
-		$location.path("/working");
-		firebase.auth().signInWithPopup(provider).then(function(res){
-			appdata.user = res.user.email;
-			appdata.lip = "google";
-			var user = firebase.auth().currentUser;
-			if(user){
-				user.getToken().then(function(res){
-					if(appdata.rememberme){
-						var now = new Date();
-						var exp = new Date(now.getFullYear(), now.getMonth()+1, now.getDate());
-						var cookiedata = {
-							token : res,
-							user : appdata.user,
-							lip : appdata.lip
-						};
-						$cookies.put(appdata.cookiename,JSON.stringify(cookiedata),{expires:exp});
-					}
-					appdata.token = res;
-					$http.defaults.headers.common['Authorization'] = "Bearer " + res;
-					$scope.filtertag = 'All'; // Set filtertag before calling backend.getTodos()
-					$scope.errormsg = "";
-					appdata.errormsg = "";
-					goMain();
-				}).catch(function(error){
-					appdata.errormsg = "Login-Error: " + error.message;
-					autologinservice.doLogout(); // Will undef appdata
-				});
-			} else {
-				appdata.errormsg = "Login-Error: Not logged in.";
-				autologinservice.doLogout(); // Will undef appdata
-			}
-		}).catch(function(error){
-			appdata.errormsg = "Login-Error: " + error.message;
-			autologinservice.doLogout(); // Will undef appdata
-		});
-	}
-
-	// Keyboard
-
-	$scope.loginKeydown = function(e){
-		var k = e.keyCode;
-		if(k==13){ // Return
-			e.preventDefault();
-			$scope.doLogin();
-		}
-	}
-
-	// Register
-
-	$scope.goRegister = function(){
-		appdata.errormsg = "";
-		$('#libutreg').blur();
-		$location.path("/register");
-	};
-
-	// Finish
-
-	$scope.errormsg = appdata.errormsg;
-	$scope.email = appdata.tmpuser;
-
-	autologinservice.check(); // Do automatic login if cookies are available
-
-	$("#liuser").focus();
-
-}]);
-
-/*
-
 	tdapp_controller_main.js
 
 */
 tdapp.controller("MainCtrl",
-["$scope", "$timeout", "$interval", "$http", "$cookies", "$location", "$routeParams", "appdata", "todoservice", "backend", "autologinservice", function(
+["$scope", "$timeout", "$location", "todoservice", function(
 	$scope,
 	$timeout,
-	$interval,
-	$http,
-	$cookies,
 	$location,
-	$routeParams,
-	appdata,todoservice,backend,autologinservice)
+	todoservice)
 {
 
 	// General Done Filter
-
 	$scope.showdone = false;
 	$scope.showdonetext = "Show Done";
 
-	// Go to settings
-
-	$scope.goSettings = function(){
-		$location.path("/settings");
-	}
-
-	// Show and hide custommenu (animated via jquery)
-
-	$scope.tmpcustommenu = 0;
-	$scope.showcustommenu = function(){
-		if($scope.tmpcustommenu==0){
-			$scope.tmpcustommenu=1;
-			$("#customnavbaricon").attr("src","images/arrow-left-3x.png");
-			if(navigator.userAgent.match(/(iPod|iPhone|iPad|Android)/)) {
-				$('body').scrollTop(0);
-				$(".custommenu").animate({height:"126px"},500);
-			} else {
-				if($('html').scrollTop()>64){
-					$('html').animate({scrollTop:0},500,function(){
-						$(".custommenu").animate({height:"126px"},500);
-					});
-				} else {
-					$('html').scrollTop(0);
-					$(".custommenu").animate({height:"126px"},500);
-				}
-			}
-		} else {
-			$scope.tmpcustommenu=0;
-			$("#customnavbaricon").attr("src","images/menu-3x.png");
-			$(".custommenu").animate({height:"0px"},500);
-			$("#todotxta").focus();
-		}
-	}
-
-	// Logout
-
-	$scope.doLogout = function(){
-		$location.path("/working");
-		$timeout(function(){
-			autologinservice.doLogout();
-		},1000);
-	}
-
 	// Keyboard
-
 	$scope.newtodoKeydown = function(e){
 		var k = e.keyCode;
 		if(k==13){//ret
@@ -348,9 +93,7 @@ tdapp.controller("MainCtrl",
 				newtodo.topic = $scope.newtodotxt;
 				newtodo.done = false;
 				$scope.newtodotxt = "";
-				backend.postTodo(newtodo);
-				backend.incTodosTotal();
-				todoservice.addTodoObj(newtodo);
+				todoservice.create(newtodo);
 				if($scope.showdone){
 					$scope.showdone = false;
 					$scope.showdonetext = "Show Done";
@@ -381,7 +124,7 @@ tdapp.controller("MainCtrl",
 			var obj = todoservice.getTodoById(id);
 			if(obj!=undefined){
 				obj.topic = currentTodo.html();
-				backend.putTodo(obj);
+				todoservice.update(obj);
 				var oldtag = obj.tag;
 				todoservice.checkForHashtag(obj);
 				if(oldtag!=undefined){
@@ -396,16 +139,18 @@ tdapp.controller("MainCtrl",
 		}
 	}
 
-	// Todo functions
+	$scope.displaytodos = function(tag) {
+		$scope.filtertag = tag;
+		$scope.todos = todoservice.getTodosByTag(tag,$scope.showdone);
+	}
 
+	// Todo functions
 	$scope.seltodoline = function(id){
 		$("#todoid"+id).focus();
 	}
 
 	$scope.deltodo = function(obj){ // No animation
 		obj.deleted = true;
-		backend.delTodo(obj);
-		backend.incTodosDeleted();
 		todoservice.delTodo(obj);
 		$scope.todos = todoservice.getTodosByTag($scope.filtertag,$scope.showdone);
 	}
@@ -414,13 +159,6 @@ tdapp.controller("MainCtrl",
 		todoservice.togPreDone(obj);
 		$timeout(function(){
 			todoservice.togDone(obj); // Toggle todo local (within todoservice)
-			if(obj.done){ // Toggle Todo on the server
-				backend.doneTodo(obj);
-				backend.incTodosDone();
-			} else {
-				backend.undoneTodo(obj);
-				backend.incTodosUndone();
-			}
 			$scope.todos = todoservice.getTodosByTag($scope.filtertag,$scope.showdone);
 		},1000);
 	}
@@ -440,13 +178,29 @@ tdapp.controller("MainCtrl",
 	// Tags
 
 	$scope.getTodosByTag = todoservice.getTodosByTag;
+	todoservice.getTodos().then(function(todos) {
+		$scope.todos = todoservice.getTodosByTag($scope.filtertag,$scope.showdone);
+		$scope.tags = todoservice.getTags();
+	});
 
 	// Finish
-
-	//autologinservice.check(); // Do automatic login if cookies are available
-	backend.getTodos();
 	$("#todotxta").focus();
 
+}]);
+
+/*
+
+	tdapp_controller_settings.js
+
+*/
+tdapp.controller("navigation",["$scope", "$http", "localStorageService", "$route", function($scope,$http,localStorageService, $route){
+
+	$scope.logout = function() {
+		localStorageService.remove("logintoken");
+		$http.defaults.headers.common['Authorization'] = "";
+		$scope.password = "";
+		$route.reload();
+	}
 }]);
 
 /*
@@ -455,12 +209,6 @@ tdapp.controller("MainCtrl",
 
 */
 tdapp.controller("RegCtrl",["$scope", "$http", "$location", "appdata", "backend", function($scope,$http,$location,appdata,backend){
-
-	// Go login
-
-	$scope.goLogin = function(){
-		$location.path("/login");
-	}
 
 	// Database
 
@@ -552,83 +300,10 @@ tdapp.controller("RegCtrl",["$scope", "$http", "$location", "appdata", "backend"
 
 /*
 
-	tdapp_controller_resetpwd.js
-
-*/
-tdapp.controller("ResetPwdCtrl",["$scope", "$location", "appdata", "autologinservice", function($scope,$location,appdata,autologinservice){
-
-	// Go login
-
-	$scope.goLogin = function(){
-		$location.path("/login");
-	}
-
-	// Reset password
-
-	$scope.doResetPwd = function(){
-		$('#rb').blur();
-		$scope.errormsg = "";
-		appdata.errormsg = "";
-		if($scope.email==undefined){
-			$scope.errormsg = "Error: Enter valid data.";
-			return;
-		}
-		var email = $scope.email;
-		$location.path("/#/working");
-		firebase.auth().sendPasswordResetEmail(email).then(function(){
-			alert("An email is waiting for you to reset your password.");
-			appdata.errormsg = "";
-			autologinservice.doLogout();
-		},function(error){
-			var errmsg = "Password reset error: "+error.message;
-			appdata.errormsg = errmsg;
-			$location.path("/resetpwd");
-		});
-	}
-
-	// Keyboard
-
-	$scope.doResetPwdKeydown = function(e){
-		var k = e.keyCode;
-		if(k==13){//ret
-			e.preventDefault();
-			$scope.doResetPwd();
-		}
-	}
-
-	// Finish
-
-	$("#liuser").focus();
-
-	$scope.errormsg = appdata.errormsg;
-	$scope.email = appdata.tmpuser;
-
-}]);
-
-/*
-
 	tdapp_controller_settings.js
 
 */
-tdapp.controller("SettingsCtrl",["$scope", "$http", "$location", "$cookies", "$timeout", "appdata", "autologinservice", function($scope,$http,$location,$cookies,$timeout,appdata,autologinservice){
-
-	// Go main
-
-	$scope.goMain = function(){
-		$location.path("/");
-	}
-
-	// Go settings
-
-	$scope.goSettings = function(){
-		$location.path("/settings");
-	}
-
-	// Change passwrod
-
-	$scope.goChPwd = function(){
-		$location.path("/chpwd");
-	}
+tdapp.controller("SettingsCtrl",["$scope", "$http", "$location", "$cookies", "$timeout", "appdata", function($scope,$http,$location,$cookies,$timeout,appdata){
 
 	$scope.doChPwd = function(){
 		$scope.errormsg = "";
@@ -718,72 +393,120 @@ tdapp.directive('authdialog', function() {
   return {
     restrict: 'E',
     templateUrl: 'templates/dialog.html',
-    controller: ["$scope", "$firebaseAuth", "autologinservice", "$http", "appdata", "$location", "$route", "localStorageService", function($scope, $firebaseAuth, autologinservice, $http, appdata, $location, $route, localStorageService) {
+    controller: ["$scope", "$firebaseAuth", "$http", "$location", "$route", "localStorageService", function($scope, $firebaseAuth, $http, $location, $route, localStorageService) {
 
-      $scope.doLoginWithGoogle = function(){
+      var auth = $firebaseAuth();
+
+      $scope.resetpwd = function() {
+
+        auth.$sendPasswordResetEmail($scope.email).then(function(){
+    			alert("An email is waiting for you to reset your password.");
+          $scope.select_login();
+    		},function(error){
+    			var errmsg = "Password reset error: "+error.message;
+    		});
+
+      }
+
+      $scope.register = function() {
+    		if( $scope.email==undefined || $scope.password== undefined ) {
+    			$scope.errormsg = "Registration-Error: Enter valid data.";
+    			return;
+    		}
+    		var email = $scope.email;
+    		var password = $scope.password;
+    		auth.createUserWithEmailAndPassword(email,password)
+          .then( function(data) {
+    				var user = auth.currentUser;
+    				user.sendEmailVerification()
+    				.then(function(){
+    					// Prepare for work
+    					user.getToken().then(function(res){
+    						$http.defaults.headers.common['Authorization'] = "Bearer " + res;
+    						// Create Welcome-Todo
+    						var welcometodo = {};
+    						welcometodo.topic = "Welcome to Dr ToDo Little!";
+    						welcometodo.done = false;
+    						backend.postTodo(welcometodo);
+    						// Continue...
+    						$scope.filtertag = "All"; // Set filtertag before calling backend.getTodos()
+    						$scope.errormsg = "";
+    						var msg = ""
+    						msg += "Registration successful! \n";
+    						msg += "A verification email is waiting for you. \n";
+    						msg += "But you can go on using Dr ToDo Little now \n";
+    						msg += "for 24 hours without verification.";
+    						alert(msg);
+    						$location.path("/");
+    					})
+    					.catch(function(err){
+    						$scope.errormsg = "Registration-Error: " + err.message;
+    						$scope.$apply();
+    					})
+    				})
+    				.catch(function(err){
+    					$scope.errormsg = "Registration-Error: " + err.message;
+    					$scope.$apply();
+    				})
+    			}
+    		).catch(function(err){
+    			$scope.errormsg = "Registration-Error: " + err.message;
+    			$scope.$apply();
+    		});
+    	}
+
+
+      $scope.loginWithGoogle = function(){
     		var provider = new firebase.auth.GoogleAuthProvider();
     		firebase.auth().signInWithPopup(provider).then(function(res){
-    			appdata.user = res.user.email;
-    			appdata.lip = "google";
     			var user = firebase.auth().currentUser;
           $scope.close_dialog();
     			if(user){
     				user.getToken().then(function(res){
-              appdata.token = res;
     					$http.defaults.headers.common['Authorization'] = "Bearer " + res;
               if ($scope.rememberme) {
                 localStorageService.set("logintoken", res);
               }
     					$scope.filtertag = "All"; // Set filtertag before calling backend.getTodos()
     					$scope.errormsg = "";
-    					appdata.errormsg = "";
     					$route.reload();
     				}).catch(function(error){
-    					appdata.errormsg = "Login-Error: " + error.message;
-    					autologinservice.doLogout(); // Will undef appdata
+              alert("Error: " + error);
     				});
     			} else {
-    				appdata.errormsg = "Login-Error: Not logged in.";
-    				autologinservice.doLogout(); // Will undef appdata
+            alert("Error: " + error);
     			}
     		}).catch(function(error){
-    			appdata.errormsg = "Login-Error: " + error.message;
-    			autologinservice.doLogout(); // Will undef appdata
+          alert("Error: " + error);
     		});
     	}
 
-      $scope.doLogin = function(){
+      $scope.login = function(){
         var auth = $firebaseAuth();
 
     		var user = $scope.email;
-    		appdata.tmpuser = user;
     		var password = $scope.password;
         $scope.close_dialog();
-
-    		appdata.lip = "firebase";
     		auth.$signInWithEmailAndPassword(user,password)
     		.then(function(res){
     			var uid = res.uid;
-    			appdata.user = res.email;
+
     				res.getToken().then(function(res){
-    					appdata.token = res;
+
     					$http.defaults.headers.common['Authorization'] = "Bearer " + res;
               if ($scope.rememberme) {
                 localStorageService.set("logintoken", res);
               }
     					$scope.filtertag = "All"; // Set filtertag before calling backend.getTodos()
     					$scope.errormsg = "";
-    					appdata.errormsg = "";
     					$route.reload();
             })
     				.catch(function(error){
-    					appdata.errormsg = "Login-Error: " + error.message;
-    					autologinservice.doLogout(); // Will undef appdata
-    				});
+              //todo Errorhandling
+            });
     		}) // signInWithEmailAndPassword
     		.catch(function(error){
-    			appdata.errormsg = "Login-Error: " + error.message;
-    			autologinservice.doLogout(); // Will undef appdata
+    			//todo Errorhandling
     		});
     	};
 
@@ -825,132 +548,16 @@ tdapp.directive('authdialog', function() {
 
 /*
 
-	tdapp_service_autologin.js
-
-*/
-tdapp.service('autologinservice',
-["$http", "$location", "$cookies", "$timeout", "$compile", "$routeParams", "appdata", "todoservice", "backend", function(
-	$http,
-	$location,
-	$cookies,
-	$timeout,
-	$compile,
-	$routeParams,
-	appdata,todoservice,backend
-){
-
-	// Injection
-
-	var _scope;
-	this.setScope = function(scope){
-		_scope = scope;
-	}
-
-	//  Get todos
-
-	this.getAllTodos = function(){
-		_scope.filtertag = 'All'; // Set filtertag before calling Backend.getTodos()
-		backend.getTodos(
-			function(){
-				_scope.tags = (todoservice.getTags()).sort();
-				_scope.todos = todoservice.getTodosByTag(_scope.filtertag,_scope.showdone)
-				if(
-					$routeParams.type!=undefined &&
-					$routeParams.id!=undefined &&
-					$routeParams.type=="todo"
-				){
-					var todo = todoservice.getTodoById($routeParams.id)
-					if(todo!=undefined){
-						var todos = [];
-						todos.push(todo);
-						_scope.todos = todos;
-					} else {
-						_scope.todos = [];
-					}
-				}
-				if(
-					$routeParams.type!=undefined &&
-					$routeParams.id!=undefined &&
-					$routeParams.type=="tag"
-				){
-					_scope.todos = todoservice.getTodosByTag("#"+$routeParams.id,false);
-				}
-				if(
-					$routeParams.type==undefined &&
-					$routeParams.id==undefined &&
-					$routeParams.type==undefined
-				){
-					$location.path("/");
-				}
-				if(typeof window.orientation == 'undefined'){ // Workaround for mobile devices
-					$("#todotxta").blur().focus();
-				}
-			}
-		)
-	}
-
-	// Logout (with undef appdata)
-
-	this.doLogout = function(){
-		$cookies.remove(appdata.cookiename);
-		todoservice.clearTodos();
-		appdata.user = undefined;
-		appdata.lip = undefined;
-		appdata.token = undefined;
-		appdata.rememberme = undefined;
-		$location.path("/login");
-		firebase.auth().signOut()
-		.catch(function(err){
-			console.log("Error: " + err.message);
-		})
-		$timeout(function(){
-			$("#liuser").focus();
-		},128);
-	}
-
-	// Check (autologin if possible)
-
-	this.check = function(){
-//		if($window.location.hostname=="localhost"){
-//			appdata.server = appdata.localserver;
-//		}
-		if(
-			appdata.user == undefined &&
-			appdata.token == undefined &&
-			appdata.lip == undefined
-		){
-			var drcookie = $cookies.get(appdata.cookiename);
-			if(drcookie!=undefined){
-				_scope.errormsg = "";
-				var dr = JSON.parse(drcookie);
-				appdata.token = dr.token;
-				appdata.user = dr.user;
-				appdata.lip = dr.lip;
-				$http.defaults.headers.common['Authorization'] = "Bearer " + appdata.token;
-				this.getAllTodos();
-			} else {
-				$location.path("/login");
-			}
-		} else {
-			$http.defaults.headers.common['Authorization'] = "Bearer " + appdata.token;
-			this.getAllTodos();
-		}
-	}
-
-}]);
-
-/*
-
 	backend.js
 
 */
-tdapp.service('backend',["$http", "appdata", "todoservice", "localStorageService", function($http,appdata,todoservice,localStorageService){
+tdapp.service('backend',["$http", "appdata", "localStorageService", function($http,appdata,localStorageService){
 
 	var token = localStorageService.get("logintoken");
 	if (token != undefined) {
 		$http.defaults.headers.common['Authorization'] = "Bearer " + token;
 	}
-	
+
 	this.postTodo = function(obj){
 		$http({
 			method:"post",
@@ -1023,22 +630,11 @@ tdapp.service('backend',["$http", "appdata", "todoservice", "localStorageService
 			}
 		);
 	}
-	this.getTodos = function(_callback){
-		$http({
+	this.getTodos = function(){
+		return $http({
 			method:"get",
 			url: appdata.server
-		}).then(
-			function successCallback(res) {
-				todoservice.clearTodos();
-				res.data.forEach(function(o){
-					todoservice.addTodoObj(o);
-				});
-
-			},
-			function(response) {
-				console.log("Error: " + JSON.stringify(response));
-			}
-		);
+		});
 	}
 
 	// Firebase realtime database
@@ -1107,41 +703,25 @@ tdapp.service('logininterceptor', ["$q", "$rootScope", "localStorageService", fu
 
 /*
 
-	routeengine.js
-
-*/
-tdapp.service('routeengine',["$location", "$route", function($location, $route){
-  var path = $location.path();
-
-  return {
-    // optional method
-    'request': function(config) {
-      // do something on success
-      return config;
-    },
-
-    // optional method
-   'requestError': function(rejection) {
-      // do something on error
-      if (canRecover(rejection)) {
-        return responseOrNewPromise
-      }
-      return $q.reject(rejection);
-    }
-
-  };
-}]);  
-
-/*
-
 	tdapp_factories.js
 
 */
 
-tdapp.service("todoservice",function(){ // ToDoManager
+tdapp.service("todoservice",["backend", "$q", function(backend, $q){ // ToDoManager
 	var fact = {};
 	fact.todos = [];
 	fact.tags = [];
+
+	fact.create = function(newtodo) {
+		backend.postTodo(newtodo);
+		backend.incTodosTotal();
+	  fact.addTodoObj(newtodo);
+	}
+
+	fact.update = function(todo) {
+		backend.putTodo(todo);
+	}
+
 	fact.checkForHashtag = function(obj){
 		if(obj.topic==undefined){
 			return;
@@ -1167,7 +747,15 @@ tdapp.service("todoservice",function(){ // ToDoManager
 		return fact.tags;
 	}
 	fact.getTodos = function(){
-		return fact.todos;
+		return $q(function(resolve, reject) {
+			backend.getTodos().then(function(response) {
+				fact.clearTodos();
+				response.data.forEach(function(todo){
+					fact.addTodoObj(todo);
+				});
+				resolve(fact.todos);
+			});
+		});
 	}
 	fact.getTodosByTag = function(tag,done){
 		if(tag=='' || tag=='All' || tag == undefined){
@@ -1237,6 +825,9 @@ tdapp.service("todoservice",function(){ // ToDoManager
 		return obj;
 	}
 	fact.delTodo = function(item){
+		backend.delTodo(item);
+		backend.incTodosDeleted();
+
 		var idx = fact.todos.indexOf(item)
 		if(idx>=0){
 			var tag = item.tag;
@@ -1260,6 +851,13 @@ tdapp.service("todoservice",function(){ // ToDoManager
 		}
 	}
 	fact.togDone = function(item){
+		if(item.done){ // Toggle Todo on the server
+			backend.doneTodo(item);
+			backend.incTodosDone();
+		} else {
+			backend.undoneTodo(item);
+			backend.incTodosUndone();
+		}
 		var idx = fact.todos.indexOf(item);
 		if( idx<0 ) return;
 		var todo = fact.todos[idx];
@@ -1272,7 +870,7 @@ tdapp.service("todoservice",function(){ // ToDoManager
 		}
 	}
 	return fact;
-});
+}]);
 
 /*
 

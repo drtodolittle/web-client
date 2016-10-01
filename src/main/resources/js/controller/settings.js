@@ -5,24 +5,6 @@
 */
 tdapp.controller("SettingsCtrl",function($scope,$http,$location,$cookies,$timeout,appdata){
 
-	// Go main
-
-	$scope.goMain = function(){
-		$location.path("/");
-	}
-
-	// Go settings
-
-	$scope.goSettings = function(){
-		$location.path("/settings");
-	}
-
-	// Change passwrod
-
-	$scope.goChPwd = function(){
-		$location.path("/chpwd");
-	}
-
 	$scope.doChPwd = function(){
 		$scope.errormsg = "";
 		var user = firebase.auth().currentUser;

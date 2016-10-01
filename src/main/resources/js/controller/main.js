@@ -15,47 +15,6 @@ function(
 	$scope.showdone = false;
 	$scope.showdonetext = "Show Done";
 
-	// Go to settings
-	$scope.goSettings = function(){
-		$location.path("/settings");
-	}
-
-	// Show and hide custommenu (animated via jquery)
-
-	$scope.tmpcustommenu = 0;
-	$scope.showcustommenu = function(){
-		if($scope.tmpcustommenu==0){
-			$scope.tmpcustommenu=1;
-			$("#customnavbaricon").attr("src","images/arrow-left-3x.png");
-			if(navigator.userAgent.match(/(iPod|iPhone|iPad|Android)/)) {
-				$('body').scrollTop(0);
-				$(".custommenu").animate({height:"126px"},500);
-			} else {
-				if($('html').scrollTop()>64){
-					$('html').animate({scrollTop:0},500,function(){
-						$(".custommenu").animate({height:"126px"},500);
-					});
-				} else {
-					$('html').scrollTop(0);
-					$(".custommenu").animate({height:"126px"},500);
-				}
-			}
-		} else {
-			$scope.tmpcustommenu=0;
-			$("#customnavbaricon").attr("src","images/menu-3x.png");
-			$(".custommenu").animate({height:"0px"},500);
-			$("#todotxta").focus();
-		}
-	}
-
-	// Logout
-	$scope.doLogout = function(){
-		$location.path("/working");
-		$timeout(function(){
-			autologinservice.doLogout();
-		},1000);
-	}
-
 	// Keyboard
 	$scope.newtodoKeydown = function(e){
 		var k = e.keyCode;

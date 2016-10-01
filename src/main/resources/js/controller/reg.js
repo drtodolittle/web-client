@@ -5,12 +5,6 @@
 */
 tdapp.controller("RegCtrl",function($scope,$http,$location,appdata,backend){
 
-	// Go login
-
-	$scope.goLogin = function(){
-		$location.path("/login");
-	}
-
 	// Database
 
 	function saveUser(){

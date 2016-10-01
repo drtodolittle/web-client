@@ -3,7 +3,7 @@
 	tdapp.js
 
 */
-var tdapp = angular.module('tdapp',['ngCookies','ngRoute', 'firebase','LocalStorageModule']);
+var tdapp = angular.module('tdapp',['ngCookies','ngRoute', 'firebase','LocalStorageModule','xeditable']);
 
 tdapp.config(function($routeProvider,$locationProvider,$compileProvider,$httpProvider) {
 	// Routing

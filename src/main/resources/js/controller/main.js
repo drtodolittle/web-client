@@ -95,6 +95,12 @@ function(
 		},1000);
 	}
 
+	$scope.saveedittodo = function(todo){
+		$scope.showedit = false;
+		todoservice.update(todo);
+	}
+
+
 	// Filter function
 
 	$scope.togShowdone = function(){

@@ -6,7 +6,7 @@
 	tdapp.js
 
 */
-var tdapp = angular.module('tdapp',['ngCookies','ngRoute', 'firebase','LocalStorageModule']);
+var tdapp = angular.module('tdapp',['ngCookies','ngRoute', 'firebase','LocalStorageModule','xeditable']);
 
 tdapp.config(["$routeProvider", "$locationProvider", "$compileProvider", "$httpProvider", function($routeProvider,$locationProvider,$compileProvider,$httpProvider) {
 	// Routing
@@ -162,6 +162,12 @@ tdapp.controller("MainCtrl",
 			$scope.todos = todoservice.getTodosByTag($scope.filtertag,$scope.showdone);
 		},1000);
 	}
+
+	$scope.saveedittodo = function(todo){
+		$scope.showedit = false;
+		todoservice.update(todo);
+	}
+
 
 	// Filter function
 

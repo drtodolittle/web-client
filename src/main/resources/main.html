@@ -2,7 +2,6 @@
 
 <div class="headspacer">&nbsp;</div>
 
-<!-- List -->
 <div class="container">
 	<div class="dropdown pull-left">
 	  <button class="btn btn-default dropdown-toggle" type="button" id="filter1" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
@@ -20,30 +19,59 @@
 	  <button class="btn btn-default" type="button" ng-click="togShowdone()">{{showdonetext}}</button>
 	</div>
 </div>
-<div class="container">
-	<div class="bootcards-list">
-	  <div class="panel panel-default">
-			<input
-				id="todotxta"
-				ng-model="newtodotxt"
-				ng-keydown="newtodoKeydown($event)"
-				class="form-control"
-				placeholder="New ToDo...">
-			</input>
-		<div class="list-group" ng-repeat="todo in todos">
-		  <div class="container list-group-item">
-			<div class="pull-right">
-				<div class="mo" ng-click="togDone(todo);">
-					<span ng-if="todo.predone==false"><img src="images/checkbox_unchecked.png" style="width:24px;height:24px;" /></span>
-					<span ng-if="todo.predone==true"><img src="images/checkbox.png" style="width:24px;height:24px;" /></span>
-				</div>
-				<div class="mo" ng-click="deltodo(todo);"><img src="images/del.png" style="width:24px;height:24px;" />
-				</div>
-			</div>
-			<p class="fnt10" style="color:#cccccc">ID:{{todo.id}}</p>
-			<h4 class="list-group-item-heading" contenteditable="true" ng-keydown="todolineKeydown($event,todo.id);" id="todoid{{todo.id}}">{{todo.topic}}</h4>
-		  </div>
-		</div>
-	  </div>
-	</div>
+<!-- List (new) -->
+<div class="container list-group" >
+	<ul class="list-group fnt16" style="padding-left:16px">
+		<li	class="list-group-item"	style="padding:16px">
+			<input id="todotxta" ng-model="newtodotxt"	ng-keydown="newtodoKeydown($event)"	class="form-control"	placeholder="New ToDo..."></input>
+		</li>
+	<li
+		class="list-group-item"
+		style="padding:16px"
+		contenteditable="false"
+		ng-keydown="todolineKeydown($event,todo.id)"
+		ng-repeat="todo in todos">
+		<span id="todoid{{todo.id}}">
+			<span class="pull-right">
+				<span class="mo m8 colgreen fnt16" ng-click="togDone(todo)" contenteditable="false">
+					<span ng-if="todo.predone==false" class="mo glyphicon glyphicon-unchecked"></span>
+					<span ng-if="todo.predone==true" class="mo glyphicon glyphicon-check"></span>
+				</span>
+				<span class="colgrey fnt16 m8">
+					<span
+						class="mo glyphicon glyphicon glyphicon-pencil"
+						contenteditable="false"
+						ng-click="edittodo(todo)">
+					</span>
+				</span>
+				<span class="colred fnt16 m8">
+					<span
+						class="mo glyphicon glyphicon-remove"
+						contenteditable="false"
+						ng-click=deltodo(todo)>
+					</span>
+				</span>
+			</span>
+			<span id="todocontent{{todo.id}}">
+				{{todo.topic}}
+			</span>
+		</span>
+	</li>
+	</ul>
 </div>
+
+<!-- modal -->
+<div id="todoeditmodal" class="modal fade" tabindex="-1" role="dialog">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-body">
+        <p id="todocontentmodal" contenteditable="true"></p>
+      </div>
+      <div class="modal-footer">
+		<button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+        <button type="button" class="btn btn-default" data-dismiss="modal" ng-click="saveedittodo()">Save</button>
+      </div>
+    </div><!-- /.modal-content -->
+  </div><!-- /.modal-dialog -->
+</div><!-- /.modal -->
+>>>>>>> refs/remotes/origin/master

@@ -17,6 +17,7 @@ tdapp.controller("chpwdCtrl",function($rootScope,$scope,$http,localStorageServic
     // Change it...
 
     $scope.doChPwd = function(){
+        console.log('doChPwd...')
         if(
 			$scope.oldPassword==undefined ||
 			$scope.newPassword==undefined

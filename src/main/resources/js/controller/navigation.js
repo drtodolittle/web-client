@@ -1,6 +1,7 @@
 /*
 
-	tdapp_controller_settings.js
+	Dr ToDo Little
+	Navigation controller
 
 */
 tdapp.controller("navigation",function($scope,$http,localStorageService,$route,$location,$timeout){
@@ -13,13 +14,14 @@ tdapp.controller("navigation",function($scope,$http,localStorageService,$route,$
 	}
 
 	$scope.changepassword = function(){
-		console.log('changepassword...')
-		$location.path('/chpwd')
+		console.log('changepassword...');
+		$location.path('/chpwd');
 	}
 
 	$scope.home = function(){
-		$location.path('/')
-		$route.reload()
+		console.log('home...');
+		$location.path('/');
+		$route.reload();
 	}
 
 });

@@ -1,6 +1,7 @@
 /*
 
-	tdapp_controller_main.js
+	Dr ToDo Little
+	The main controller
 
 */
 tdapp.controller("MainCtrl",

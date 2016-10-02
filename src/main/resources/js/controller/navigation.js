@@ -27,7 +27,7 @@ tdapp.controller("navigation",function($scope,$http,localStorageService,$route,$
 	}
 
 	$scope.profile = function(){
-		$location.path('/settings')
+		$location.path('/profile')
 	}
 
 });

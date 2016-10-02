@@ -24,9 +24,9 @@ tdapp.config(function($routeProvider,$locationProvider,$compileProvider,$httpPro
         templateUrl : 'respwd.html',
 				controller : 'respwdCtrl'
     	})
-			.when('/settings', {
-        templateUrl : 'settings.html',
-				controller : 'SettingsCtrl'
+			.when('/profile', {
+        templateUrl : 'profile.html',
+				controller : 'profileCtrl'
       })
 			.when('/chpwd', {
         templateUrl : 'chpwd.html',

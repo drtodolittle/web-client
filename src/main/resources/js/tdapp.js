@@ -1,6 +1,7 @@
 /*
 
-	tdapp.js
+	Dr ToDo Little
+	The main application (tdapp)
 
 */
 var tdapp = angular.module('tdapp',['ngCookies','ngRoute', 'firebase','LocalStorageModule','xeditable']);

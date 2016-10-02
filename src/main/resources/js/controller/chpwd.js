@@ -1,3 +1,9 @@
+/*
+
+	Dr ToDo Little
+	Change password controller
+
+*/
 tdapp.controller("chpwdCtrl",function($rootScope,$scope,$http,localStorageService,$route,$location){
 
     // Modification of $location.path()

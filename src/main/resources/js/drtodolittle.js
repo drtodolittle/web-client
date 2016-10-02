@@ -3,7 +3,8 @@
 
 /*
 
-	tdapp.js
+	Dr ToDo Little
+	The main application (tdapp)
 
 */
 var tdapp = angular.module('tdapp',['ngCookies','ngRoute', 'firebase','LocalStorageModule','xeditable']);
@@ -66,6 +67,12 @@ tdapp.value(
 	}
 );
 
+/*
+
+	Dr ToDo Little
+	Change password controller
+
+*/
 tdapp.controller("chpwdCtrl",["$rootScope", "$scope", "$http", "localStorageService", "$route", "$location", function($rootScope,$scope,$http,localStorageService,$route,$location){
 
     // Modification of $location.path()
@@ -271,12 +278,10 @@ tdapp.controller("navigation",["$scope", "$http", "localStorageService", "$route
 	}
 
 	$scope.changepassword = function(){
-		console.log('changepassword...');
 		$location.path('/chpwd');
 	}
 
 	$scope.home = function(){
-		console.log('home...');
 		$location.path('/');
 		$route.reload();
 	}

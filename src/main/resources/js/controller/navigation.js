@@ -14,12 +14,10 @@ tdapp.controller("navigation",function($scope,$http,localStorageService,$route,$
 	}
 
 	$scope.changepassword = function(){
-		console.log('changepassword...');
 		$location.path('/chpwd');
 	}
 
 	$scope.home = function(){
-		console.log('home...');
 		$location.path('/');
 		$route.reload();
 	}

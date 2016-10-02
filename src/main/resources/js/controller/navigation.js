@@ -3,7 +3,7 @@
 	tdapp_controller_settings.js
 
 */
-tdapp.controller("navigation",function($scope,$http,localStorageService, $route){
+tdapp.controller("navigation",function($scope,$http,localStorageService,$route,$location,$timeout){
 
 	$scope.logout = function() {
 		localStorageService.remove("logintoken");
@@ -11,4 +11,14 @@ tdapp.controller("navigation",function($scope,$http,localStorageService, $route)
 		$scope.password = "";
 		$route.reload();
 	}
+
+	$scope.changepassword = function(){
+		$location.path('/chpwd')
+	}
+
+	$scope.home = function(){
+		$location.path('/')
+		$route.reload()
+	}
+
 });

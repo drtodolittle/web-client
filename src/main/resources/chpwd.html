@@ -1,58 +1,17 @@
-﻿<!-- Change password -->
-
-<div class="headspacer"></div>
-
-<center>
-	<div>&nbsp;</div>
-	<input
-		id="oldpassword"
-		type="password"
-		ng-model="oldPassword"
-		placeholder="Old password"
-		class="form-control lipass fnt16"
-		tabindex="1">
-	</input>
-	<input
-		id="newpassword"
-		type="password"
-		ng-model="newPassword"
-		placeholder="New password"
-		class="form-control lipass fnt16"
-		tabindex="2">
-	</input>
-	<div>&nbsp;</div>
-	<button class="btn btn-default bwidth196" type="button" ng-click="doChPwd();">Change password</button>
-	<div>&nbsp;</div>
-	<div class="flash">{{errormsg}}</div>
-</div>
-</center>
-
-<!-- Navbar (alternative one) -->
-<!--
-<div class="customnavbar fnt16">
-<span ng-click="goSettings();"><img class="mo" src="images/arrow-left-3x.png" alt="main"></img></span>
-</div>
--->
-
-<!-- Navbar (alternative two) -->
-<div class="customnavbar fnt16">
-	<table>
-		<tr>
-			<td>
-				<img
-					id="customnavbaricon"
-					class="mo"
-					src="images/arrow-left-3x.png"
-					ng-click="goMain()">
-				</img>
-			</td>
-			<td style="width:100%;padding-left:8px;padding-right:8px;">
-				<input
-					class="form-control"
-					placeholder="New ToDo..."
-					style="visibility:hidden">
-				</input>
-			</td>
-		</tr>
-	</table>
-</div>
+<input
+	id="oldpassword"
+	type="password"
+	ng-model="oldPassword"
+	placeholder="Old password"
+	class="form-control lipass fnt16"
+	tabindex="1">
+</input>
+<input
+	id="newpassword"
+	type="password"
+	ng-model="newPassword"
+	placeholder="New password"
+	class="form-control lipass fnt16"
+	tabindex="2">
+</input>
+<button class="btn btn-default" type="button" ng-click="doChPwd()">Change password</button>

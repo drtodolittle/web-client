@@ -174,8 +174,9 @@ body,div,p,span{
 	resize:none;
 	width:224px;
 	height:36px;
-	padding:8px;
-	margin:8px;
+	// padding:8px;
+	// margin:8px;
+	margin-bottom:8px;
 }
 .fp{
 	color:#888888;

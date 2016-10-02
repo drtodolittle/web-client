@@ -28,7 +28,7 @@ tdapp.config(function($routeProvider,$locationProvider,$compileProvider,$httpPro
 				controller : 'SettingsCtrl'
       })
 			.when('/chpwd', {
-        templateUrl : 'templates/chpwd.html',
+        templateUrl : 'chpwd.html',
 				controller : 'chpwdCtrl'
       })
 			.when('/egg', {

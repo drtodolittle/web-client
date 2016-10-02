@@ -84,3 +84,11 @@ gulp.task('clean', function () {
 gulp.task('default', function() {
     gulp.start('build');
 });
+
+gulp.watch([
+  'src/main/resources/js/tdapp.js',
+  'src/main/resources/js/controller/*.js',
+  'src/main/resources/js/directive/*.js',
+  'src/main/resources/js/service/*.js',
+  'src/main/resources/js/tdapp_firebase.js'
+], ['js']);

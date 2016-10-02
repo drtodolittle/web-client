@@ -728,25 +728,25 @@ tdapp.service("todoservice",["backend", "$q", function(backend, $q){ // ToDoMana
 		backend.putTodo(todo);
 	}
 
-	fact.checkForHashtag = function(obj){
-		if(obj.topic==undefined){
+	fact.checkForHashtag = function(todo){
+		if(todo.topic==undefined){
 			return;
 		}
-		obj.tags = [];
-		var s = obj.topic.indexOf('#');
+		todo.tags = [];
+		var s = todo.topic.indexOf('#');
 		var e = 0;
 		while(s>=0){
-			e = obj.topic.indexOf(' ',s+1);
-			if(e==-1) e=obj.topic.length;
-			var tag = obj.topic.substring(s,e);
+			e = todo.topic.indexOf(' ',s+1);
+			if(e==-1) e=todo.topic.length;
+			var tag = todo.topic.substring(s,e);
 			if(tag=='#') tag = undefined;
 			if(tag!=undefined){
-				obj.tags.push(tag);
+				todo.tags.push(tag);
 			}
 			if(tag!=undefined && fact.tags.indexOf(tag)<0){
 				fact.tags.push(tag);
 			}
-			s = obj.topic.indexOf('#', s+1);
+			s = todo.topic.indexOf('#', s+1);
 		}
 	}
 	fact.getTags = function(){

@@ -217,3 +217,5 @@ pip-log.txt
 
 #Maven target
 target/
+
+node_modules/

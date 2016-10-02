@@ -59,7 +59,7 @@ gulp.task('templates', function() {
 });
 
 gulp.task('html', function() {
-    return gulp.src(["src/index.html", "src/favicon.ico"])
+    return gulp.src(["src/index.html", "src/favicon.ico", "src/chpwd.html"])
         .pipe(gulp.dest('./dist'));
 });
 

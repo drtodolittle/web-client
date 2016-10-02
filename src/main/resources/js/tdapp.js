@@ -20,9 +20,9 @@ tdapp.config(function($routeProvider,$locationProvider,$compileProvider,$httpPro
         templateUrl : 'register.html',
 				controller : 'RegCtrl'
       })
-			.when('/resetpwd', {
-        templateUrl : 'resetpwd.html',
-				controller : 'ResetPwdCtrl'
+			.when('/respwd', {
+        templateUrl : 'respwd.html',
+				controller : 'respwdCtrl'
     	})
 			.when('/settings', {
         templateUrl : 'settings.html',

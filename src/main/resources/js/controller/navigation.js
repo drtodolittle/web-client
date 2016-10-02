@@ -17,9 +17,17 @@ tdapp.controller("navigation",function($scope,$http,localStorageService,$route,$
 		$location.path('/chpwd');
 	}
 
+	$scope.resetpassword = function(){
+		$location.path('/respwd');
+	}
+
 	$scope.home = function(){
 		$location.path('/');
 		$route.reload();
+	}
+
+	$scope.profile = function(){
+		$location.path('/settings')
 	}
 
 });

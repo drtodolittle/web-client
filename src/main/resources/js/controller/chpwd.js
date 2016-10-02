@@ -22,14 +22,27 @@ tdapp.controller("chpwdCtrl",function($rootScope,$scope,$http,localStorageServic
 
     // Change it...
 
+    function showError(msg){
+        var ee = $('#errtemplate').clone()
+        ee.children('#errmsg').html(msg)
+        ee.css('visibility','visible')
+        $('#nfo').append(ee)
+    }
+
+    function showSuccess(msg){
+        var ee = $('#successtemplate').clone()
+        ee.children('#sucmsg').html(msg)
+        ee.css('visibility','visible')
+        $('#nfo').append(ee)
+    }
+
+
     $scope.doChPwd = function(){
-        console.log('doChPwd...')
         if(
 			$scope.oldPassword==undefined ||
 			$scope.newPassword==undefined
 		){
-            console.log('Error: Enter valid data.')
-            $route.reload()
+            showError('Enter valid data.')
             return
 		}
         var user = firebase.auth().currentUser;
@@ -42,20 +55,14 @@ tdapp.controller("chpwdCtrl",function($rootScope,$scope,$http,localStorageServic
 					$scope.newPassword
 				).then(
 					function(){
-						alert("Password change done!");
-                        $route.reload()
+                        showSuccess('Password change done!')
 					}
 				).catch(function(error){
-					var errmsg = "Error: " + error.message;
-                    console.log(errmsg)
-                    $route.reload()
+                    showError(error.message)
 				})
-                $route.reload()
 			}
 		).catch(function(error){
-			var errmsg = "Error: " + error.message;
-            console.log(errmsg)
-            $route.reload()
+            showError(error.message)
 		});
     }
 

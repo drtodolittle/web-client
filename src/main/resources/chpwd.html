@@ -16,4 +16,15 @@
 		tabindex="2">
 	</input>
 	<button class="btn btn-default" type="button" ng-click="doChPwd()">Change password</button>
+	<div id="nfo" style="padding-top:16px"></div>
+</div>
+
+<div id="errtemplate" class="alert alert-danger alert-dismissible" role="alert" style="visibility:hidden">
+  <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+  <strong>Error! </strong><span id="errmsg"></span>
+</div>
+
+<div id="successtemplate" class="alert alert-success alert-dismissible" role="alert" style="visibility:hidden">
+  <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+  <strong>Success! </strong><span id="sucmsg"></span>
 </div>

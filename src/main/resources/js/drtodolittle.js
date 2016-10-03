@@ -508,7 +508,7 @@ tdapp.directive('authdialog', function() {
   return {
     restrict: 'E',
     templateUrl: 'templates/dialog.html',
-    controller: ["$scope", "$firebaseAuth", "$http", "$location", "$route", "localStorageService", function($scope, $firebaseAuth, $http, $location, $route, localStorageService) {
+    controller: ["$scope", "$firebaseAuth", "$http", "$location", "$route", "localStorageService", "backend", "$timeout", function($scope, $firebaseAuth, $http, $location, $route, localStorageService, backend, $timeout) {
 
       var auth = $firebaseAuth();
 
@@ -530,9 +530,10 @@ tdapp.directive('authdialog', function() {
     		}
     		var email = $scope.email;
     		var password = $scope.password;
+            var auth = firebase.auth()
     		auth.createUserWithEmailAndPassword(email,password)
-          .then( function(data) {
-    				var user = auth.currentUser;
+            .then(function(data){
+    		        var user = auth.currentUser;
     				user.sendEmailVerification()
     				.then(function(){
     					// Prepare for work
@@ -552,21 +553,23 @@ tdapp.directive('authdialog', function() {
     						msg += "But you can go on using Dr ToDo Little now \n";
     						msg += "for 24 hours without verification.";
     						alert(msg);
-    						$location.path("/");
+                            $scope.close_dialog()
+    						$location.path("/")
+                            $route.reload();
     					})
     					.catch(function(err){
     						$scope.errormsg = "Registration-Error: " + err.message;
-    						$scope.$apply();
+                            alert($scope.errormsg)
     					})
     				})
     				.catch(function(err){
     					$scope.errormsg = "Registration-Error: " + err.message;
-    					$scope.$apply();
+                        alert($scope.errormsg)
     				})
     			}
     		).catch(function(err){
     			$scope.errormsg = "Registration-Error: " + err.message;
-    			$scope.$apply();
+                alert($scope.errormsg)
     		});
     	}
 

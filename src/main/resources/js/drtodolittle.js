@@ -10,44 +10,46 @@
 var tdapp = angular.module('tdapp',['ngCookies','ngRoute', 'firebase','LocalStorageModule','xeditable']);
 
 tdapp.config(["$routeProvider", "$locationProvider", "$compileProvider", "$httpProvider", function($routeProvider,$locationProvider,$compileProvider,$httpProvider) {
+
 	// Routing
+
 	$routeProvider
-      .when('/', {
+	.when('/', {
         templateUrl : 'main.html',
-				controller : 'MainCtrl'
-      })
-			.when('/working', {
-        templateUrl : 'working.html'
-      })
-			.when('/register', {
+		controller : 'MainCtrl'
+    })
+	.when('/register', {
         templateUrl : 'register.html',
-				controller : 'RegCtrl'
-      })
-			.when('/respwd', {
-        templateUrl : 'respwd.html',
-				controller : 'respwdCtrl'
-    	})
-			.when('/profile', {
+		controller : 'RegCtrl'
+    })
+	.when('/respwd', {
+    	templateUrl : 'respwd.html',
+		controller : 'respwdCtrl'
+    })
+	.when('/profile', {
         templateUrl : 'profile.html',
-				controller : 'profileCtrl'
-      })
-			.when('/chpwd', {
+		controller : 'profileCtrl'
+    })
+	.when('/chpwd', {
         templateUrl : 'chpwd.html',
-				controller : 'chpwdCtrl'
-      })
-			.when('/egg', {
-        templateUrl : 'egg.html'
-      })
-			.when('/error', {
-        templateUrl : 'error.html'
-      })
-			.otherwise({
-				redirectTo: '/error'
-			});
+		controller : 'chpwdCtrl'
+    })
+	.when('/error', {
+    	templateUrl : 'error.html'
+    })
+	.otherwise({
+		redirectTo: '/error'
+	});
+
 	// Performance improvement
+
 	$compileProvider.debugInfoEnabled(false);
+
 	// Disable hashbang urls
+
 	$locationProvider.html5Mode(true);
+
+	// Interceptor
 
 	$httpProvider.interceptors.push('logininterceptor');
 }])
@@ -65,7 +67,7 @@ tdapp.value(
 		lip : undefined,
 		errormsg : ""
 	}
-);
+)
 
 /*
 
@@ -501,96 +503,6 @@ tdapp.controller("respwdCtrl",["$rootScope", "$scope", "$http", "localStorageSer
 
 }]);
 
-/*
-
-	tdapp_controller_settings.js
-
-*/
-tdapp.controller("SettingsCtrl",["$scope", "$http", "$location", "$cookies", "$timeout", "appdata", function($scope,$http,$location,$cookies,$timeout,appdata){
-
-	$scope.doChPwd = function(){
-		$scope.errormsg = "";
-		var user = firebase.auth().currentUser;
-		if(!user){
-			autologinservice.doLogout();
-		}
-		if(
-			$scope.oldPassword==undefined ||
-			$scope.newPassword==undefined
-		){
-			$scope.errormsg = "Error: Enter valid data.";
-			return;
-		}
-		$location.path("/working");
-		firebase.auth().signInWithEmailAndPassword(
-			user.email,
-			$scope.oldPassword
-		).then(
-			function(fbuser){
-				fbuser.updatePassword(
-					$scope.newPassword
-				).then(
-					function(){
-						alert("Password change done!");
-						$location.path("/#/settings");
-					}
-				).catch(function(error){
-					var errmsg = "Error: " + error.message;
-					$appdata.errormsg = errmsg;
-					autologinservice.doLogout();
-				});
-			}
-		).catch(function(error){
-			var errmsg = "Error: " + error.message;
-			$appdata.errormsg = errmsg;
-			autologinservice.doLogout();
-		});
-	}
-
-	// Reset password
-
-	$scope.doResetPwd = function(){
-		var user = firebase.auth().currentUser;
-		if(user){
-			$location.path("/working");
-			var email = user.email;
-			firebase.auth().sendPasswordResetEmail(email).then(function(){
-				alert("An email is waiting for you to reset your password.");
-				autologinservice.doLogout();
-			},function(error){
-				alert("Password reset error: "+error.message);
-				autologinservice.doLogout();
-			});
-		} else {
-			appdata.errormsg = "An error has occured. Login again!";
-			autologinservice.doLogout();
-		}
-	}
-
-	// Check for login, redirect if not logged in
-
-	if(
-		appdata.user==undefined &&
-		appdata.token==undefined
-	){
-		var _dr = $cookies.get(appdata.derdrcookie);
-		if (_dr==undefined){
-			autologinservice.doLogout();
-		} else {
-			var dr = JSON.parse(_dr);
-			appdata.user = dr.user;
-			appdata.token = dr.token;
-			appdata.lip = dr.lip;
-		}
-	}
-
-	$scope.user = appdata.user;
-	$scope.lip = appdata.lip;
-
-	$('#oldpassword').focus();
-
-}]);
-
 tdapp.directive('authdialog', function() {
 
   return {
@@ -890,14 +802,17 @@ tdapp.service('backend',["$http", "appdata", "localStorageService", function($ht
 
 }]);
 
-tdapp.service('logininterceptor', ["$q", "$rootScope", "localStorageService", function($q, $rootScope, localStorageService) {
+tdapp.service('logininterceptor', ["$q", "$rootScope", "$timeout", "localStorageService", function($q, $rootScope, $timeout, localStorageService) {
   return {
    'responseError': function(rejection) {
       if (rejection.status == 401) {
         if (localStorageService.get("logintoken") != undefined) {
-          localStorageService.remove("logintoken");
+          localStorageService.remove("logintoken")
         }
-        $rootScope.open_dialog();
+        $rootScope.open_dialog()
+        $timeout(function(){
+            $('#signin-email').focus()
+        },512)
       }
       return $q.reject(rejection);
     }

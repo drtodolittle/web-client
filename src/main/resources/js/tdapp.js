@@ -7,44 +7,46 @@
 var tdapp = angular.module('tdapp',['ngCookies','ngRoute', 'firebase','LocalStorageModule','xeditable']);
 
 tdapp.config(function($routeProvider,$locationProvider,$compileProvider,$httpProvider) {
+
 	// Routing
+
 	$routeProvider
-      .when('/', {
+	.when('/', {
         templateUrl : 'main.html',
-				controller : 'MainCtrl'
-      })
-			.when('/working', {
-        templateUrl : 'working.html'
-      })
-			.when('/register', {
+		controller : 'MainCtrl'
+    })
+	.when('/register', {
         templateUrl : 'register.html',
-				controller : 'RegCtrl'
-      })
-			.when('/respwd', {
-        templateUrl : 'respwd.html',
-				controller : 'respwdCtrl'
-    	})
-			.when('/profile', {
+		controller : 'RegCtrl'
+    })
+	.when('/respwd', {
+    	templateUrl : 'respwd.html',
+		controller : 'respwdCtrl'
+    })
+	.when('/profile', {
         templateUrl : 'profile.html',
-				controller : 'profileCtrl'
-      })
-			.when('/chpwd', {
+		controller : 'profileCtrl'
+    })
+	.when('/chpwd', {
         templateUrl : 'chpwd.html',
-				controller : 'chpwdCtrl'
-      })
-			.when('/egg', {
-        templateUrl : 'egg.html'
-      })
-			.when('/error', {
-        templateUrl : 'error.html'
-      })
-			.otherwise({
-				redirectTo: '/error'
-			});
+		controller : 'chpwdCtrl'
+    })
+	.when('/error', {
+    	templateUrl : 'error.html'
+    })
+	.otherwise({
+		redirectTo: '/error'
+	});
+
 	// Performance improvement
+
 	$compileProvider.debugInfoEnabled(false);
+
 	// Disable hashbang urls
+
 	$locationProvider.html5Mode(true);
+
+	// Interceptor
 
 	$httpProvider.interceptors.push('logininterceptor');
 })
@@ -62,4 +64,4 @@ tdapp.value(
 		lip : undefined,
 		errormsg : ""
 	}
-);
+)

@@ -3,7 +3,7 @@ tdapp.directive('authdialog', function() {
   return {
     restrict: 'E',
     templateUrl: 'templates/dialog.html',
-    controller: function($scope, $firebaseAuth, $http, $location, $route, localStorageService, backend, $timeout) {
+    controller: function($scope, $firebaseAuth, $http, $location, $route, localStorageService, todoservice, $timeout) {
 
       var auth = $firebaseAuth();
 
@@ -36,11 +36,11 @@ tdapp.directive('authdialog', function() {
     						$http.defaults.headers.common['Authorization'] = "Bearer " + res;
     						// Create Welcome-Todo
     						var welcometodo = {};
-    						welcometodo.topic = "Welcome to Dr ToDo Little!";
+    						welcometodo.topic = "Welcome to Dr ToDo Little! You can use hashtags to filter tasks e.g. #new";
     						welcometodo.done = false;
-    						backend.postTodo(welcometodo);
-    						// Continue...
-    						$scope.filtertag = "All"; // Set filtertag before calling backend.getTodos()
+    						todoservice.create(welcometodo);
+
+    						$scope.filtertag = "All";
     						$scope.errormsg = "";
     						var msg = ""
     						msg += "Registration successful! \n";
@@ -48,9 +48,9 @@ tdapp.directive('authdialog', function() {
     						msg += "But you can go on using Dr ToDo Little now \n";
     						msg += "for 24 hours without verification.";
     						alert(msg);
-                            $scope.close_dialog()
+                $scope.close_dialog()
     						$location.path("/")
-                            $route.reload();
+                $route.reload();
     					})
     					.catch(function(err){
     						$scope.errormsg = "Registration-Error: " + err.message;
@@ -80,7 +80,7 @@ tdapp.directive('authdialog', function() {
               if ($scope.rememberme) {
                 localStorageService.set("logintoken", res);
               }
-    					$scope.filtertag = "All"; // Set filtertag before calling backend.getTodos()
+    					$scope.filtertag = "All";
     					$scope.errormsg = "";
     					$route.reload();
     				}).catch(function(error){
@@ -101,16 +101,13 @@ tdapp.directive('authdialog', function() {
     		var password = $scope.password;
         $scope.close_dialog();
     		auth.$signInWithEmailAndPassword(user,password)
-    		.then(function(res){
-    			var uid = res.uid;
-
-    				res.getToken().then(function(res){
-
-    					$http.defaults.headers.common['Authorization'] = "Bearer " + res;
+    		.then(function(response){
+    				response.getToken().then(function(response) {
+    					$http.defaults.headers.common['Authorization'] = "Bearer " + response;
               if ($scope.rememberme) {
-                localStorageService.set("logintoken", res);
+                localStorageService.set("logintoken", response);
               }
-    					$scope.filtertag = "All"; // Set filtertag before calling backend.getTodos()
+    					$scope.filtertag = "All";
     					$scope.errormsg = "";
     					$route.reload();
             })

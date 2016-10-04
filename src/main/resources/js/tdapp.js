@@ -9,7 +9,6 @@ var tdapp = angular.module('tdapp',['ngCookies','ngRoute', 'firebase','LocalStor
 tdapp.config(function($routeProvider,$locationProvider,$compileProvider,$httpProvider) {
 
 	// Routing
-
 	$routeProvider
 	.when('/', {
         templateUrl : 'main.html',

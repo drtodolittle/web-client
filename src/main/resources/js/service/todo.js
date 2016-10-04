@@ -1,25 +1,25 @@
 /*
 
-	tdapp_factories.js
+	Service: todo.js
 
 */
 
 tdapp.service("todoservice",function(backend, $q){ // ToDoManager
-	var fact = {};
-	fact.todos = [];
-	fact.tags = [];
+	var service = {};
+	service.todos = [];
+	service.tags = [];
 
-	fact.create = function(newtodo) {
+	service.create = function(newtodo) {
 		backend.postTodo(newtodo);
 		backend.incTodosTotal();
-	  fact.addTodoObj(newtodo);
+	  service.addTodoObj(newtodo);
 	}
 
-	fact.update = function(todo) {
+	service.update = function(todo) {
 		backend.putTodo(todo);
 	}
 
-	fact.checkForHashtag = function(todo){
+	service.checkForHashtag = function(todo){
 		if(todo.topic==undefined){
 			return;
 		}
@@ -34,37 +34,37 @@ tdapp.service("todoservice",function(backend, $q){ // ToDoManager
 			if(tag!=undefined){
 				todo.tags.push(tag);
 			}
-			if(tag!=undefined && fact.tags.indexOf(tag)<0){
-				fact.tags.push(tag);
+			if(tag!=undefined && service.tags.indexOf(tag)<0){
+				service.tags.push(tag);
 			}
 			s = todo.topic.indexOf('#', s+1);
 		}
 	}
-	fact.getTags = function(){
-		return fact.tags;
+	service.getTags = function(){
+		return service.tags;
 	}
-	fact.getTodos = function(){
+	service.getTodos = function(){
 		return $q(function(resolve, reject) {
 			backend.getTodos().then(function(response) {
-				fact.clearTodos();
+				service.clearTodos();
 				response.data.forEach(function(todo){
-					fact.addTodoObj(todo);
+					service.addTodoObj(todo);
 				});
-				resolve(fact.todos);
+				resolve(service.todos);
 			});
 		});
 	}
-	fact.getTodosByTag = function(tag,done){
+	service.getTodosByTag = function(tag,done){
 		if(tag=='' || tag=='All' || tag == undefined){
 			var ret = [];
 			if(done){
-				fact.todos.forEach(function(obj){
+				service.todos.forEach(function(obj){
 					if(obj.done){
 						ret.push(obj);
 					}
 				});
 			} else {
-				fact.todos.forEach(function(obj){
+				service.todos.forEach(function(obj){
 					if(!obj.done){
 						ret.push(obj);
 					}
@@ -73,7 +73,7 @@ tdapp.service("todoservice",function(backend, $q){ // ToDoManager
 			return ret;
 		}
 		var tagged = [];
-		fact.todos.forEach(function(obj){
+		service.todos.forEach(function(obj){
 			if(obj.tags.indexOf(tag)>=0){
 				if(done){
 					if(obj.done) tagged.push(obj);
@@ -84,70 +84,70 @@ tdapp.service("todoservice",function(backend, $q){ // ToDoManager
 		});
 		return tagged;
 	}
-	fact.setTodos = function(todolist){
+	service.setTodos = function(todolist){
 		if(todolist==undefined) return;
-		fact.todos = todolist;
+		service.todos = todolist;
 		if(todolist.length>0){
-			fact.todos.forEach(function(obj){
-				fact.checkForHashtag(obj);
+			service.todos.forEach(function(obj){
+				service.checkForHashtag(obj);
 			});
 		}
 	}
-	fact.clearTodos = function(){
-		while(fact.todos.length>0){
-			fact.todos.pop();
+	service.clearTodos = function(){
+		while(service.todos.length>0){
+			service.todos.pop();
 		}
-		while(fact.tags.length>0){
-			fact.tags.pop();
+		while(service.tags.length>0){
+			service.tags.pop();
 		}
 	}
-	fact.getTodoById = function(id){
+	service.getTodoById = function(id){
 		var ret = undefined;
-		fact.todos.forEach(function(obj){
+		service.todos.forEach(function(obj){
 			if(obj.id==id){
 				ret = obj;
 			}
 		});
 		return ret;
 	}
-	fact.addTodoObj = function(obj){
+	service.addTodoObj = function(obj){
 		obj.predone = obj.done;
-		fact.checkForHashtag(obj);
-		fact.todos.unshift(obj);
+		service.checkForHashtag(obj);
+		service.todos.unshift(obj);
 		return obj;
 	}
-	fact.addTodo = function(topic){
+	service.addTodo = function(topic){
 		var obj = {"topic":topic,done:false};
-		fact.addTodoObj(obj);
+		service.addTodoObj(obj);
 		return obj;
 	}
-	fact.delTodo = function(item){
+	service.delTodo = function(item){
 		backend.delTodo(item);
 		backend.incTodosDeleted();
 
-		var idx = fact.todos.indexOf(item)
+		var idx = service.todos.indexOf(item)
 		if(idx>=0){
 			var tag = item.tag;
-			fact.todos.splice(idx,1);
+			service.todos.splice(idx,1);
 			if( tag!=undefined ){
-				var ttd = fact.getTodosByTag(tag);
+				var ttd = service.getTodosByTag(tag);
 				if( ttd.length==0 ){
-					fact.tags.splice(fact.tags.indexOf(tag),1);
+					service.tags.splice(service.tags.indexOf(tag),1);
 				}
 			}
 		}
 	}
-	fact.togPreDone = function(item){
-		var idx = fact.todos.indexOf(item);
+	service.togPreDone = function(item){
+		var idx = service.todos.indexOf(item);
 		if( idx<0 ) return;
-		var todo = fact.todos[idx];
+		var todo = service.todos[idx];
 		if(todo.predone){
 			todo.predone = false;
 		} else {
 			todo.predone = true;
 		}
 	}
-	fact.togDone = function(item){
+	service.togDone = function(item){
 		if(item.done){ // Toggle Todo on the server
 			backend.doneTodo(item);
 			backend.incTodosDone();
@@ -155,9 +155,9 @@ tdapp.service("todoservice",function(backend, $q){ // ToDoManager
 			backend.undoneTodo(item);
 			backend.incTodosUndone();
 		}
-		var idx = fact.todos.indexOf(item);
+		var idx = service.todos.indexOf(item);
 		if( idx<0 ) return;
-		var todo = fact.todos[idx];
+		var todo = service.todos[idx];
 		if(todo.done){
 			todo.done = false;
 			todo.predone = todo.done;
@@ -166,5 +166,5 @@ tdapp.service("todoservice",function(backend, $q){ // ToDoManager
 			todo.predone = todo.done;
 		}
 	}
-	return fact;
+	return service;
 });

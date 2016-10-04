@@ -12,7 +12,6 @@ var tdapp = angular.module('tdapp',['ngCookies','ngRoute', 'firebase','LocalStor
 tdapp.config(["$routeProvider", "$locationProvider", "$compileProvider", "$httpProvider", function($routeProvider,$locationProvider,$compileProvider,$httpProvider) {
 
 	// Routing
-
 	$routeProvider
 	.when('/', {
         templateUrl : 'main.html',
@@ -68,6 +67,157 @@ tdapp.value(
 		errormsg : ""
 	}
 )
+
+tdapp.controller('authdialog', ["$scope", "$firebaseAuth", "$http", "$location", "$route", "localStorageService", "todoservice", "$timeout", function($scope, $firebaseAuth, $http, $location, $route, localStorageService, todoservice, $timeout) {
+
+  var auth = $firebaseAuth();
+
+  $scope.resetpwd = function() {
+
+    auth.$sendPasswordResetEmail($scope.email).then(function(){
+      alert("An email is waiting for you to reset your password.");
+      $scope.select_login();
+    },function(error){
+      var errmsg = "Password reset error: "+error.message;
+    });
+
+  }
+
+  $scope.register = function() {
+    if( $scope.email==undefined || $scope.password== undefined ) {
+      $scope.errormsg = "Registration-Error: Enter valid data.";
+      return;
+    }
+    var email = $scope.email;
+    var password = $scope.password;
+        var auth = firebase.auth()
+    auth.createUserWithEmailAndPassword(email,password)
+        .then(function(data){
+            var user = auth.currentUser;
+        user.sendEmailVerification()
+        .then(function(){
+          // Prepare for work
+          user.getToken().then(function(res){
+            $http.defaults.headers.common['Authorization'] = "Bearer " + res;
+            // Create Welcome-Todo
+            var welcometodo = {};
+            welcometodo.topic = "Welcome to Dr ToDo Little! You can use hashtags to filter tasks e.g. #new";
+            welcometodo.done = false;
+            todoservice.create(welcometodo);
+
+            $scope.filtertag = "All";
+            $scope.errormsg = "";
+            var msg = ""
+            msg += "Registration successful! \n";
+            msg += "A verification email is waiting for you. \n";
+            msg += "But you can go on using Dr ToDo Little now \n";
+            msg += "for 24 hours without verification.";
+            alert(msg);
+            $scope.close_dialog()
+            $location.path("/")
+            $route.reload();
+          })
+          .catch(function(err){
+            $scope.errormsg = "Registration-Error: " + err.message;
+                        alert($scope.errormsg)
+          })
+        })
+        .catch(function(err){
+          $scope.errormsg = "Registration-Error: " + err.message;
+                    alert($scope.errormsg)
+        })
+      }
+    ).catch(function(err){
+      $scope.errormsg = "Registration-Error: " + err.message;
+            alert($scope.errormsg)
+    });
+  }
+
+
+  $scope.loginWithGoogle = function(){
+    var provider = new firebase.auth.GoogleAuthProvider();
+    firebase.auth().signInWithPopup(provider).then(function(res){
+      var user = firebase.auth().currentUser;
+      $scope.close_dialog();
+      if(user){
+        user.getToken().then(function(res){
+          $http.defaults.headers.common['Authorization'] = "Bearer " + res;
+          if ($scope.rememberme) {
+            localStorageService.set("logintoken", res);
+          }
+          $scope.filtertag = "All";
+          $scope.errormsg = "";
+          $route.reload();
+        }).catch(function(error){
+          alert("Error: " + error);
+        });
+      } else {
+        alert("Error: " + error);
+      }
+    }).catch(function(error){
+      alert("Error: " + error);
+    });
+  }
+
+  $scope.login = function(){
+    var auth = $firebaseAuth();
+
+    var user = $scope.email;
+    var password = $scope.password;
+    $scope.close_dialog();
+    auth.$signInWithEmailAndPassword(user,password)
+    .then(function(response){
+        response.getToken().then(function(response) {
+          $http.defaults.headers.common['Authorization'] = "Bearer " + response;
+          if ($scope.rememberme) {
+            localStorageService.set("logintoken", response);
+          }
+          $scope.filtertag = "All";
+          $scope.errormsg = "";
+          $route.reload();
+        })
+        .catch(function(error){
+          //todo Errorhandling
+        });
+    }) // signInWithEmailAndPassword
+    .catch(function(error){
+      //todo Errorhandling
+    });
+  };
+
+
+  $scope.open_dialog = function() {
+    $scope.cdusermodal = true;
+    $scope.select_login();
+  };
+
+  $scope.select_login = function() {
+    $scope.loginselected = true;
+    $scope.registerselected = false;
+    $scope.resetselected = false;
+  };
+
+  $scope.select_register = function() {
+    $scope.loginselected = false;
+    $scope.registerselected = true;
+    $scope.resetselected = false;
+  };
+
+  $scope.select_reset = function() {
+    $scope.loginselected = false;
+    $scope.registerselected = false;
+    $scope.resetselected = true;
+  };
+
+  $scope.close_dialog = function() {
+    $scope.cdusermodal = false;
+    $scope.loginselected = false;
+    $scope.registerselected = false;
+    $scope.resetselected = false;
+  };
+
+  $scope.rememberme=true;
+}]);
 
 /*
 
@@ -508,7 +658,7 @@ tdapp.directive('authdialog', function() {
   return {
     restrict: 'E',
     templateUrl: 'templates/dialog.html',
-    controller: ["$scope", "$firebaseAuth", "$http", "$location", "$route", "localStorageService", "backend", "$timeout", function($scope, $firebaseAuth, $http, $location, $route, localStorageService, backend, $timeout) {
+    controller: ["$scope", "$firebaseAuth", "$http", "$location", "$route", "localStorageService", "todoservice", "$timeout", function($scope, $firebaseAuth, $http, $location, $route, localStorageService, todoservice, $timeout) {
 
       var auth = $firebaseAuth();
 
@@ -541,11 +691,11 @@ tdapp.directive('authdialog', function() {
     						$http.defaults.headers.common['Authorization'] = "Bearer " + res;
     						// Create Welcome-Todo
     						var welcometodo = {};
-    						welcometodo.topic = "Welcome to Dr ToDo Little!";
+    						welcometodo.topic = "Welcome to Dr ToDo Little! You can use hashtags to filter tasks e.g. #new";
     						welcometodo.done = false;
-    						backend.postTodo(welcometodo);
-    						// Continue...
-    						$scope.filtertag = "All"; // Set filtertag before calling backend.getTodos()
+    						todoservice.create(welcometodo);
+
+    						$scope.filtertag = "All";
     						$scope.errormsg = "";
     						var msg = ""
     						msg += "Registration successful! \n";
@@ -553,9 +703,9 @@ tdapp.directive('authdialog', function() {
     						msg += "But you can go on using Dr ToDo Little now \n";
     						msg += "for 24 hours without verification.";
     						alert(msg);
-                            $scope.close_dialog()
+                $scope.close_dialog()
     						$location.path("/")
-                            $route.reload();
+                $route.reload();
     					})
     					.catch(function(err){
     						$scope.errormsg = "Registration-Error: " + err.message;
@@ -585,7 +735,7 @@ tdapp.directive('authdialog', function() {
               if ($scope.rememberme) {
                 localStorageService.set("logintoken", res);
               }
-    					$scope.filtertag = "All"; // Set filtertag before calling backend.getTodos()
+    					$scope.filtertag = "All";
     					$scope.errormsg = "";
     					$route.reload();
     				}).catch(function(error){
@@ -606,16 +756,13 @@ tdapp.directive('authdialog', function() {
     		var password = $scope.password;
         $scope.close_dialog();
     		auth.$signInWithEmailAndPassword(user,password)
-    		.then(function(res){
-    			var uid = res.uid;
-
-    				res.getToken().then(function(res){
-
-    					$http.defaults.headers.common['Authorization'] = "Bearer " + res;
+    		.then(function(response){
+    				response.getToken().then(function(response) {
+    					$http.defaults.headers.common['Authorization'] = "Bearer " + response;
               if ($scope.rememberme) {
-                localStorageService.set("logintoken", res);
+                localStorageService.set("logintoken", response);
               }
-    					$scope.filtertag = "All"; // Set filtertag before calling backend.getTodos()
+    					$scope.filtertag = "All";
     					$scope.errormsg = "";
     					$route.reload();
             })
@@ -824,26 +971,26 @@ tdapp.service('logininterceptor', ["$q", "$rootScope", "$timeout", "localStorage
 
 /*
 
-	tdapp_factories.js
+	Service: todo.js
 
 */
 
 tdapp.service("todoservice",["backend", "$q", function(backend, $q){ // ToDoManager
-	var fact = {};
-	fact.todos = [];
-	fact.tags = [];
+	var service = {};
+	service.todos = [];
+	service.tags = [];
 
-	fact.create = function(newtodo) {
+	service.create = function(newtodo) {
 		backend.postTodo(newtodo);
 		backend.incTodosTotal();
-	  fact.addTodoObj(newtodo);
+	  service.addTodoObj(newtodo);
 	}
 
-	fact.update = function(todo) {
+	service.update = function(todo) {
 		backend.putTodo(todo);
 	}
 
-	fact.checkForHashtag = function(todo){
+	service.checkForHashtag = function(todo){
 		if(todo.topic==undefined){
 			return;
 		}
@@ -858,37 +1005,37 @@ tdapp.service("todoservice",["backend", "$q", function(backend, $q){ // ToDoMana
 			if(tag!=undefined){
 				todo.tags.push(tag);
 			}
-			if(tag!=undefined && fact.tags.indexOf(tag)<0){
-				fact.tags.push(tag);
+			if(tag!=undefined && service.tags.indexOf(tag)<0){
+				service.tags.push(tag);
 			}
 			s = todo.topic.indexOf('#', s+1);
 		}
 	}
-	fact.getTags = function(){
-		return fact.tags;
+	service.getTags = function(){
+		return service.tags;
 	}
-	fact.getTodos = function(){
+	service.getTodos = function(){
 		return $q(function(resolve, reject) {
 			backend.getTodos().then(function(response) {
-				fact.clearTodos();
+				service.clearTodos();
 				response.data.forEach(function(todo){
-					fact.addTodoObj(todo);
+					service.addTodoObj(todo);
 				});
-				resolve(fact.todos);
+				resolve(service.todos);
 			});
 		});
 	}
-	fact.getTodosByTag = function(tag,done){
+	service.getTodosByTag = function(tag,done){
 		if(tag=='' || tag=='All' || tag == undefined){
 			var ret = [];
 			if(done){
-				fact.todos.forEach(function(obj){
+				service.todos.forEach(function(obj){
 					if(obj.done){
 						ret.push(obj);
 					}
 				});
 			} else {
-				fact.todos.forEach(function(obj){
+				service.todos.forEach(function(obj){
 					if(!obj.done){
 						ret.push(obj);
 					}
@@ -897,7 +1044,7 @@ tdapp.service("todoservice",["backend", "$q", function(backend, $q){ // ToDoMana
 			return ret;
 		}
 		var tagged = [];
-		fact.todos.forEach(function(obj){
+		service.todos.forEach(function(obj){
 			if(obj.tags.indexOf(tag)>=0){
 				if(done){
 					if(obj.done) tagged.push(obj);
@@ -908,70 +1055,70 @@ tdapp.service("todoservice",["backend", "$q", function(backend, $q){ // ToDoMana
 		});
 		return tagged;
 	}
-	fact.setTodos = function(todolist){
+	service.setTodos = function(todolist){
 		if(todolist==undefined) return;
-		fact.todos = todolist;
+		service.todos = todolist;
 		if(todolist.length>0){
-			fact.todos.forEach(function(obj){
-				fact.checkForHashtag(obj);
+			service.todos.forEach(function(obj){
+				service.checkForHashtag(obj);
 			});
 		}
 	}
-	fact.clearTodos = function(){
-		while(fact.todos.length>0){
-			fact.todos.pop();
+	service.clearTodos = function(){
+		while(service.todos.length>0){
+			service.todos.pop();
 		}
-		while(fact.tags.length>0){
-			fact.tags.pop();
+		while(service.tags.length>0){
+			service.tags.pop();
 		}
 	}
-	fact.getTodoById = function(id){
+	service.getTodoById = function(id){
 		var ret = undefined;
-		fact.todos.forEach(function(obj){
+		service.todos.forEach(function(obj){
 			if(obj.id==id){
 				ret = obj;
 			}
 		});
 		return ret;
 	}
-	fact.addTodoObj = function(obj){
+	service.addTodoObj = function(obj){
 		obj.predone = obj.done;
-		fact.checkForHashtag(obj);
-		fact.todos.unshift(obj);
+		service.checkForHashtag(obj);
+		service.todos.unshift(obj);
 		return obj;
 	}
-	fact.addTodo = function(topic){
+	service.addTodo = function(topic){
 		var obj = {"topic":topic,done:false};
-		fact.addTodoObj(obj);
+		service.addTodoObj(obj);
 		return obj;
 	}
-	fact.delTodo = function(item){
+	service.delTodo = function(item){
 		backend.delTodo(item);
 		backend.incTodosDeleted();
 
-		var idx = fact.todos.indexOf(item)
+		var idx = service.todos.indexOf(item)
 		if(idx>=0){
 			var tag = item.tag;
-			fact.todos.splice(idx,1);
+			service.todos.splice(idx,1);
 			if( tag!=undefined ){
-				var ttd = fact.getTodosByTag(tag);
+				var ttd = service.getTodosByTag(tag);
 				if( ttd.length==0 ){
-					fact.tags.splice(fact.tags.indexOf(tag),1);
+					service.tags.splice(service.tags.indexOf(tag),1);
 				}
 			}
 		}
 	}
-	fact.togPreDone = function(item){
-		var idx = fact.todos.indexOf(item);
+	service.togPreDone = function(item){
+		var idx = service.todos.indexOf(item);
 		if( idx<0 ) return;
-		var todo = fact.todos[idx];
+		var todo = service.todos[idx];
 		if(todo.predone){
 			todo.predone = false;
 		} else {
 			todo.predone = true;
 		}
 	}
-	fact.togDone = function(item){
+	service.togDone = function(item){
 		if(item.done){ // Toggle Todo on the server
 			backend.doneTodo(item);
 			backend.incTodosDone();
@@ -979,9 +1126,9 @@ tdapp.service("todoservice",["backend", "$q", function(backend, $q){ // ToDoMana
 			backend.undoneTodo(item);
 			backend.incTodosUndone();
 		}
-		var idx = fact.todos.indexOf(item);
+		var idx = service.todos.indexOf(item);
 		if( idx<0 ) return;
-		var todo = fact.todos[idx];
+		var todo = service.todos[idx];
 		if(todo.done){
 			todo.done = false;
 			todo.predone = todo.done;
@@ -990,7 +1137,7 @@ tdapp.service("todoservice",["backend", "$q", function(backend, $q){ // ToDoMana
 			todo.predone = todo.done;
 		}
 	}
-	return fact;
+	return service;
 }]);
 
 /*

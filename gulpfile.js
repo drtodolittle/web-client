@@ -67,8 +67,10 @@ gulp.task('bowerfonts', function() {
 gulp.task('bowerjs', function() {
   gulp.src([
     config.bowerDir + '/angular/angular.min.js',
+    config.bowerDir + '/angular/angular.js',
     config.bowerDir + '/angular/angular.min.js.map',
     config.bowerDir + '/angular-route/angular-route.min.js',
+    config.bowerDir + '/angular-route/angular-route.js',
     config.bowerDir + '/angular-route/angular-route.min.js.map',
     config.bowerDir + '/jquery/dist/jquery.min.js',
     config.bowerDir + '/bootstrap/dist/js/bootstrap.min.js',

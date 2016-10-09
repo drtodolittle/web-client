@@ -22,21 +22,21 @@ var config = {
     publishPath: '/srv/www/app'
 }
 
-gulp.task('webserver', function() {
-  gulp.src(config.destPath)
-    .pipe(webserver({
-      livereload: true
-    }));
-});
-
 gulp.task('dev', function() {
-  gulp.start('bower', 'webserver');
+  runSequence('bower', ['templates', 'html', 'images', 'css', 'js', 'bowerjs', 'bowercss', 'bowerfonts'], ['webserver', 'watch']);
 })
 
 
 gulp.task('jenkins-build', function() {
   runSequence('bower', ['templates', 'html', 'images', 'css', 'js', 'bowerjs', 'bowercss', 'bowerfonts'], 'publish');
 })
+
+gulp.task('webserver', function() {
+  gulp.src(config.destPath)
+    .pipe(webserver({
+      livereload: true
+    }));
+});
 
 gulp.task('publish', function() {
   gulp.src(config.destPath + '/**/*')
@@ -133,5 +133,5 @@ gulp.task('default', function() {
 });
 
 gulp.task('watch', function() {
-  gulp.watch(config.srcPath,['build'])
+  gulp.watch(config.srcPath + "**/*",['build'])
 });

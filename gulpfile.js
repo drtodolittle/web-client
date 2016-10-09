@@ -7,7 +7,6 @@ var concat = require("gulp-concat");
 var uglify = require('gulp-uglify');
 var ngannotate = require('gulp-ng-annotate');
 var stripDebug = require('gulp-strip-debug');
-var karma = require('karma').Server;
 var iife = require('gulp-iife');
 var fs = require("fs");
 var webserver = require('gulp-webserver');

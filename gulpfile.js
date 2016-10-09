@@ -50,6 +50,7 @@ gulp.task('bower', function() { 
 gulp.task('bowercss', function() {
   gulp.src([
     config.bowerDir + '/bootstrap/dist/css/bootstrap.min.css',
+    config.bowerDir + '/bootstrap/dist/css/bootstrap.min.css.map',
     config.bowerDir + '/angular-xeditable/dist/css/xeditable.css'
   ])
   .pipe(replace('border-bottom: dashed 1px #428bca;', ''))
@@ -76,6 +77,8 @@ gulp.task('bowerjs', function() {
     config.bowerDir + '/firebase/firebase.js',
     config.bowerDir + '/angularfire/dist/angularfire.min.js',
     config.bowerDir + '/angular-local-storage/dist/angular-local-storage.min.js',
+    config.bowerDir + '/angular-local-storage/dist/angular-local-storage.js',
+    config.bowerDir + '/angular-local-storage/dist/angular-local-storage.min.js.map',
     config.bowerDir + '/angular-xeditable/dist/js/xeditable.min.js'
   ])
   .pipe(gulp.dest(config.destPath + '/js'))

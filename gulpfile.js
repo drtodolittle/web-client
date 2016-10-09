@@ -10,85 +10,124 @@ var stripDebug = require('gulp-strip-debug');
 var karma = require('karma').Server;
 var iife = require('gulp-iife');
 var fs = require("fs");
+var webserver = require('gulp-webserver');
+var bower = require('gulp-bower');
+var replace = require('gulp-string-replace');
+var runSequence = require('run-sequence');
+
+var config = {
+     srcPath: './app',
+    destPath: './dist',
+     bowerDir: './bower_components' ,
+    publishPath: '/srv/www/app'
+}
+
+gulp.task('webserver', function() {
+  gulp.src(config.destPath)
+    .pipe(webserver({
+      livereload: true
+    }));
+});
+
+gulp.task('dev', function() {
+  gulp.start('bower', 'webserver');
+})
+
+
+gulp.task('jenkins-build', function() {
+  runSequence('bower', ['templates', 'html', 'images', 'css', 'js', 'bowerjs', 'bowercss', 'bowerfonts'], 'publish');
+})
+
+gulp.task('publish', function() {
+  gulp.src(config.destPath + '/**/*')
+    .pipe(gulp.dest(config.publishPath))
+})
+
+gulp.task('bower', function() { 
+    return bower()
+         .pipe(gulp.dest(config.bowerDir)) 
+});
+
+gulp.task('bowercss', function() {
+  gulp.src([
+    config.bowerDir + '/bootstrap/dist/css/bootstrap.min.css',
+    config.bowerDir + '/angular-xeditable/dist/css/xeditable.css'
+  ])
+  .pipe(replace('border-bottom: dashed 1px #428bca;', ''))
+  .pipe(gulp.dest(config.destPath + '/css'))
+});
+
+gulp.task('bowerfonts', function() {
+  gulp.src([
+    config.bowerDir + '/bootstrap/dist/fonts/*',
+  ])
+  .pipe(gulp.dest(config.destPath + '/fonts'))
+});
+
+gulp.task('bowerjs', function() {
+  gulp.src([
+    config.bowerDir + '/angular/angular.min.js',
+    config.bowerDir + '/angular-route/angular-route.min.js',
+    config.bowerDir + '/jquery/dist/jquery.min.js',
+    config.bowerDir + '/bootstrap/dist/js/bootstrap.min.js',
+    config.bowerDir + '/firebase/firebase.js',
+    config.bowerDir + '/angularfire/dist/angularfire.min.js',
+    config.bowerDir + '/angular-local-storage/dist/angular-local-storage.min.js',
+    config.bowerDir + '/angular-xeditable/dist/js/xeditable.min.js'
+  ])
+  .pipe(gulp.dest(config.destPath + '/js'))
+});
 
 gulp.task('js', function () {
-    gulp.src([
-      'src/main/resources/js/tdapp.js',
-      'src/main/resources/js/controller/*.js',
-      'src/main/resources/js/directive/*.js',
-      'src/main/resources/js/service/*.js',
-      'src/main/resources/js/tdapp_firebase.js'
+    return gulp.src([
+      config.srcPath + '/js/tdapp.js',
+      config.srcPath + '/js/controller/*.js',
+      config.srcPath + '/js/directive/*.js',
+      config.srcPath + '/js/service/*.js',
+      config.srcPath + '/js/tdapp_firebase.js'
     ])
         .pipe(concat('drtodolittle.js'))
         .pipe(ngannotate())
         .pipe(iife())
-        .pipe(gulp.dest('src/main/resources/js/'))
+        .pipe(gulp.dest(config.destPath + '/js/'))
         .pipe(rename({ suffix: '.min' }))
         .pipe(stripDebug())
         .pipe(uglify())
-        .pipe(gulp.dest('src/main/resources/js/'))
-});
-
-gulp.task('doc', ['clean'], function() {
-    return gulp.src("src/**/*.js")
-        //.pipe(concat("README.md"))
-        //.pipe(jsdoc2md({ template: fs.readFileSync("./readme.hbs", "utf8") }))
-        .pipe(jsdoc2md())
-        .on("error", function(err){
-            gutil.log("jsdoc2md failed:", err.message);
-        })
-        .pipe(rename(function(path){
-            path.extname = ".md";
-        }))
-        .pipe(gulp.dest('./dist/doc'));
+        .pipe(gulp.dest(config.destPath + '/js/'))
 });
 
 gulp.task('css', function() {
-    return gulp.src("src/css/**/*")
-        .pipe(gulp.dest('./dist/css'));
+    return gulp.src(config.srcPath + '/css/**/*')
+        .pipe(gulp.dest(config.destPath + '/css'));
 });
 
 gulp.task('images', function() {
-    return gulp.src("src/images/**/*")
-        .pipe(gulp.dest('./dist/images'));
+    return gulp.src(config.srcPath + '/images/**/*')
+        .pipe(gulp.dest(config.destPath + '/images'));
 });
 
 gulp.task('templates', function() {
-    return gulp.src("src/templates/**/*")
-        .pipe(gulp.dest('./dist/templates'));
+    return gulp.src(config.srcPath + '/templates/**/*')
+        .pipe(gulp.dest(config.destPath + '/templates'));
 });
 
 gulp.task('html', function() {
-    return gulp.src(["src/index.html", "src/favicon.ico", "src/chpwd.html"])
-        .pipe(gulp.dest('./dist'));
-});
-
-gulp.task('test', function(done) {
-    new karma({
-        configFile: __dirname + '/karma.conf.js',
-        singleRun: true
-    }, done).start();
+    return gulp.src([config.srcPath + '/*.html', config.srcPath + '/favicon.ico'])
+        .pipe(gulp.dest(config.destPath));
 });
 
 gulp.task('build', function() {
-    gulp.start('clean', 'templates', 'html', 'images', 'css', 'js', 'doc');
+    gulp.start( 'templates', 'html', 'images', 'css', 'js', 'bowerjs', 'bowercss', 'bowerfonts');
 });
 
 gulp.task('clean', function () {
-    return del([
-        'dist/',
-        'doc/'
-    ]);
+    return del(config.destPath);
 });
 
 gulp.task('default', function() {
     gulp.start('build');
 });
 
-gulp.watch([
-  'src/main/resources/js/tdapp.js',
-  'src/main/resources/js/controller/*.js',
-  'src/main/resources/js/directive/*.js',
-  'src/main/resources/js/service/*.js',
-  'src/main/resources/js/tdapp_firebase.js'
-], ['js']);
+gulp.task('watch', function() {
+  gulp.watch(config.srcPath,['build'])
+});

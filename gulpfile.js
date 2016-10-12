@@ -18,7 +18,7 @@ var config = {
      srcPath: './app',
     destPath: './dist',
      bowerDir: './bower_components' ,
-    publishPath: '/srv/www/app'
+    publishPath: '/srv/www/test'
 }
 
 gulp.task('dev', function() {

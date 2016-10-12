@@ -137,34 +137,12 @@ tdapp.service("todoservice",function(backend, $q){ // ToDoManager
 			}
 		}
 	}
-	service.togPreDone = function(item){
-		var idx = service.todos.indexOf(item);
-		if( idx<0 ) return;
-		var todo = service.todos[idx];
-		if(todo.predone){
-			todo.predone = false;
-		} else {
-			todo.predone = true;
-		}
-	}
-	service.togDone = function(item){
-		if(item.done){ // Toggle Todo on the server
+	service.done = function(item) {
 			backend.doneTodo(item);
-			backend.incTodosDone();
-		} else {
-			backend.undoneTodo(item);
-			backend.incTodosUndone();
-		}
-		var idx = service.todos.indexOf(item);
-		if( idx<0 ) return;
-		var todo = service.todos[idx];
-		if(todo.done){
-			todo.done = false;
-			todo.predone = todo.done;
-		} else {
-			todo.done = true;
-			todo.predone = todo.done;
-		}
-	}
+	};
+	service.undone = function(item) {
+		backend.undoneTodo(item);
+	};
+
 	return service;
 });

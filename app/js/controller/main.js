@@ -88,12 +88,16 @@ function(
 		$scope.todos = todoservice.getTodosByTag($scope.filtertag,$scope.showdone);
 	}
 
-	$scope.togDone = function(obj){
-		todoservice.togPreDone(obj);
-		$timeout(function(){
-			todoservice.togDone(obj); // Toggle todo local (within todoservice)
-			$scope.todos = todoservice.getTodosByTag($scope.filtertag,$scope.showdone);
-		},1000);
+	$scope.togDone = function(item) {
+		if (item.done) {
+			todoservice.undone(item);
+			item.done = false;
+		}
+		else {
+			todoservice.done(item);
+			item.done=true;
+		}
+		$scope.todos = todoservice.getTodosByTag($scope.filtertag,$scope.showdone);
 	}
 
 	$scope.saveedittodo = function(todo){

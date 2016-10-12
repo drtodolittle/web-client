@@ -50,13 +50,18 @@ tdapp.config(function($routeProvider,$locationProvider,$compileProvider,$httpPro
 	$httpProvider.interceptors.push('logininterceptor');
 })
 
+var serverurl = "https://app.drtodolittle.de/api/todos";
+if (window.location.host.startsWith("test")) {
+	serverurl = "https://test.drtodolittle.de/api/todos";
+}
+
 tdapp.value(
 	"appdata",{
 		name : "drtodolittle",
 		nickname : "derdr",
 		cookiename : "derdrcookie",
 		localserver : "http://localhost:3000/api/todos",
-		server : "https://app.drtodolittle.de/api/todos",
+		server : serverurl,
 		rememberme : undefined,
 		token : undefined,
 		user : undefined,

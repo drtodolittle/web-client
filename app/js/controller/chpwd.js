@@ -6,21 +6,7 @@
 */
 tdapp.controller("chpwdCtrl",function($rootScope,$scope,$http,localStorageService,$route,$location){
 
-    // Modification of $location.path()
-
-    var original = $location.path
-    $location.path = function(path,reload){
-        if (reload === false){
-            var lastRoute = $route.current
-            var un = $rootScope.$on('$locationChangeSuccess', function(){
-                $route.current = lastRoute
-                un()
-            });
-        }
-        return original.apply($location,[path])
-    }
-
-    // Change it...
+    // Helper
 
     function showError(msg){
         var ee = $('#errtemplate').clone()
@@ -36,6 +22,7 @@ tdapp.controller("chpwdCtrl",function($rootScope,$scope,$http,localStorageServic
         $('#nfo').append(ee)
     }
 
+    // Change it...
 
     $scope.doChPwd = function(){
         if(
@@ -65,8 +52,6 @@ tdapp.controller("chpwdCtrl",function($rootScope,$scope,$http,localStorageServic
             showError(error.message)
 		});
     }
-
-    $location.path('/',false)
 
     $('#oldpassword').focus()
 });

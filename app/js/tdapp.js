@@ -9,6 +9,7 @@ var tdapp = angular.module('tdapp',['ngRoute', 'firebase','LocalStorageModule','
 tdapp.config(function($routeProvider,$locationProvider,$compileProvider,$httpProvider) {
 
 	// Routing
+
 	$routeProvider
 	.when('/', {
         templateUrl : 'main.html',
@@ -18,17 +19,17 @@ tdapp.config(function($routeProvider,$locationProvider,$compileProvider,$httpPro
         templateUrl : 'register.html',
 		controller : 'RegCtrl'
     })
-	.when('/respwd', {
-    	templateUrl : 'respwd.html',
-		controller : 'respwdCtrl'
-    })
 	.when('/profile', {
         templateUrl : 'profile.html',
 		controller : 'profileCtrl'
     })
-	.when('/chpwd', {
+	.when('/settings/chpwd', {
         templateUrl : 'chpwd.html',
 		controller : 'chpwdCtrl'
+    })
+	.when('/settings/respwd', {
+    	templateUrl : 'respwd.html',
+		controller : 'respwdCtrl'
     })
 	.when('/error', {
     	templateUrl : 'error.html'
@@ -52,8 +53,10 @@ tdapp.config(function($routeProvider,$locationProvider,$compileProvider,$httpPro
 
 var serverurl = "https://app.drtodolittle.de/api/todos";
 if (window.location.host.startsWith("test")) {
-	serverurl = "https://test.drtodolittle.de/api/todos";
+	serverurl = "http://test.drtodolittle.de/api/todos";
 }
+
+// Datastore
 
 tdapp.value(
 	"appdata",{
@@ -69,3 +72,9 @@ tdapp.value(
 		errormsg : ""
 	}
 )
+
+// Angular-xeditable theme
+
+tdapp.run(function(editableOptions) {
+  editableOptions.theme = 'bs3';
+});

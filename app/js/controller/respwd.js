@@ -6,21 +6,7 @@
 */
 tdapp.controller("respwdCtrl",function($rootScope,$scope,$http,localStorageService,$route,$location){
 
-    // Modification of $location.path()
-
-    var original = $location.path
-    $location.path = function(path,reload){
-        if (reload === false){
-            var lastRoute = $route.current
-            var un = $rootScope.$on('$locationChangeSuccess', function(){
-                $route.current = lastRoute
-                un()
-            });
-        }
-        return original.apply($location,[path])
-    }
-
-    // Change it...
+    // Helper
 
     function showError(msg){
         var ee = $('#errtemplate').clone()
@@ -36,6 +22,8 @@ tdapp.controller("respwdCtrl",function($rootScope,$scope,$http,localStorageServi
         $('#nfo').append(ee)
     }
 
+    // Reset it...
+
     $scope.doResetPwd = function(){
         var user = firebase.auth().currentUser;
 		if(user){
@@ -49,7 +37,5 @@ tdapp.controller("respwdCtrl",function($rootScope,$scope,$http,localStorageServi
             showError("Resetting password is not possible at this moment. Please login again.")
 		}
     }
-
-    $location.path('/',false)
 
 });

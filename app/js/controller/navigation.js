@@ -14,14 +14,6 @@ tdapp.controller("navigation",function($scope,$http,localStorageService,$route,$
 		$route.reload();
 	}
 
-	$scope.changepassword = function(){
-		$location.path('/chpwd');
-	}
-
-	$scope.resetpassword = function(){
-		$location.path('/respwd');
-	}
-
 	$scope.home = function(){
 		$location.path('/');
 		$route.reload();
@@ -29,6 +21,14 @@ tdapp.controller("navigation",function($scope,$http,localStorageService,$route,$
 
 	$scope.profile = function(){
 		$location.path('/profile')
+	}
+
+	$scope.changepassword = function(){
+		$location.path('/settings/chpwd');
+	}
+
+	$scope.resetpassword = function(){
+		$location.path('/settings/respwd');
 	}
 
 });

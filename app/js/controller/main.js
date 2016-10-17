@@ -9,8 +9,9 @@ function(
 	$scope,
 	$timeout,
 	$location,
-	todoservice)
-{
+	$routeParams,
+	todoservice
+){
 
 	// General Done Filter
 	$scope.showdone = false;
@@ -125,6 +126,29 @@ function(
 		$scope.todos = todoservice.getTodosByTag($scope.filtertag,$scope.showdone);
 		$scope.tags = todoservice.getTags();
 	});
+
+	// Routeparams
+	if(
+		$routeParams.type!=undefined &&
+		$routeParams.id!=undefined &&
+		$routeParams.type=="todo"
+	){
+		var todo = TDMgr.getTodoById($routeParams.id)
+		if(todo!=undefined){
+			var todos = [];
+			todos.push(todo);
+			_scope.todos = todos;
+		} else {
+			_scope.todos = [];
+		}
+	}
+	if(
+		$routeParams.type!=undefined &&
+		$routeParams.id!=undefined &&
+		$routeParams.type=="tag"
+	){
+		_scope.todos = TDMgr.getTodosByTag("#"+$routeParams.id,false);
+	}
 
 	// Finish
 	$("#todotxta").focus();

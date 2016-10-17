@@ -15,6 +15,10 @@ tdapp.config(function($routeProvider,$locationProvider,$compileProvider,$httpPro
         templateUrl : 'main.html',
 		controller : 'MainCtrl'
     })
+	.when('/todos/:type/:id', {
+        templateUrl : 'main.html',
+		controller : 'MainCtrl'
+    })
 	.when('/register', {
         templateUrl : 'register.html',
 		controller : 'RegCtrl'

@@ -39,6 +39,7 @@ tdapp.controller("profileCtrl",function($rootScope,$scope,$http,localStorageServ
         $scope.user = user.email
     } else {
         showError('Try again later.')
+        console.log('Error in profile.js')
     }
 
     $location.path('/',false)

@@ -128,6 +128,10 @@ function(
 	});
 
 	// Routeparams
+	console.log("routeparams...")
+	console.log($routeParams.type)
+	console.log($routeParams.id)
+	console.log("...done")
 	if(
 		$routeParams.type!=undefined &&
 		$routeParams.id!=undefined &&

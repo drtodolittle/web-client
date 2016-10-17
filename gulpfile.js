@@ -135,5 +135,5 @@ gulp.task('default', function() {
 });
 
 gulp.task('watch', function() {
-  gulp.watch(config.srcPath + "**/*",['build'])
+  gulp.watch(config.srcPath + "/**/*",['build'])
 });

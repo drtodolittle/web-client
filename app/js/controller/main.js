@@ -133,7 +133,7 @@ function(
 		$routeParams.id!=undefined &&
 		$routeParams.type=="todo"
 	){
-		var todo = TDMgr.getTodoById($routeParams.id)
+		var todo = todoservice.getTodoById($routeParams.id)
 		if(todo!=undefined){
 			var todos = [];
 			todos.push(todo);
@@ -147,7 +147,7 @@ function(
 		$routeParams.id!=undefined &&
 		$routeParams.type=="tag"
 	){
-		$scope.todos = TDMgr.getTodosByTag("#"+$routeParams.id,false);
+		$scope.todos = todoservice.getTodosByTag("#"+$routeParams.id,false);
 	}
 
 	// Finish

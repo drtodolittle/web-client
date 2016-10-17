@@ -36,10 +36,11 @@ tdapp.controller("profileCtrl",function($rootScope,$scope,$http,localStorageServ
 
     var user = firebase.auth().currentUser
     if(user){
+        console.log('Analysis: User = '+user.email)
         $scope.user = user.email
     } else {
+        console.log('Analysis: User = undefined (error in profile.js)')
         showError('Try again later.')
-        console.log('Error in profile.js')
     }
 
     $location.path('/',false)

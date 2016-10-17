@@ -142,7 +142,7 @@ tdapp.controller("mainCtrl", function(
             var _todo = todoservice.getTodoById($routeParams.id)
             if (_todo != undefined) {
                 var _todos = [];
-                _todos.push(todo);
+                _todos.push(_todo);
                 $scope.todos = _todos;
             } else {
                 $scope.todos = [];

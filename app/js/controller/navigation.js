@@ -10,6 +10,7 @@ tdapp.controller("navigation",function($scope,$http,localStorageService,$route,$
 		localStorageService.remove("logintoken");
 		$http.defaults.headers.common['Authorization'] = "";
 		$scope.password = "";
+		$location.path("/");
 		$route.reload();
 	}
 

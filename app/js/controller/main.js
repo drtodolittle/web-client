@@ -137,9 +137,9 @@ function(
 		if(todo!=undefined){
 			var todos = [];
 			todos.push(todo);
-			_scope.todos = todos;
+			$scope.todos = todos;
 		} else {
-			_scope.todos = [];
+			$scope.todos = [];
 		}
 	}
 	if(
@@ -147,7 +147,7 @@ function(
 		$routeParams.id!=undefined &&
 		$routeParams.type=="tag"
 	){
-		_scope.todos = TDMgr.getTodosByTag("#"+$routeParams.id,false);
+		$scope.todos = TDMgr.getTodosByTag("#"+$routeParams.id,false);
 	}
 
 	// Finish

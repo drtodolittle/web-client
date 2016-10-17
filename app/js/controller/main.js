@@ -123,36 +123,32 @@ function(
 
 	$scope.getTodosByTag = todoservice.getTodosByTag;
 	todoservice.getTodos().then(function(todos) {
+		// Normal
 		$scope.todos = todoservice.getTodosByTag($scope.filtertag,$scope.showdone);
 		$scope.tags = todoservice.getTags();
-	});
-
-	// Routeparams
-	console.log("routeparams...")
-	console.log($routeParams.type)
-	console.log($routeParams.id)
-	console.log("...done")
-	if(
-		$routeParams.type!=undefined &&
-		$routeParams.id!=undefined &&
-		$routeParams.type=="todo"
-	){
-		var todo = todoservice.getTodoById($routeParams.id)
-		if(todo!=undefined){
-			var todos = [];
-			todos.push(todo);
-			$scope.todos = todos;
-		} else {
-			$scope.todos = [];
+		// Routeparams
+		if(
+			$routeParams.type!=undefined &&
+			$routeParams.id!=undefined &&
+			$routeParams.type=="todo"
+		){
+			var todo = todoservice.getTodoById($routeParams.id)
+			if(todo!=undefined){
+				var todos = [];
+				todos.push(todo);
+				$scope.todos = todos;
+			} else {
+				$scope.todos = [];
+			}
 		}
-	}
-	if(
-		$routeParams.type!=undefined &&
-		$routeParams.id!=undefined &&
-		$routeParams.type=="tag"
-	){
-		$scope.todos = todoservice.getTodosByTag("#"+$routeParams.id,false);
-	}
+		if(
+			$routeParams.type!=undefined &&
+			$routeParams.id!=undefined &&
+			$routeParams.type=="tag"
+		){
+			$scope.todos = todoservice.getTodosByTag("#"+$routeParams.id,false);
+		}
+	});
 
 	// Finish
 	$("#todotxta").focus();

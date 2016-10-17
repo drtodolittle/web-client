@@ -4,7 +4,14 @@
     Profile controller
 
 */
-tdapp.controller("profileCtrl",function($rootScope,$scope,$http,localStorageService,$route,$location){
+tdapp.controller("profileCtrl",function(
+    $rootScope,
+    $scope,
+    $http,
+    localStorageService,
+    $route,
+    $location
+){
 
     var user = firebase.auth().currentUser
     if(user){
@@ -15,4 +22,4 @@ tdapp.controller("profileCtrl",function($rootScope,$scope,$http,localStorageServ
 
     // TODO: Present error message to user.
 
-});
+})

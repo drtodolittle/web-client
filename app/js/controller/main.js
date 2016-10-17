@@ -1,10 +1,10 @@
 /*
 
-	Dr ToDo Little
-	The main controller
+    Dr ToDo Little
+    The main controller
 
 */
-tdapp.controller("MainCtrl", function(
+tdapp.controller("mainCtrl", function(
     $scope,
     $timeout,
     $location,

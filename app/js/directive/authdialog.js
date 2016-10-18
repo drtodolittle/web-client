@@ -1,157 +1,179 @@
 tdapp.directive('authdialog', function() {
+    return {
+        restrict: 'E',
+        templateUrl: 'templates/dialog.html',
+        controller: function($scope, $firebaseAuth, $http, $location, $route, localStorageService, todoservice, $timeout) {
 
-  return {
-    restrict: 'E',
-    templateUrl: 'templates/dialog.html',
-    controller: function($scope, $firebaseAuth, $http, $location, $route, localStorageService, todoservice, $timeout) {
+            // Auth
 
-      var auth = $firebaseAuth();
+            var auth = $firebaseAuth();
 
-      $scope.resetpwd = function() {
+            // Reset password
 
-        auth.$sendPasswordResetEmail($scope.email).then(function(){
-    			alert("An email is waiting for you to reset your password.");
-          $scope.select_login();
-    		},function(error){
-    			var errmsg = "Password reset error: "+error.message;
-    		});
+            $scope.resetpwd = function() {
+                auth.$sendPasswordResetEmail($scope.email).then(function() {
+                    alert("An email is waiting for you to reset your password.");
+                    $scope.select_login();
+                }, function(error) {
+                    showError('Password reset error: ' + error.message)
+                });
+            }
 
-      }
+            // Register
 
-      $scope.register = function() {
-    		if( $scope.email==undefined || $scope.password== undefined ) {
-    			$scope.errormsg = "Registration-Error: Enter valid data.";
-    			return;
-    		}
-    		var email = $scope.email;
-    		var password = $scope.password;
-            var auth = firebase.auth()
-    		auth.createUserWithEmailAndPassword(email,password)
-            .then(function(data){
-    		        var user = auth.currentUser;
-    				user.sendEmailVerification()
-    				.then(function(){
-    					// Prepare for work
-    					user.getToken().then(function(res){
-    						$http.defaults.headers.common['Authorization'] = "Bearer " + res;
-    						// Create Welcome-Todo
-    						var welcometodo = {};
-    						welcometodo.topic = "Welcome to Dr ToDo Little! You can use hashtags to filter tasks e.g. #new";
-    						welcometodo.done = false;
-    						todoservice.create(welcometodo);
+            $scope.register = function() {
+                if ($scope.email == undefined || $scope.password == undefined) {
+                    showError('Registration-Error: Enter valid data.')
+                    return;
+                }
+                var email = $scope.email;
+                var password = $scope.password;
+                var auth = firebase.auth()
+                auth.createUserWithEmailAndPassword(email, password)
+                    .then(function(data) {
+                        var user = auth.currentUser;
+                        user.sendEmailVerification()
+                            .then(function() {
+                                // Prepare for work
+                                user.getToken().then(function(res) {
+                                        $http.defaults.headers.common['Authorization'] = "Bearer " + res;
+                                        // Create Welcome-Todo
+                                        var welcometodo = {};
+                                        welcometodo.topic = "Welcome to Dr ToDo Little! You can use hashtags to filter tasks e.g. #new";
+                                        welcometodo.done = false;
+                                        todoservice.create(welcometodo);
+                                        $scope.filtertag = "All";
+                                        // Registration information
+                                        var msg = ""
+                                        msg += "Registration successful! \n";
+                                        msg += "A verification email is waiting for you. \n";
+                                        msg += "But you can go on using Dr ToDo Little now \n";
+                                        msg += "for 24 hours without verification.";
+                                        alert(msg);
+                                        // Go...
+                                        $scope.close_dialog()
+                                        $location.path("/")
+                                        $route.reload();
+                                    })
+                                    .catch(function(error) {
+                                        showError('Registration-Error: ' + error.message)
+                                    })
+                            })
+                            .catch(function(error) {
+                                showError('Registration-Error: ' + error.message)
+                            })
+                    }).catch(function(error) {
+                        showError('Registration-Error: ' + error.message)
+                    });
+            }
 
-    						$scope.filtertag = "All";
-    						$scope.errormsg = "";
-    						var msg = ""
-    						msg += "Registration successful! \n";
-    						msg += "A verification email is waiting for you. \n";
-    						msg += "But you can go on using Dr ToDo Little now \n";
-    						msg += "for 24 hours without verification.";
-    						alert(msg);
-                $scope.close_dialog()
-    						$location.path("/")
-                $route.reload();
-    					})
-    					.catch(function(err){
-    						$scope.errormsg = "Registration-Error: " + err.message;
-                            alert($scope.errormsg)
-    					})
-    				})
-    				.catch(function(err){
-    					$scope.errormsg = "Registration-Error: " + err.message;
-                        alert($scope.errormsg)
-    				})
-    			}
-    		).catch(function(err){
-    			$scope.errormsg = "Registration-Error: " + err.message;
-                alert($scope.errormsg)
-    		});
-    	}
+            // Login
 
+            $scope.login = function() {
+                var auth = $firebaseAuth();
+                var user = $scope.email;
+                var password = $scope.password;
+                if (user == undefined || password == undefined) {
+                    showError('Login-Error: Enter valid data.')
+                    return
+                }
 
-      $scope.loginWithGoogle = function(){
-    		var provider = new firebase.auth.GoogleAuthProvider();
-    		firebase.auth().signInWithPopup(provider).then(function(res){
-    			var user = firebase.auth().currentUser;
-          $scope.close_dialog();
-    			if(user){
-    				user.getToken().then(function(res){
-    					$http.defaults.headers.common['Authorization'] = "Bearer " + res;
-              if ($scope.rememberme) {
-                localStorageService.set("logintoken", res);
-              }
-    					$scope.filtertag = "All";
-    					$scope.errormsg = "";
-    					$route.reload();
-    				}).catch(function(error){
-              alert("Error: " + error);
-    				});
-    			} else {
-            alert("Error: " + error);
-    			}
-    		}).catch(function(error){
-          alert("Error: " + error);
-    		});
-    	}
+                auth.$signInWithEmailAndPassword(user, password)
+                    .then(function(response) {
+                        response.getToken().then(function(response) {
+                                $scope.close_dialog();
+                                $http.defaults.headers.common['Authorization'] = "Bearer " + response;
+                                if ($scope.rememberme) {
+                                    localStorageService.set("logintoken", response);
+                                }
+                                $scope.filtertag = "All";
+                                $scope.errormsg = "";
+                                $route.reload();
+                            })
+                            .catch(function(error) {
+                                showError(error.message)
+                            });
+                    })
+                    .catch(function(error) {
+                        showError(error.message)
+                    });
+            };
 
-      $scope.login = function(){
-        var auth = $firebaseAuth();
+            $scope.loginWithGoogle = function() {
+                var provider = new firebase.auth.GoogleAuthProvider();
+                firebase.auth().signInWithPopup(provider).then(function(res) {
+                    var user = firebase.auth().currentUser;
+                    if (user) {
+                        user.getToken().then(function(res) {
+                            $scope.close_dialog();
+                            $http.defaults.headers.common['Authorization'] = "Bearer " + res;
+                            if ($scope.rememberme) {
+                                localStorageService.set("logintoken", res);
+                            }
+                            $scope.filtertag = "All";
+                            $scope.errormsg = "";
+                            $route.reload();
+                        }).catch(function(error) {
+                            showError('Google-Login-Error: ' + error.message)
+                        });
+                    } else {
+                        showError('Google-Login-Error: ' + error.message)
+                    }
+                }).catch(function(error) {
+                    showError('Google-Login-Error: ' + error.message)
+                });
+            }
 
-    		var user = $scope.email;
-    		var password = $scope.password;
-        $scope.close_dialog();
-    		auth.$signInWithEmailAndPassword(user,password)
-    		.then(function(response){
-    				response.getToken().then(function(response) {
-    					$http.defaults.headers.common['Authorization'] = "Bearer " + response;
-              if ($scope.rememberme) {
-                localStorageService.set("logintoken", response);
-              }
-    					$scope.filtertag = "All";
-    					$scope.errormsg = "";
-    					$route.reload();
-            })
-    				.catch(function(error){
-              //todo Errorhandling
-            });
-    		}) // signInWithEmailAndPassword
-    		.catch(function(error){
-    			//todo Errorhandling
-    		});
-    	};
+            // Helper
 
+            $scope.open_dialog = function() {
+                $scope.cdusermodal = true;
+                $scope.select_login();
+            };
 
-      $scope.open_dialog = function() {
-        $scope.cdusermodal = true;
-        $scope.select_login();
-      };
+            $scope.select_login = function() {
+                $scope.loginselected = true;
+                $scope.registerselected = false;
+                $scope.resetselected = false;
+                hideError()
+            };
 
-      $scope.select_login = function() {
-        $scope.loginselected = true;
-        $scope.registerselected = false;
-        $scope.resetselected = false;
-      };
+            $scope.select_register = function() {
+                $scope.loginselected = false;
+                $scope.registerselected = true;
+                $scope.resetselected = false;
+                hideError()
+            };
 
-      $scope.select_register = function() {
-        $scope.loginselected = false;
-        $scope.registerselected = true;
-        $scope.resetselected = false;
-      };
+            $scope.select_reset = function() {
+                $scope.loginselected = false;
+                $scope.registerselected = false;
+                $scope.resetselected = true;
+            };
 
-      $scope.select_reset = function() {
-        $scope.loginselected = false;
-        $scope.registerselected = false;
-        $scope.resetselected = true;
-      };
+            $scope.close_dialog = function() {
+                $scope.cdusermodal = false;
+                $scope.loginselected = false;
+                $scope.registerselected = false;
+                $scope.resetselected = false;
+                hideError()
+            };
 
-      $scope.close_dialog = function() {
-        $scope.cdusermodal = false;
-        $scope.loginselected = false;
-        $scope.registerselected = false;
-        $scope.resetselected = false;
-      };
+            var showError = function(msg) {
+                $('.cd-error-message').html(msg)
+                $('.cd-error-message').css('visibility', 'visible')
+                $('.cd-error-message').css('opacity', '1')
+                $('.cd-error-message').css('font-size', '12px')
+            }
 
-      $scope.rememberme=true;
+            var hideError = function() {
+                $('.cd-error-message').html('')
+                $('.cd-error-message').css('visibility', 'hidden')
+                $('.cd-error-message').css('opacity', '0')
+            }
+
+            $scope.rememberme = true;
+
+        }
     }
-  }
-});
+})

@@ -1,40 +1,35 @@
-<div class="container">
-	<div class="dropdown pull-left">
-	  <button class="btn btn-default dropdown-toggle" type="button" id="filter1" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
-		Filter {{filtertag}}
-		<span class="caret"></span>
-	  </button>
-	  <ul class="dropdown-menu" aria-labelledby="filter1">
-		<li><a href="/" ng-click="displaytodos('All')">All</a></li>
-		<li ng-repeat="tag in tags">
-			<a href="/" ng-click="displaytodos(tag)">{{tag}}</a>
+<div>
+	<ul class="list-group">
+		<li class="list-group-item">
+			<button class="btn btn-default dropdown-toggle" type="button" id="filter1" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
+			  Filter {{filtertag}}
+			  <span class="caret"></span>
+			</button>
+			<ul class="dropdown-menu" aria-labelledby="filter1">
+			  <li><a href="/" ng-click="displaytodos('All')">All</a></li>
+			  <li ng-repeat="tag in tags">
+				  <a href="/" ng-click="displaytodos(tag)">{{tag}}</a>
+			  </li>
+			</ul>
+			<button class="btn btn-default" type="button" ng-click="togShowdone()">{{showdonetext}}</button>
 		</li>
-	  </ul>
-	</div>
-	<div class="dropdown pull-left">
-	  <button class="btn btn-default" type="button" ng-click="togShowdone()">{{showdonetext}}</button>
-	</div>
-</div>
-
-<div class="container list-group">
-	<ul class="list-group fnt16" style="padding-left:16px">
-		<li	class="list-group-item"	style="padding:16px">
+		<li class="list-group-item">
 			<input id="todotxta" ng-model="newtodotxt" ng-keydown="newtodoKeydown($event)" class="form-control" placeholder="New ToDo..."></input>
 		</li>
-		<li class="list-group-item" style="padding:16px" contenteditable="false" ng-repeat="todo in todos">
+		<li class="list-group-item" contenteditable="false" ng-repeat="todo in todos">
 			<span id="todoid{{todo.id}}">
 				<span class="pull-left">
-					<span class="mo m8 colgreen fnt16" ng-click="togDone(todo)" contenteditable="false">
+					<span class="mo mr12 colgreen fnt16" ng-click="togDone(todo)" contenteditable="false">
 						<span ng-if="todo.done==false" class="mo glyphicon glyphicon-unchecked"></span>
 						<span ng-if="todo.done==true" class="mo glyphicon glyphicon-check"></span>
 					</span>
 				</span>
-				<span class="pull-right">
-					<span class="colred fnt16 m8">
+			<span class="pull-right">
+					<span class="colred fnt14">
 						<span class="mo glyphicon glyphicon-remove" contenteditable="false" ng-click=deltodo(todo)></span>
-					</span>
-				</span>
-				<span id="todocontent{{todo.id}}" e-ng-keypress="editTodoKeydown($event)" editable-textarea="todo.topic" e-rows="7" e-cols="40" onbeforesave="saveedittodo(todo)">
+			</span>
+			</span>
+			<span id="todocontent{{todo.id}}" e-ng-keypress="editTodoKeydown($event)" editable-textarea="todo.topic" e-rows="7" e-cols="40" onbeforesave="saveedittodo(todo)">
 				{{ todo.topic }}
 				</span>
 			</span>

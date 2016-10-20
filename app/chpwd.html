@@ -1,32 +1,21 @@
-<div class="container">
-	<div>Change Password</div>
-	<br>
+<div>
+	<div style="padding-bottom:12px">Change Password</div>
 	<input
 		id="oldpassword"
 		type="password"
 		ng-model="oldPassword"
 		placeholder="Old password"
-		class="form-control lipass fnt16"
-		tabindex="1">
+		class="form-control lipass fnt14"
+		tabindex="1"
+	>
 	</input>
 	<input
 		id="newpassword"
 		type="password"
 		ng-model="newPassword"
 		placeholder="New password"
-		class="form-control lipass fnt16"
+		class="form-control lipass fnt14"
 		tabindex="2">
 	</input>
 	<button class="btn btn-default" type="button" ng-click="doChPwd()">Do it now</button>
-	<div id="nfo" style="padding-top:16px"></div>
-</div>
-
-<div id="errtemplate" class="alert alert-danger alert-dismissible" role="alert" style="visibility:hidden">
-  <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-  <strong>Error! </strong><span id="errmsg"></span>
-</div>
-
-<div id="successtemplate" class="alert alert-success alert-dismissible" role="alert" style="visibility:hidden">
-  <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-  <strong>Success! </strong><span id="sucmsg"></span>
 </div>

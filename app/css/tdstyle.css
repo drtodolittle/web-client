@@ -1,6 +1,6 @@
 /*
-
-	tdstyle.css
+	Dr ToDo Little
+	Styles
 
 */
 body,div,p,span{
@@ -20,6 +20,7 @@ body,div,p,span{
 .colred{
 	color:#a04040
 }
+
 /*
   Fonts ----------------------------------------
 */
@@ -30,6 +31,10 @@ body,div,p,span{
 .fnt12{
 	font-family:arial;
 	font-size:12px;
+}
+.fnt14{
+	font-family:arial;
+	font-size:14px;
 }
 .fnt16{
 	font-family:arial;
@@ -49,6 +54,12 @@ body,div,p,span{
 */
 .m8{
 	margin:8px;
+}
+.mr8{
+	margin-right:8px;
+}
+.mr12{
+	margin-right:12px;
 }
 .mt8{
 	margin-top:8px;
@@ -123,7 +134,7 @@ body,div,p,span{
 }
 
 /*
-  Error ----------------------------------------
+  Error (old) ----------------------------------------
 */
 @keyframes flash{
 	0% {color:white;}
@@ -214,11 +225,9 @@ body,div,p,span{
 	cursor:pointer;
 }
 
-/* --------------------------------
-
-xsigin/signup popup
-
--------------------------------- */
+/*
+  xsigin/signup popup ----------------------------------------
+*/
 .cd-user-modal {
   position: fixed;
   top: 0;
@@ -249,7 +258,6 @@ xsigin/signup popup
   -o-transform: translateY(0);
   transform: translateY(0);
 }
-
 .cd-user-modal-container {
   position: relative;
   width: 90%;
@@ -313,7 +321,6 @@ xsigin/signup popup
     line-height: 70px;
   }
 }
-
 .cd-form {
   padding: 1.4em;
 }
@@ -417,7 +424,6 @@ xsigin/signup popup
 	-webkit-box-shadow: inset 0 3px 5px rgba(0,0,0,0.125);
 	box-shadow: inset 0 3px 5px rgba(0,0,0,0.125);
 }
-
 .cd-form .hide-password {
   display: inline-block;
   position: absolute;
@@ -493,7 +499,6 @@ xsigin/signup popup
     padding: 16px 0;
   }
 }
-
 .cd-form-message {
   padding: 1.4em 1.4em 0;
   font-size: 12px;
@@ -505,7 +510,6 @@ xsigin/signup popup
     padding: 2em 2em 0;
   }
 }
-
 .cd-form-bottom-message {
   position: absolute;
   width: 100%;
@@ -518,7 +522,6 @@ xsigin/signup popup
   color: #fff;
   text-decoration: underline;
 }
-
 .cd-close-form {
   /* form X button on top right */
   display: block;
@@ -537,15 +540,12 @@ xsigin/signup popup
     display: none;
   }
 }
-
 #cd-login, #cd-signup, #cd-reset-password {
   display: none;
 }
-
 #cd-login.is-selected, #cd-signup.is-selected, #cd-reset-password.is-selected {
   display: block;
 }
-
 .social-login {
 	width: 100%;
 	display: table;
@@ -636,45 +636,34 @@ xsigin/signup popup
 	top: 11px;
 	left: 0;
 }
-
-
 /*
   navbar
-
 */
 body,html{
 height: 100%;
 }
-
 /* remove outer padding */
 .main .row{
 padding: 0px;
 margin: 0px;
 }
-
 /*Remove rounded coners*/
-
 nav.sidebar.navbar {
 border-radius: 0px;
 }
-
 nav.sidebar, .main{
 -webkit-transition: margin 200ms ease-out;
 	-moz-transition: margin 200ms ease-out;
 	-o-transition: margin 200ms ease-out;
 	transition: margin 200ms ease-out;
 }
-
 /* Add gap to nav and right windows.*/
 .main{
 padding: 10px 10px 0 10px;
 }
-
 /* .....NavBar: Icon only with coloring/layout.....*/
-
 /*small/medium side display*/
 @media (min-width: 768px) {
-
 /*Allow main to be next to Nav*/
 .main{
 	position: absolute;
@@ -682,12 +671,10 @@ padding: 10px 10px 0 10px;
 	margin-left: 40px;
 	float: right;
 }
-
 /*lets nav bar to be showed on mouseover*/
 nav.sidebar:hover + .main{
 	margin-left: 200px;
 }
-
 /*Center Brand*/
 nav.sidebar.navbar.sidebar>.container .navbar-brand, .navbar>.container-fluid .navbar-brand {
 	margin-left: 0px;
@@ -698,22 +685,18 @@ nav.sidebar .navbar-brand, nav.sidebar .navbar-header{
 	width: 100%;
 	margin-left: 0px;
 }
-
 /*Center Icons*/
 nav.sidebar a{
 	padding-right: 13px;
 }
-
 /*adds border top to first nav box */
 nav.sidebar .navbar-nav > li:first-child{
 	border-top: 1px #e5e5e5 solid;
 }
-
 /*adds border to bottom nav boxes*/
 nav.sidebar .navbar-nav > li{
 	border-bottom: 1px #e5e5e5 solid;
 }
-
 /* Colors/style dropdown box*/
 nav.sidebar .navbar-nav .open .dropdown-menu {
 	position: static;
@@ -725,17 +708,14 @@ nav.sidebar .navbar-nav .open .dropdown-menu {
 	-webkit-box-shadow: none;
 	box-shadow: none;
 }
-
 /*allows nav box to use 100% width*/
 nav.sidebar .navbar-collapse, nav.sidebar .container-fluid{
 	padding: 0 0px 0 0px;
 }
-
 /*colors dropdown box text */
 .navbar-inverse .navbar-nav .open .dropdown-menu>li>a {
 	color: #777;
 }
-
 /*gives sidebar width/height*/
 nav.sidebar{
 	width: 200px;
@@ -745,12 +725,10 @@ nav.sidebar{
 	z-index: 8000;
 	margin-bottom: 0px;
 }
-
 /*give sidebar 100% width;*/
 nav.sidebar li {
 	width: 100%;
 }
-
 /* Move nav to full on mouse over*/
 nav.sidebar:hover{
 	margin-left: 0px;
@@ -760,17 +738,13 @@ nav.sidebar:hover{
 	opacity: 0;
 }
 }
-
 /* .....NavBar: Fully showing nav bar..... */
-
 @media (min-width: 1330px) {
-
 /*Allow main to be next to Nav*/
 .main{
 	width: calc(100% - 200px); /*keeps 100% minus nav size*/
 	margin-left: 200px;
 }
-
 /*Show all nav*/
 nav.sidebar{
 	margin-left: 0px;
@@ -781,12 +755,10 @@ nav.sidebar .forAnimate{
 	opacity: 1;
 }
 }
-
 nav.sidebar .navbar-nav .open .dropdown-menu>li>a:hover, nav.sidebar .navbar-nav .open .dropdown-menu>li>a:focus {
 color: #CCC;
 background-color: transparent;
 }
-
 nav:hover .forAnimate{
 opacity: 1;
 }

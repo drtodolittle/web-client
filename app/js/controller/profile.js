@@ -15,11 +15,18 @@ tdapp.controller("profileCtrl",function(
 
     var user = firebase.auth().currentUser
     if(user){
-        $scope.user = user.email
+        if(user.providerData.length>0){
+            $scope.user = user.providerData[0].email
+            $scope.userphotourl = user.providerData[0].photoURL
+        } else {
+            $scope.user = "n/a"
+            $scope.userphotourl = "null"
+        }
     } else {
         $scope.user = "n/a"
+        $scope.userphotourl = "null"
     }
 
-    // TODO: Present error message to user.
+    // TODO: Present error message (if occured) to user.
 
 })

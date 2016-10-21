@@ -33,7 +33,8 @@ gulp.task('jenkins-build', function() {
 gulp.task('webserver', function() {
   gulp.src(config.destPath)
     .pipe(webserver({
-      livereload: true
+      livereload: true,
+      // fallback: 'index.html'
     }));
 });
 

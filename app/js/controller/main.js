@@ -8,6 +8,7 @@ tdapp.controller("mainCtrl", function(
     $scope,
     $timeout,
     $location,
+    $route,
     $routeParams,
     todoservice
 ) {
@@ -82,8 +83,13 @@ tdapp.controller("mainCtrl", function(
     }
 
     $scope.displaytodos = function(tag) {
-        $scope.filtertag = tag;
-        $scope.todos = todoservice.getTodosByTag(tag, $scope.showdone);
+        if(tag!='All' && tag!=undefined){
+            $location.path('/todos/tag/'+tag.substring(1,tag.length));
+            $scope.todos = todoservice.getTodosByTag(tag, $scope.showdone);
+        } else {
+            $location.path('/');
+            $scope.todos = todoservice.getTodosByTag('All', $scope.showdone);
+        }
     }
 
     // Todo functions
@@ -153,7 +159,8 @@ tdapp.controller("mainCtrl", function(
             $routeParams.id != undefined &&
             $routeParams.type == "tag"
         ) {
-            $scope.todos = todoservice.getTodosByTag("#" + $routeParams.id, false);
+            $scope.todos = todoservice.getTodosByTag("#" + $routeParams.id, $scope.showdone);
+            $scope.filtertag = '#'+$routeParams.id
         }
     });
 

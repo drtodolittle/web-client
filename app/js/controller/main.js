@@ -120,6 +120,11 @@ tdapp.controller("mainCtrl", function(
         todoservice.update(todo);
     }
 
+    $scope.todocopylink = function(id){
+        var url = $location.protocol() + "://" + $location.host() + ":" + $location.port() + "/todos/todo/" + id
+        window.prompt("Copy to clipboard: Ctrl+C, Enter", url);
+    }
+
     // Filter function
 
     $scope.togShowdone = function() {

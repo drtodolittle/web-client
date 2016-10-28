@@ -84,7 +84,7 @@ tdapp.controller("mainCtrl", function(
 
     $scope.displaytodos = function(tag) {
         if(tag!='All' && tag!=undefined){
-            $location.path('/todos/tag/'+tag.substring(1,tag.length));
+            $location.path('/todos/open/tag/'+tag.substring(1,tag.length));
             $scope.todos = todoservice.getTodosByTag(tag, $scope.showdone);
         } else {
             $location.path('/');
@@ -112,7 +112,9 @@ tdapp.controller("mainCtrl", function(
             todoservice.done(item);
             item.done = true;
         }
-        $scope.todos = todoservice.getTodosByTag($scope.filtertag, $scope.showdone);
+        if($location.path().indexOf("/todos/todo")==-1){
+            $scope.todos = todoservice.getTodosByTag($scope.filtertag, $scope.showdone);
+        }
     }
 
     $scope.saveedittodo = function(todo) {
@@ -121,20 +123,36 @@ tdapp.controller("mainCtrl", function(
     }
 
     $scope.todocopylink = function(id){
-        var url = $location.protocol() + "://" + $location.host() + ":" + $location.port() + "/todos/todo/" + id
+        var url =
+            $location.protocol() + "://" + $location.host() + ":" + $location.port() +
+            "/todos" +
+            // "/openordone" +
+            "/todo/" + id
         window.prompt("Copy to clipboard: Ctrl+C, Enter", url);
     }
 
     // Filter function
 
     $scope.togShowdone = function() {
-        $scope.showdone = !$scope.showdone;
-        if ($scope.showdone) {
-            $scope.showdonetext = "Show Open";
-        } else {
-            $scope.showdonetext = "Show Done";
+        if($location.path().indexOf("/todos/todo/")!=-1){
+            showInfo('If you view a todo in direct mode (see URL), it is not possible to toggle between Open and Done.')
+            return;
         }
-        $scope.todos = todoservice.getTodosByTag($scope.filtertag, $scope.showdone);
+        $scope.showdone = !$scope.showdone;
+        if($scope.filtertag!=undefined && $scope.filtertag!="All" && $scope.filtertag!="/"){
+            if ($scope.showdone) {
+                $location.path("todos/done/tag/"+$scope.filtertag.substring(1,$scope.filtertag.length));
+            } else {
+                $location.path("todos/open/tag/"+$scope.filtertag.substring(1,$scope.filtertag.length));
+            }
+        } else {
+            $scope.todos = todoservice.getTodosByTag($scope.filtertag,$scope.showdone);
+            if($scope.showdone){
+                $scope.showdonetext = "Show Open";
+            } else {
+                $scope.showdonetext = "Show Done";
+            }
+        }
     }
 
     // Get/Prepare todos
@@ -160,11 +178,21 @@ tdapp.controller("mainCtrl", function(
             }
         }
         if (
+            $routeParams.status != undefined &&
             $routeParams.type != undefined &&
             $routeParams.id != undefined &&
             $routeParams.type == "tag"
         ) {
-            $scope.todos = todoservice.getTodosByTag("#" + $routeParams.id, $scope.showdone);
+            if($routeParams.status=="open"){
+                $scope.showdonetext = "Show Done";
+                $scope.showdone = false;
+                $scope.todos = todoservice.getTodosByTag("#" + $routeParams.id, false);
+            }
+            if($routeParams.status=="done"){
+                $scope.showdonetext = "Show Open";
+                $scope.showdone = true;
+                $scope.todos = todoservice.getTodosByTag("#" + $routeParams.id, true);
+            }
             $scope.filtertag = '#'+$routeParams.id
         }
     });

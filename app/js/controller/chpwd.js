@@ -13,22 +13,6 @@ tdapp.controller("chpwdCtrl", function(
     $location
 ) {
 
-    // Helper
-
-    function showError(msg) {
-        var ee = $('#errtemplate').clone()
-        ee.children('#errmsg').html(msg)
-        ee.css('visibility', 'visible')
-        $('#nfo').append(ee)
-    }
-
-    function showSuccess(msg) {
-        var ee = $('#successtemplate').clone()
-        ee.children('#sucmsg').html(msg)
-        ee.css('visibility', 'visible')
-        $('#nfo').append(ee)
-    }
-
     // Change it...
 
     $scope.doChPwd = function() {

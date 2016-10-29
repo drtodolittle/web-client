@@ -14,6 +14,7 @@ tdapp.service('backend', function($http, appdata, localStorageService) {
         return $http({
             method: "post",
             url: appdata.server,
+			timeout: 5000,
             header: "application/json",
             data: obj
         })
@@ -69,7 +70,8 @@ tdapp.service('backend', function($http, appdata, localStorageService) {
     this.getTodos = function() {
         return $http({
             method: "get",
-            url: appdata.server
+            url: appdata.server,
+			timeout: 5000
         });
     }
 

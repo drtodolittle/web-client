@@ -1,34 +1,22 @@
 /*
 
-	backend.js
+	Dr ToDo Little
+	the Backend Service
 
 */
+
 tdapp.service('backend', function($http, appdata, localStorageService) {
-
-    var ERRORMSG = "A backend problem occured. Please try again later."
-
     var token = localStorageService.get("logintoken");
     if (token != undefined) {
         $http.defaults.headers.common['Authorization'] = "Bearer " + token;
     }
-
     this.postTodo = function(obj) {
-        $http({
+        return $http({
             method: "post",
             url: appdata.server,
             header: "application/json",
             data: obj
-        }).then(
-            function successCallback(res) {
-                obj.id = res.data.id;
-            },
-            function errorCallback(res) {
-                console.log("Error: " + JSON.stringify(res));
-                throw ({
-                    statusText: ERRORMSG
-                })
-            }
-        );
+        })
     }
     this.putTodo = function(obj) {
         $http({
@@ -40,9 +28,6 @@ tdapp.service('backend', function($http, appdata, localStorageService) {
             function successCallback(res) {},
             function errorCallback(res) {
                 console.log("Error: " + JSON.stringify(res));
-                throw ({
-                    statusText: ERRORMSG
-                })
             }
         );
     }
@@ -56,9 +41,6 @@ tdapp.service('backend', function($http, appdata, localStorageService) {
             function successCallback(res) {},
             function errorCallback(res) {
                 console.log("Error: " + JSON.stringify(res));
-                throw ({
-                    statusText: ERRORMSG
-                })
             }
         );
     }
@@ -70,9 +52,6 @@ tdapp.service('backend', function($http, appdata, localStorageService) {
             function successCallback(res) {},
             function errorCallback(res) {
                 console.log("Error: " + JSON.stringify(res));
-                throw ({
-                    statusText: ERRORMSG
-                })
             }
         );
     }
@@ -84,9 +63,6 @@ tdapp.service('backend', function($http, appdata, localStorageService) {
             function successCallback(res) {},
             function errorCallback(res) {
                 console.log("Error: " + JSON.stringify(res));
-                throw ({
-                    statusText: ERRORMSG
-                })
             }
         );
     }
@@ -143,6 +119,5 @@ tdapp.service('backend', function($http, appdata, localStorageService) {
                 console.log("Error: " + error.message);
             })
     }
-
 
 });

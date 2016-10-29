@@ -4,6 +4,7 @@
     The main controller
 
 */
+
 tdapp.controller("mainCtrl", function(
     $scope,
     $timeout,
@@ -21,35 +22,25 @@ tdapp.controller("mainCtrl", function(
     // Keyboard
 
     $scope.newtodoKeydown = function(e) {
-        try {
-            var k = e.keyCode;
-            if (k == 13) { // Return
-                e.preventDefault();
-                if ($scope.newtodotxt != "") {
-                    var newtodo = {};
-                    newtodo.topic = $scope.newtodotxt;
-                    newtodo.done = false;
-                    $scope.newtodotxt = "";
-                    todoservice.create(newtodo);
-                    if ($scope.showdone) {
-                        $scope.showdone = false;
-                        $scope.showdonetext = "Show Done";
-                    }
-                    if (newtodo.tag != undefined) {
-                        $scope.filtertag = newtodo.tag;
-                    } else {
-                        $scope.filtertag = "All";
-                    }
+        var k = e.keyCode;
+        if (k == 13) { // Return
+            e.preventDefault();
+            if ($scope.newtodotxt != "") {
+                var newtodo = {};
+                newtodo.topic = $scope.newtodotxt;
+                newtodo.done = false;
+                $scope.newtodotxt = "";
+                todoservice.create(newtodo).then(function(response){
                     $scope.todos = todoservice.getTodosByTag($scope.filtertag, $scope.showdone);
                     window.scrollTo(0, 0);
                     $("#todotxta").focus();
-                }
-            } else
-            if (k == 9) { //tab
-                e.preventDefault();
+                }).catch(function(error){
+                    showError(error.message)
+                })
             }
-        } catch (e) {
-            showError(e.statusText)
+        } else
+        if (k == 9) { // Tab
+            e.preventDefault();
         }
     }
 
@@ -212,8 +203,11 @@ tdapp.controller("mainCtrl", function(
             $scope.filtertag = '#' + $routeParams.id
         }
     }).catch(function(error) {
-        if ($soope.user != undefined) { // Avoid displaying an "Unauthorized"-Error before login
+        if ($scope.user != undefined) { // Avoid displaying an "Unauthorized"-Error before login
             showError(error.statusText)
+        }
+        if(error.data==null){
+            showError("A backend problem occured. Please try again later.")
         }
     })
 

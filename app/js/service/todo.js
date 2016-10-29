@@ -1,33 +1,34 @@
 /*
 
-	Service: todo.js
+    Dr ToDo Little
+	The ToDo Service
 
 */
 
 tdapp.service("todoservice", function(backend, $q) { // ToDoManager
+    var ERRORMSG = "A backend problem occured. Please try again later."
     var service = {};
     service.todos = [];
     service.tags = [];
-
     service.create = function(newtodo) {
-        try {
-            backend.postTodo(newtodo);
-            backend.incTodosTotal();
-            service.addTodoObj(newtodo);
-        } catch (e) {
-            throw (e)
-        }
+        return $q(function(resolve, reject) {
+            backend.postTodo(newtodo).then(function(response) {
+                newtodo.id = response.data.id
+                backend.incTodosTotal();
+                service.addTodoObj(newtodo);
+                resolve();
+            }).catch(function(error) {
+                reject({
+                    message: ERRORMSG,
+                    error: error
+                });
+            })
+        })
     }
-
     service.update = function(todo) {
-        try {
-            service.checkForHashtag(todo); // TODO: Update tag list
-            backend.putTodo(todo);
-        } catch (e) {
-            throw (e)
-        }
+        service.checkForHashtag(todo); // TODO: Update tag list
+        backend.putTodo(todo);
     }
-
     service.checkForHashtag = function(todo) {
         if (todo.topic == undefined) {
             return;
@@ -183,6 +184,5 @@ tdapp.service("todoservice", function(backend, $q) { // ToDoManager
             throw (e)
         }
     };
-
     return service;
 });

@@ -126,7 +126,6 @@ tdapp.controller("mainCtrl", function(
         var url =
             $location.protocol() + "://" + $location.host() + ":" + $location.port() +
             "/todos" +
-            // "/openordone" +
             "/todo/" + id
         window.prompt("Copy to clipboard: Ctrl+C, Enter", url);
     }

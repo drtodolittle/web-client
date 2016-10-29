@@ -21,35 +21,40 @@ tdapp.controller("mainCtrl", function(
     // Keyboard
 
     $scope.newtodoKeydown = function(e) {
-        var k = e.keyCode;
-        if (k == 13) { // Return
-            e.preventDefault();
-            if ($scope.newtodotxt != "") {
-                var newtodo = {};
-                newtodo.topic = $scope.newtodotxt;
-                newtodo.done = false;
-                $scope.newtodotxt = "";
-                todoservice.create(newtodo);
-                if ($scope.showdone) {
-                    $scope.showdone = false;
-                    $scope.showdonetext = "Show Done";
+        try {
+            var k = e.keyCode;
+            if (k == 13) { // Return
+                e.preventDefault();
+                if ($scope.newtodotxt != "") {
+                    var newtodo = {};
+                    newtodo.topic = $scope.newtodotxt;
+                    newtodo.done = false;
+                    $scope.newtodotxt = "";
+                    todoservice.create(newtodo);
+                    if ($scope.showdone) {
+                        $scope.showdone = false;
+                        $scope.showdonetext = "Show Done";
+                    }
+                    if (newtodo.tag != undefined) {
+                        $scope.filtertag = newtodo.tag;
+                    } else {
+                        $scope.filtertag = "All";
+                    }
+                    $scope.todos = todoservice.getTodosByTag($scope.filtertag, $scope.showdone);
+                    window.scrollTo(0, 0);
+                    $("#todotxta").focus();
                 }
-                if (newtodo.tag != undefined) {
-                    $scope.filtertag = newtodo.tag;
-                } else {
-                    $scope.filtertag = "All";
-                }
-                $scope.todos = todoservice.getTodosByTag($scope.filtertag, $scope.showdone);
-                window.scrollTo(0, 0);
-                $("#todotxta").focus();
+            } else
+            if (k == 9) { //tab
+                e.preventDefault();
             }
-        } else
-        if (k == 9) { //tab
-            e.preventDefault();
+        } catch (e) {
+            showError(e.statusText)
         }
     }
 
     $scope.todolineKeydown = function(e, id) {
+        // TODO: Check if this function is obsolute
         var k = e.keyCode;
         if (k == 13) { // Return
             e.preventDefault();
@@ -83,8 +88,8 @@ tdapp.controller("mainCtrl", function(
     }
 
     $scope.displaytodos = function(tag) {
-        if(tag!='All' && tag!=undefined){
-            $location.path('/todos/open/tag/'+tag.substring(1,tag.length));
+        if (tag != 'All' && tag != undefined) {
+            $location.path('/todos/open/tag/' + tag.substring(1, tag.length));
             $scope.todos = todoservice.getTodosByTag(tag, $scope.showdone);
         } else {
             $location.path('/');
@@ -99,30 +104,42 @@ tdapp.controller("mainCtrl", function(
     }
 
     $scope.deltodo = function(obj) { // No animation
-        obj.deleted = true;
-        todoservice.delTodo(obj);
-        $scope.todos = todoservice.getTodosByTag($scope.filtertag, $scope.showdone);
+        try {
+            obj.deleted = true;
+            todoservice.delTodo(obj);
+            $scope.todos = todoservice.getTodosByTag($scope.filtertag, $scope.showdone);
+        } catch (e) {
+            showError(e.statusText)
+        }
     }
 
     $scope.togDone = function(item) {
-        if (item.done) {
-            todoservice.undone(item);
-            item.done = false;
-        } else {
-            todoservice.done(item);
-            item.done = true;
-        }
-        if($location.path().indexOf("/todos/todo")==-1){
-            $scope.todos = todoservice.getTodosByTag($scope.filtertag, $scope.showdone);
+        try {
+            if (item.done) {
+                todoservice.undone(item);
+                item.done = false;
+            } else {
+                todoservice.done(item);
+                item.done = true;
+            }
+            if ($location.path().indexOf("/todos/todo") == -1) {
+                $scope.todos = todoservice.getTodosByTag($scope.filtertag, $scope.showdone);
+            }
+        } catch (e) {
+            showError(e.statusText)
         }
     }
 
     $scope.saveedittodo = function(todo) {
-        $scope.showedit = false;
-        todoservice.update(todo);
+        try {
+            $scope.showedit = false;
+            todoservice.update(todo)
+        } catch (e) {
+            showError(e.statusText)
+        }
     }
 
-    $scope.todocopylink = function(id){
+    $scope.todocopylink = function(id) {
         var url =
             $location.protocol() + "://" + $location.host() + ":" + $location.port() +
             "/todos" +
@@ -133,20 +150,20 @@ tdapp.controller("mainCtrl", function(
     // Filter function
 
     $scope.togShowdone = function() {
-        if($location.path().indexOf("/todos/todo/")!=-1){
+        if ($location.path().indexOf("/todos/todo/") != -1) {
             showInfo('If you view a todo in direct mode (see URL), it is not possible to toggle between Open and Done.')
             return;
         }
         $scope.showdone = !$scope.showdone;
-        if($scope.filtertag!=undefined && $scope.filtertag!="All" && $scope.filtertag!="/"){
+        if ($scope.filtertag != undefined && $scope.filtertag != "All" && $scope.filtertag != "/") {
             if ($scope.showdone) {
-                $location.path("todos/done/tag/"+$scope.filtertag.substring(1,$scope.filtertag.length));
+                $location.path("todos/done/tag/" + $scope.filtertag.substring(1, $scope.filtertag.length));
             } else {
-                $location.path("todos/open/tag/"+$scope.filtertag.substring(1,$scope.filtertag.length));
+                $location.path("todos/open/tag/" + $scope.filtertag.substring(1, $scope.filtertag.length));
             }
         } else {
-            $scope.todos = todoservice.getTodosByTag($scope.filtertag,$scope.showdone);
-            if($scope.showdone){
+            $scope.todos = todoservice.getTodosByTag($scope.filtertag, $scope.showdone);
+            if ($scope.showdone) {
                 $scope.showdonetext = "Show Open";
             } else {
                 $scope.showdonetext = "Show Done";
@@ -182,19 +199,23 @@ tdapp.controller("mainCtrl", function(
             $routeParams.id != undefined &&
             $routeParams.type == "tag"
         ) {
-            if($routeParams.status=="open"){
+            if ($routeParams.status == "open") {
                 $scope.showdonetext = "Show Done";
                 $scope.showdone = false;
                 $scope.todos = todoservice.getTodosByTag("#" + $routeParams.id, false);
             }
-            if($routeParams.status=="done"){
+            if ($routeParams.status == "done") {
                 $scope.showdonetext = "Show Open";
                 $scope.showdone = true;
                 $scope.todos = todoservice.getTodosByTag("#" + $routeParams.id, true);
             }
-            $scope.filtertag = '#'+$routeParams.id
+            $scope.filtertag = '#' + $routeParams.id
         }
-    });
+    }).catch(function(error) {
+        if ($soope.user != undefined) { // Avoid displaying an "Unauthorized"-Error before login
+            showError(error.statusText)
+        }
+    })
 
     // Finish
 

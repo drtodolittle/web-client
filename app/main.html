@@ -11,7 +11,11 @@
 				  <a href="" ng-click="displaytodos(tag)">{{tag}}</a>
 			  </li>
 			</ul>
-			<button id="togshowdone" class="btn btn-default" type="button" ng-click="togShowdone()" data-toggle="tooltip" data-placement="top" title="Toggle between done/undone">{{showdonetext}}</button>
+			<!-- <button id="togshowdone" class="btn btn-default" type="button" ng-click="togShowdone()" data-toggle="tooltip" data-placement="top" title="Toggle between done/undone">{{showdonetext}}</button> -->
+			<span class="pull-right colgreen fnt16" style="padding-top:6px;">Show
+				<span ng-if="showdone" class="mo glyphicon glyphicon-check" ng-click="togShowdone()" data-toggle="tooltip" data-placement="top" title="Show Open"></span>
+				<span ng-if="!showdone" class="mo glyphicon glyphicon-unchecked" ng-click="togShowdone()" data-toggle="tooltip" data-placement="top" title="Show Done"></span>
+			</span>
 		</li>
 		<li class="list-group-item">
 			<input id="todotxta" ng-model="newtodotxt" ng-keydown="newtodoKeydown($event)" class="form-control" placeholder="New ToDo..."></input>

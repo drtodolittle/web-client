@@ -15,7 +15,7 @@ tdapp.directive('authdialog', function() {
                     alert("An email is waiting for you to reset your password.");
                     $scope.select_login();
                 }, function(error) {
-                    showError('Password reset error: ' + error.message)
+                    _showError(error.message)
                 });
             }
 
@@ -23,7 +23,7 @@ tdapp.directive('authdialog', function() {
 
             $scope.register = function() {
                 if ($scope.email == undefined || $scope.password == undefined) {
-                    showError('Registration-Error: Enter valid data.')
+                    _showError('Enter valid data.')
                     return;
                 }
                 var email = $scope.email;
@@ -56,14 +56,14 @@ tdapp.directive('authdialog', function() {
                                         $route.reload();
                                     })
                                     .catch(function(error) {
-                                        showError('Registration-Error: ' + error.message)
+                                        _showError(error.message)
                                     })
                             })
                             .catch(function(error) {
-                                showError('Registration-Error: ' + error.message)
+                                _showError(error.message)
                             })
                     }).catch(function(error) {
-                        showError('Registration-Error: ' + error.message)
+                        _showError(error.message)
                     });
             }
 
@@ -74,7 +74,7 @@ tdapp.directive('authdialog', function() {
                 var user = $scope.email;
                 var password = $scope.password;
                 if (user == undefined || password == undefined) {
-                    showError('Login-Error: Enter valid data.')
+                    _showError('Enter valid data.')
                     return
                 }
 
@@ -91,11 +91,11 @@ tdapp.directive('authdialog', function() {
                                 $route.reload();
                             })
                             .catch(function(error) {
-                                showError(error.message)
+                                _showError(error.message)
                             });
                     })
                     .catch(function(error) {
-                        showError(error.message)
+                        _showError(error.message)
                     });
             };
 
@@ -114,13 +114,13 @@ tdapp.directive('authdialog', function() {
                             $scope.errormsg = "";
                             $route.reload();
                         }).catch(function(error) {
-                            showError('Google-Login-Error: ' + error.message)
+                            _showError(error.message)
                         });
                     } else {
-                        showError('Google-Login-Error: ' + error.message)
+                        _showError(error.message)
                     }
                 }).catch(function(error) {
-                    showError('Google-Login-Error: ' + error.message)
+                    _showError(error.message)
                 });
             }
 
@@ -135,14 +135,14 @@ tdapp.directive('authdialog', function() {
                 $scope.loginselected = true;
                 $scope.registerselected = false;
                 $scope.resetselected = false;
-                hideError()
+                _hideError()
             };
 
             $scope.select_register = function() {
                 $scope.loginselected = false;
                 $scope.registerselected = true;
                 $scope.resetselected = false;
-                hideError()
+                _hideError()
             };
 
             $scope.select_reset = function() {
@@ -156,16 +156,16 @@ tdapp.directive('authdialog', function() {
                 $scope.loginselected = false;
                 $scope.registerselected = false;
                 $scope.resetselected = false;
-                hideError()
+                _hideError()
             };
 
-            var showError = function(msg) {
+            var _showError = function(msg) {
                 var ee = $('#errtemplate').clone()
 		        ee.children('#errmsg').html(msg)
                 ee.css('visibility','visible')
-		        $('#custonloginerror').append(ee)
-                $('#custonloginerror').css('visibility','visible')
-                $('#custonloginerror').css('opacity','1')
+		        $('.customerror').append(ee)
+                $('.customerror').css('visibility','visible')
+                $('.customerror').css('opacity','1')
                 /*
                 $('.cd-error-message').html(msg)
                 $('.cd-error-message').css('visibility', 'visible')
@@ -174,8 +174,10 @@ tdapp.directive('authdialog', function() {
                 */
             }
 
-            var hideError = function() {
-                $('#custonloginerror').html('')
+            var _hideError = function() {
+                $('.customerror').html('')
+                $('.customerror').css('visibility','hidden')
+                $('.customerror').css('opacity','0')
                 /*
                 $('.cd-error-message').html('')
                 $('.cd-error-message').css('visibility', 'hidden')

@@ -160,16 +160,27 @@ tdapp.directive('authdialog', function() {
             };
 
             var showError = function(msg) {
+                var ee = $('#errtemplate').clone()
+		        ee.children('#errmsg').html(msg)
+                ee.css('visibility','visible')
+		        $('#custonloginerror').append(ee)
+                $('#custonloginerror').css('visibility','visible')
+                $('#custonloginerror').css('opacity','1')
+                /*
                 $('.cd-error-message').html(msg)
                 $('.cd-error-message').css('visibility', 'visible')
                 $('.cd-error-message').css('opacity', '1')
                 $('.cd-error-message').css('font-size', '12px')
+                */
             }
 
             var hideError = function() {
+                $('#custonloginerror').html('')
+                /*
                 $('.cd-error-message').html('')
                 $('.cd-error-message').css('visibility', 'hidden')
                 $('.cd-error-message').css('opacity', '0')
+                */
             }
 
             $scope.rememberme = true;

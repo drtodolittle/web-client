@@ -1,20 +1,26 @@
 /*
 
 	Dr ToDo Little
-	the Backend Service
+	The Backend Service
 
 */
 
 tdapp.service('backend', function($http, appdata, localStorageService) {
+
+    // Misc
+
     var token = localStorageService.get("logintoken");
     if (token != undefined) {
         $http.defaults.headers.common['Authorization'] = "Bearer " + token;
     }
+
+    // Dr ToDo Little REST interface
+
     this.postTodo = function(obj) {
         return $http({
             method: "post",
             url: appdata.server,
-			timeout: 5000,
+			timeout: 3000,
             header: "application/json",
             data: obj
         })
@@ -46,32 +52,24 @@ tdapp.service('backend', function($http, appdata, localStorageService) {
         );
     }
     this.doneTodo = function(obj) {
-        $http({
+        return $http({
             method: "get",
             url: appdata.server + "/" + obj.id + "/done",
-        }).then(
-            function successCallback(res) {},
-            function errorCallback(res) {
-                console.log("Error: " + JSON.stringify(res));
-            }
-        );
+            timeout: 3000
+        })
     }
     this.undoneTodo = function(obj) {
-        $http({
+        return $http({
             method: "get",
             url: appdata.server + "/" + obj.id + "/undone",
-        }).then(
-            function successCallback(res) {},
-            function errorCallback(res) {
-                console.log("Error: " + JSON.stringify(res));
-            }
-        );
+            timeout: 3000
+        })
     }
     this.getTodos = function() {
         return $http({
             method: "get",
             url: appdata.server,
-			timeout: 5000
+			timeout: 3000
         });
     }
 

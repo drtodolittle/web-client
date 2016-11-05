@@ -6,10 +6,40 @@
 */
 
 tdapp.service("todoservice", function(backend, $q) { // ToDoManager
+
+    // Misc
+
     var ERRORMSG = "A backend problem occured. Please try again later."
     var service = {};
     service.todos = [];
     service.tags = [];
+
+    // Internal helper functions
+
+    var _update = function(todo){
+        service.todos.forEach(function(obj) {
+            if (obj.id == todo.id) {
+                obj.done = todo.done
+            }
+        })
+    }
+
+    // Functions with backend interaction
+
+    service.getTodos = function() {
+        return $q(function(resolve, reject) {
+            backend.getTodos().then(function(response) {
+                    service.clearTodos();
+                    response.data.forEach(function(todo) {
+                        service.addTodoObj(todo);
+                    });
+                    resolve(service.todos);
+                })
+                .catch(function(error) {
+                    reject(error);
+                });
+        });
+    }
     service.create = function(newtodo) {
         return $q(function(resolve, reject) {
             backend.postTodo(newtodo).then(function(response) {
@@ -29,6 +59,37 @@ tdapp.service("todoservice", function(backend, $q) { // ToDoManager
         service.checkForHashtag(todo); // TODO: Update tag list
         backend.putTodo(todo);
     }
+    service.done = function(item) {
+        return $q(function(resolve, reject) {
+            backend.doneTodo(item).then(function(){
+                item.done = true
+                _update(item)
+                resolve()
+            }).catch(function(error){
+                reject({
+                    message: ERRORMSG,
+                    error: error
+                });
+            })
+        })
+    };
+    service.undone = function(item) {
+        return $q(function(resolve, reject) {
+            backend.undoneTodo(item).then(function(){
+                item.done = false
+                _update(item)
+                resolve()
+            }).catch(function(error){
+                reject({
+                    message: ERRORMSG,
+                    error: error
+                });
+            })
+        })
+    };
+
+    // Functions without backend interaction
+
     service.checkForHashtag = function(todo) {
         if (todo.topic == undefined) {
             return;
@@ -66,20 +127,6 @@ tdapp.service("todoservice", function(backend, $q) { // ToDoManager
     }
     service.getTags = function() {
         return service.tags;
-    }
-    service.getTodos = function() {
-        return $q(function(resolve, reject) {
-            backend.getTodos().then(function(response) {
-                    service.clearTodos();
-                    response.data.forEach(function(todo) {
-                        service.addTodoObj(todo);
-                    });
-                    resolve(service.todos);
-                })
-                .catch(function(error) {
-                    reject(error);
-                });
-        });
     }
     service.getTodosByTag = function(tag, done) {
         if (tag == '' || tag == 'All' || tag == undefined) {
@@ -170,19 +217,6 @@ tdapp.service("todoservice", function(backend, $q) { // ToDoManager
             throw (e)
         }
     }
-    service.done = function(item) {
-        try {
-            backend.doneTodo(item);
-        } catch (e) {
-            throw (e)
-        }
-    };
-    service.undone = function(item) {
-        try {
-            backend.undoneTodo(item);
-        } catch (e) {
-            throw (e)
-        }
-    };
     return service;
+
 });

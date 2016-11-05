@@ -105,19 +105,25 @@ tdapp.controller("mainCtrl", function(
     }
 
     $scope.togDone = function(item) {
-        try {
-            if (item.done) {
-                todoservice.undone(item);
-                item.done = false;
-            } else {
-                todoservice.done(item);
-                item.done = true;
-            }
-            if ($location.path().indexOf("/todos/todo") == -1) {
-                $scope.todos = todoservice.getTodosByTag($scope.filtertag, $scope.showdone);
-            }
-        } catch (e) {
-            showError(e.statusText)
+        var _update = function(){
+            $scope.todos = todoservice.getTodosByTag($scope.filtertag, $scope.showdone);
+            $scope.tags = todoservice.getTags();
+        }
+        if (item.done) {
+            todoservice.undone(item).then(function(){
+                _update()
+            }).catch(function(e){
+                showError(e.message)
+            })
+        } else {
+            todoservice.done(item).then(function(){
+                _update()
+            }).catch(function(e){
+                showError(e.message)
+            })
+        }
+        if ($location.path().indexOf("/todos/todo") == -1) {
+            $scope.todos = todoservice.getTodosByTag($scope.filtertag, $scope.showdone);
         }
     }
 

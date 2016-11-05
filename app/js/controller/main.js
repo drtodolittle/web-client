@@ -128,12 +128,17 @@ tdapp.controller("mainCtrl", function(
     }
 
     $scope.saveedittodo = function(todo) {
-        try {
-            $scope.showedit = false;
-            todoservice.update(todo)
-        } catch (e) {
-            showError(e.statusText)
-        }
+        $scope.showedit = false;
+        var otodotopic = todo.topic
+        todoservice.update(todo).catch(function(error){
+            showError(error.message)
+            todoservice.todos.forEach(function(obj){
+                if(obj.id == todo.id){
+                    obj.topic = otodotopic
+                }
+            })
+            $scope.todos = todoservice.getTodosByTag($scope.filtertag, $scope.showdone)
+        })
     }
 
     $scope.todocopylink = function(id) {

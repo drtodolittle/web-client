@@ -14,7 +14,7 @@ tdapp.service('backend', function($http, appdata, localStorageService) {
         $http.defaults.headers.common['Authorization'] = "Bearer " + token;
     }
 
-    // Dr ToDo Little REST interface
+    // Dr ToDo Little backend
 
     this.postTodo = function(obj) {
         return $http({
@@ -26,17 +26,13 @@ tdapp.service('backend', function($http, appdata, localStorageService) {
         })
     }
     this.putTodo = function(obj) {
-        $http({
+        return $http({
             method: "put",
             url: appdata.server + "/" + obj.id,
             header: "application/json",
-            data: obj
-        }).then(
-            function successCallback(res) {},
-            function errorCallback(res) {
-                console.log("Error: " + JSON.stringify(res));
-            }
-        );
+            data: obj,
+            timeout: 3000
+        })
     }
     this.delTodo = function(obj) {
         $http({
@@ -73,7 +69,7 @@ tdapp.service('backend', function($http, appdata, localStorageService) {
         });
     }
 
-    // Firebase realtime database
+    // Firebase realtime database backend
 
     this.incTodosTotal = function() {
         firebase.database().ref('/data/misc/todos/total').transaction(

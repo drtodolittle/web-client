@@ -55,10 +55,6 @@ tdapp.service("todoservice", function(backend, $q) { // ToDoManager
             })
         })
     }
-    service.update = function(todo) {
-        service.checkForHashtag(todo); // TODO: Update tag list
-        backend.putTodo(todo);
-    }
     service.done = function(item) {
         return $q(function(resolve, reject) {
             backend.doneTodo(item).then(function(){
@@ -72,7 +68,7 @@ tdapp.service("todoservice", function(backend, $q) { // ToDoManager
                 });
             })
         })
-    };
+    }
     service.undone = function(item) {
         return $q(function(resolve, reject) {
             backend.undoneTodo(item).then(function(){
@@ -86,7 +82,39 @@ tdapp.service("todoservice", function(backend, $q) { // ToDoManager
                 });
             })
         })
-    };
+    }
+    service.update = function(todo) {
+        return $q(function(resolve, reject) {
+            backend.putTodo(todo).then(function(){
+                service.checkForHashtag(todo); // TODO: Update filter tag list
+                resolve()
+            }).catch(function(error){
+                reject({
+                    message: ERRORMSG,
+                    error: error
+                });
+            });
+        })
+    }
+    service.delTodo = function(item) {
+        try {
+            backend.delTodo(item);
+            backend.incTodosDeleted();
+            var idx = service.todos.indexOf(item)
+            if (idx >= 0) {
+                var tag = item.tag;
+                service.todos.splice(idx, 1);
+                if (tag != undefined) {
+                    var ttd = service.getTodosByTag(tag);
+                    if (ttd.length == 0) {
+                        service.tags.splice(service.tags.indexOf(tag), 1);
+                    }
+                }
+            }
+        } catch (e) {
+            throw (e)
+        }
+    }
 
     // Functions without backend interaction
 
@@ -197,25 +225,6 @@ tdapp.service("todoservice", function(backend, $q) { // ToDoManager
         };
         service.addTodoObj(obj);
         return obj;
-    }
-    service.delTodo = function(item) {
-        try {
-            backend.delTodo(item);
-            backend.incTodosDeleted();
-            var idx = service.todos.indexOf(item)
-            if (idx >= 0) {
-                var tag = item.tag;
-                service.todos.splice(idx, 1);
-                if (tag != undefined) {
-                    var ttd = service.getTodosByTag(tag);
-                    if (ttd.length == 0) {
-                        service.tags.splice(service.tags.indexOf(tag), 1);
-                    }
-                }
-            }
-        } catch (e) {
-            throw (e)
-        }
     }
     return service;
 

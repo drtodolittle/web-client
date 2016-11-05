@@ -44,33 +44,6 @@ tdapp.controller("mainCtrl", function(
         }
     }
 
-    $scope.todolineKeydown = function(e, id) {
-        // TODO: Check if this function is obsolute
-        var k = e.keyCode;
-        if (k == 13) { // Return
-            e.preventDefault();
-            var currentTodo = $('#todoid' + id);
-            // Correct contenteditable behaviour
-            currentTodo.html(currentTodo.html().replace('<br>', ''));
-            currentTodo.blur();
-            var obj = todoservice.getTodoById(id);
-            if (obj != undefined) {
-                obj.topic = currentTodo.html();
-                todoservice.update(obj);
-                var oldtag = obj.tag;
-                todoservice.checkForHashtag(obj);
-                if (oldtag != undefined) {
-                    var ttd = todoservice.getTodosByTag(oldtag);
-                    if (ttd.length <= 0) {
-                        todoservice.tags.splice(todoservice.tags.indexOf(oldtag), 1);
-                    }
-                }
-                $scope.tags = (todoservice.getTags()).sort();
-                $scope.todos = todoservice.getTodosByTag($scope.filtertag, $scope.showdone);
-            }
-        }
-    }
-
     $scope.editTodoKeydown = function(e) {
         var k = e.keyCode;
         if (k == 13) { // Return
@@ -94,19 +67,19 @@ tdapp.controller("mainCtrl", function(
         $("#todoid" + id).focus();
     }
 
-    $scope.deltodo = function(obj) { // No animation
-        try {
-            obj.deleted = true;
-            todoservice.delTodo(obj);
-            $scope.todos = todoservice.getTodosByTag($scope.filtertag, $scope.showdone);
-        } catch (e) {
-            showError(e.statusText)
-        }
+    $scope.deltodo = function(obj) {
+        todoservice.delTodo(obj).then(function(){
+            $scope.todos = todoservice.getTodosByTag($scope.filtertag, $scope.showdone)
+        }).catch(function(error){
+            showError(error.message)
+        })
     }
 
     $scope.togDone = function(item) {
         var _update = function(){
-            $scope.todos = todoservice.getTodosByTag($scope.filtertag, $scope.showdone);
+            if ($location.path().indexOf("/todos/todo") == -1) {
+                $scope.todos = todoservice.getTodosByTag($scope.filtertag, $scope.showdone);
+            }
             $scope.tags = todoservice.getTags();
         }
         if (item.done) {
@@ -121,9 +94,6 @@ tdapp.controller("mainCtrl", function(
             }).catch(function(e){
                 showError(e.message)
             })
-        }
-        if ($location.path().indexOf("/todos/todo") == -1) {
-            $scope.todos = todoservice.getTodosByTag($scope.filtertag, $scope.showdone);
         }
     }
 

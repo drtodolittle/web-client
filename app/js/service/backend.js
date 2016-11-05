@@ -1,7 +1,7 @@
 /*
 
 	Dr ToDo Little
-	The Backend Service
+	The backend service
 
 */
 
@@ -9,9 +9,9 @@ tdapp.service('backend', function($http, appdata, localStorageService) {
 
     // Misc
 
-    var token = localStorageService.get("logintoken");
+    var token = localStorageService.get("logintoken")
     if (token != undefined) {
-        $http.defaults.headers.common['Authorization'] = "Bearer " + token;
+        $http.defaults.headers.common['Authorization'] = "Bearer " + token
     }
 
     // Dr ToDo Little backend
@@ -35,17 +35,13 @@ tdapp.service('backend', function($http, appdata, localStorageService) {
         })
     }
     this.delTodo = function(obj) {
-        $http({
+        return $http({
             method: "delete",
             url: appdata.server + "/" + obj.id,
             header: "application/json",
+            timeout: 3000,
             data: obj
-        }).then(
-            function successCallback(res) {},
-            function errorCallback(res) {
-                console.log("Error: " + JSON.stringify(res));
-            }
-        );
+        })
     }
     this.doneTodo = function(obj) {
         return $http({
@@ -66,7 +62,7 @@ tdapp.service('backend', function($http, appdata, localStorageService) {
             method: "get",
             url: appdata.server,
 			timeout: 3000
-        });
+        })
     }
 
     // Firebase realtime database backend
@@ -116,4 +112,4 @@ tdapp.service('backend', function($http, appdata, localStorageService) {
             })
     }
 
-});
+})

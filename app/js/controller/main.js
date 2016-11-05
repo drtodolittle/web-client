@@ -69,7 +69,11 @@ tdapp.controller("mainCtrl", function(
 
     $scope.deltodo = function(obj) {
         todoservice.delTodo(obj).then(function(){
-            $scope.todos = todoservice.getTodosByTag($scope.filtertag, $scope.showdone)
+            if ($location.path().indexOf("/todos/todo") == -1) {
+                $scope.todos = todoservice.getTodosByTag($scope.filtertag, $scope.showdone);
+            } else {
+                $location.path("/")
+            }
         }).catch(function(error){
             showError(error.message)
         })

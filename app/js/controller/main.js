@@ -105,7 +105,13 @@ tdapp.controller("mainCtrl", function(
     $scope.saveedittodo = function(todo) {
         $scope.showedit = false;
         var otodotopic = todo.topic
-        todoservice.update(todo).catch(function(error){
+        todoservice.update(todo).then(function(){
+            if($location.path().indexOf('todos/todo') != -1 ){
+                $route.reload()
+            } else {
+                $scope.todos = todoservice.getTodosByTag($scope.filtertag, $scope.showdone)
+            }
+        }).catch(function(error){
             showError(error.message)
             todoservice.todos.forEach(function(obj){
                 if(obj.id == todo.id){

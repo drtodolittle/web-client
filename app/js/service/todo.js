@@ -14,13 +14,24 @@ tdapp.service("todoservice", function(backend, $q) { // ToDoManager
     service.todos = [];
     service.tags = [];
 
-    // Internal helper functions
+    // Internal helper functions (Prefix '_')
 
     var _update = function(todo) {
         service.todos.forEach(function(obj) {
             if (obj.id == todo.id) {
                 obj.done = todo.done
             }
+        })
+    }
+
+    var _updateTags = function() {
+        var backup = []
+        service.todos.forEach(function(obj) {
+            backup.unshift(obj)
+        })
+        service.clearTodos()
+        backup.forEach(function(todo) {
+            service.addTodoObj(todo)
         })
     }
 
@@ -86,7 +97,8 @@ tdapp.service("todoservice", function(backend, $q) { // ToDoManager
     service.update = function(todo) {
         return $q(function(resolve, reject) {
             backend.putTodo(todo).then(function() {
-                service.checkForHashtag(todo); // TODO: Update filter tag list
+                service.checkForHashtag(todo)
+                _updateTags()
                 resolve()
             }).catch(function(error) {
                 reject({

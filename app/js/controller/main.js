@@ -17,7 +17,6 @@ tdapp.controller("mainCtrl", function(
     // General Done Filter
 
     $scope.showdone = false;
-    $scope.showdonetext = "Show Done";
 
     // Keyboard
 
@@ -53,7 +52,11 @@ tdapp.controller("mainCtrl", function(
 
     $scope.displaytodos = function(tag) {
         if (tag != 'All' && tag != undefined) {
-            $location.path('/todos/open/tag/' + tag.substring(1, tag.length));
+            var status = "open"
+            if($scope.showdone){
+                status = "done"
+            }
+            $location.path('/todos/'+status+'/tag/' + tag.substring(1, tag.length));
             $scope.todos = todoservice.getTodosByTag(tag, $scope.showdone);
         } else {
             $location.path('/');
@@ -128,7 +131,7 @@ tdapp.controller("mainCtrl", function(
     $scope.togShowdone = function() {
         if ($location.path().indexOf("/todos/todo/") != -1) {
             showInfo('If you view a todo in direct mode (see URL), it is not possible to toggle between Open and Done.')
-            return;
+            return
         }
         $scope.showdone = !$scope.showdone;
         if ($scope.filtertag != undefined && $scope.filtertag != "All" && $scope.filtertag != "/") {
@@ -139,11 +142,6 @@ tdapp.controller("mainCtrl", function(
             }
         } else {
             $scope.todos = todoservice.getTodosByTag($scope.filtertag, $scope.showdone);
-            if ($scope.showdone) {
-                $scope.showdonetext = "Show Open";
-            } else {
-                $scope.showdonetext = "Show Done";
-            }
         }
     }
 
@@ -176,14 +174,12 @@ tdapp.controller("mainCtrl", function(
             $routeParams.type == "tag"
         ) {
             if ($routeParams.status == "open") {
-                $scope.showdonetext = "Show Done";
-                $scope.showdone = false;
                 $scope.todos = todoservice.getTodosByTag("#" + $routeParams.id, false);
+                $scope.showdone = false;
             }
             if ($routeParams.status == "done") {
-                $scope.showdonetext = "Show Open";
-                $scope.showdone = true;
                 $scope.todos = todoservice.getTodosByTag("#" + $routeParams.id, true);
+                $scope.showdone = true;
             }
             $scope.filtertag = '#' + $routeParams.id
         }

@@ -14,7 +14,7 @@ tdapp.controller("mainCtrl", function(
     todoservice
 ) {
 
-    // General Done Filter
+    // Initial filter setting
 
     $scope.showdone = false;
 
@@ -51,15 +51,13 @@ tdapp.controller("mainCtrl", function(
     }
 
     $scope.displaytodos = function(tag) {
+        var status = "open"
+        if($scope.showdone) status = "done"
         if (tag != 'All' && tag != undefined) {
-            var status = "open"
-            if($scope.showdone){
-                status = "done"
-            }
             $location.path('/todos/'+status+'/tag/' + tag.substring(1, tag.length));
             $scope.todos = todoservice.getTodosByTag(tag, $scope.showdone);
         } else {
-            $location.path('/');
+            $location.path('/todos/'+status+'/all')
             $scope.todos = todoservice.getTodosByTag('All', $scope.showdone);
         }
     }
@@ -134,6 +132,20 @@ tdapp.controller("mainCtrl", function(
             return
         }
         $scope.showdone = !$scope.showdone;
+        if (
+            $location.path().indexOf("open/all") > -1
+        ) {
+            $location.path('/todos/done/all')
+            $route.reload()
+            return
+        }
+        if (
+            $location.path().indexOf("done/all") > -1
+        ) {
+            $location.path('/todos/open/all')
+            $route.reload()
+            return
+        }
         if ($scope.filtertag != undefined && $scope.filtertag != "All" && $scope.filtertag != "/") {
             if ($scope.showdone) {
                 $location.path("todos/done/tag/" + $scope.filtertag.substring(1, $scope.filtertag.length));
@@ -153,7 +165,7 @@ tdapp.controller("mainCtrl", function(
         $scope.todos = todoservice.getTodosByTag($scope.filtertag, $scope.showdone);
         $scope.tags = todoservice.getTags();
         // Routeparams
-        if (
+        if ( // Direct
             $routeParams.type != undefined &&
             $routeParams.id != undefined &&
             $routeParams.type == "todo"
@@ -167,7 +179,7 @@ tdapp.controller("mainCtrl", function(
                 $scope.todos = [];
             }
         }
-        if (
+        if ( // Tag
             $routeParams.status != undefined &&
             $routeParams.type != undefined &&
             $routeParams.id != undefined &&
@@ -182,6 +194,19 @@ tdapp.controller("mainCtrl", function(
                 $scope.showdone = true;
             }
             $scope.filtertag = '#' + $routeParams.id
+        }
+        if ( // All
+            $routeParams.type != undefined &&
+            $routeParams.id == "all"
+        ) {
+            if ($routeParams.type == "open") {
+                $scope.showdone = false
+                $scope.todos = todoservice.getTodosByTag('All', $scope.showdone)
+            }
+            if ($routeParams.type == "done") {
+                $scope.showdone = true
+                $scope.todos = todoservice.getTodosByTag('All', $scope.showdone)
+            }
         }
     }).catch(function(error) {
         if ($scope.user != undefined) { // Avoid displaying an "Unauthorized"-Error before login

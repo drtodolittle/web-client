@@ -27,7 +27,7 @@ tdapp.config(function(
         .when('/todos/:type/:id', {
             templateUrl: 'main.html',
             controller: 'mainCtrl'
-        })        
+        })
         .when('/register', {
             templateUrl: 'register.html',
             controller: 'regCtrl'

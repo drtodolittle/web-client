@@ -39,10 +39,9 @@ tdapp.directive('authdialog', function() {
                                         $http.defaults.headers.common['Authorization'] = "Bearer " + res;
                                         // Create Welcome-Todo
                                         var welcometodo = {};
-                                        welcometodo.topic = "Welcome to Dr ToDo Little! You can use hashtags to filter tasks e.g. #new";
+                                        welcometodo.topic = "Welcome to Dr ToDo Little! You can use hashtags to filter your todos (e.g. #new).";
                                         welcometodo.done = false;
                                         todoservice.create(welcometodo);
-                                        $scope.filtertag = "All";
                                         // Registration information
                                         var msg = ""
                                         msg += "Registration successful! \n";
@@ -52,7 +51,7 @@ tdapp.directive('authdialog', function() {
                                         alert(msg);
                                         // Go...
                                         $scope.close_dialog()
-                                        $location.path("/")
+                                        $location.path("/todos/open/all")
                                         $route.reload();
                                     })
                                     .catch(function(error) {
@@ -86,8 +85,7 @@ tdapp.directive('authdialog', function() {
                                 if ($scope.rememberme) {
                                     localStorageService.set("logintoken", response);
                                 }
-                                $scope.filtertag = "All";
-                                $scope.errormsg = "";
+                                $location.path('todos/open/all')
                                 $route.reload();
                             })
                             .catch(function(error) {
@@ -110,8 +108,7 @@ tdapp.directive('authdialog', function() {
                             if ($scope.rememberme) {
                                 localStorageService.set("logintoken", res);
                             }
-                            $scope.filtertag = "All";
-                            $scope.errormsg = "";
+                            $location.path('todos/open/all')
                             $route.reload();
                         }).catch(function(error) {
                             _showError(error.message)
@@ -166,23 +163,12 @@ tdapp.directive('authdialog', function() {
 		        $('.customerror').append(ee)
                 $('.customerror').css('visibility','visible')
                 $('.customerror').css('opacity','1')
-                /*
-                $('.cd-error-message').html(msg)
-                $('.cd-error-message').css('visibility', 'visible')
-                $('.cd-error-message').css('opacity', '1')
-                $('.cd-error-message').css('font-size', '12px')
-                */
             }
 
             var _hideError = function() {
                 $('.customerror').html('')
                 $('.customerror').css('visibility','hidden')
                 $('.customerror').css('opacity','0')
-                /*
-                $('.cd-error-message').html('')
-                $('.cd-error-message').css('visibility', 'hidden')
-                $('.cd-error-message').css('opacity', '0')
-                */
             }
 
             $scope.rememberme = true;

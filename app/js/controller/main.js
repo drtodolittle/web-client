@@ -8,6 +8,7 @@
 tdapp.controller("mainCtrl", function(
     $scope,
     $timeout,
+    $interval,
     $location,
     $route,
     $routeParams,
@@ -18,6 +19,20 @@ tdapp.controller("mainCtrl", function(
 
     $scope.showdone = false;
 
+    // Initial todotextarea count setting / maximal length of todo
+
+    $scope.todotxtacount = 0
+    $scope._maxlen = 1024
+    $interval(function() {
+        var content = $("#todotxta").val()
+        var len = content.length
+        if(len>=$scope._maxlen){
+            $("#todotxta").val(content.substring(0,$scope._maxlen))
+            len = $scope._maxlen
+        }
+        $scope.todotxtacount = len
+    }, 64)
+
     // Keyboard
 
     $scope.newtodoKeydown = function(e) {
@@ -25,39 +40,64 @@ tdapp.controller("mainCtrl", function(
         if (k == 13) { // Return
             e.preventDefault();
             if ($scope.newtodotxt != "") {
-                var newtodo = {};
-                newtodo.topic = $scope.newtodotxt;
-                newtodo.done = false;
-                $scope.newtodotxt = "";
-                todoservice.create(newtodo).then(function(response){
-                    $scope.todos = todoservice.getTodosByTag($scope.filtertag, $scope.showdone);
-                    window.scrollTo(0, 0);
-                    $("#todotxta").focus();
-                }).catch(function(error){
+                var newtodo = {}
+                newtodo.topic = $scope.newtodotxt
+                newtodo.done = false
+                $scope.newtodotxt = ""
+                todoservice.create(newtodo).then(function(response) {
+                    $scope.todos = todoservice.getTodosByTag($scope.filtertag, $scope.showdone)
+                    window.scrollTo(0, 0)
+                    $("#todotxta").focus()
+                }).catch(function(error) {
                     showError(error.message)
                 })
             }
-        } else
+            return
+        }
         if (k == 9) { // Tab
             e.preventDefault();
+            return
+        }
+        if (k == 8 || k == 37 || k == 39 || k == 46) { // Back + Left + Right + Del
+            return
+        }
+        // Limit amount of characters in todotextarea
+        var len = $("#todotxta").val().length
+        if (len >= $scope._maxlen) {
+            var content = $("#todotxta").val()
+            $("#todotxta").val(content.substring(0,$scope._maxlen))
+            $scope.todotxtacount = $scope._maxlen
+            e.preventDefault()
+            return
         }
     }
 
-    $scope.editTodoKeydown = function(e) {
+    $scope.editTodoKeydown = function(e,id) {
         var k = e.keyCode;
         if (k == 13) { // Return
-            e.preventDefault();
+            e.preventDefault()
+        }
+        if (k == 9) { // Tab
+            e.preventDefault()
+        }
+        if (k == 8 || k == 37 || k == 38 || k == 39 || k == 40 || k == 46) { // Back + Left + Up + Right + Down + Del
+            return
+        }
+        var len = $('.editable-input').val().length
+        if (len >= $scope._maxlen) {
+            e.preventDefault()
+            return
         }
     }
 
     $scope.displaytodos = function(tag) {
         var status = "open"
-        if($scope.showdone) status = "done"
+        if ($scope.showdone) status = "done"
         if (tag != 'All' && tag != undefined) {
-            $location.path('/todos/'+status+'/tag/' + tag.substring(1, tag.length));
+            $location.path('/todos/' + status + '/tag/' + tag.substring(1, tag.length));
             $scope.todos = todoservice.getTodosByTag(tag, $scope.showdone);
         } else {
-            $location.path('/todos/'+status+'/all')
+            $location.path('/todos/' + status + '/all')
             $scope.todos = todoservice.getTodosByTag('All', $scope.showdone);
         }
     }
@@ -69,52 +109,52 @@ tdapp.controller("mainCtrl", function(
     }
 
     $scope.deltodo = function(obj) {
-        todoservice.delTodo(obj).then(function(){
+        todoservice.delTodo(obj).then(function() {
             if ($location.path().indexOf("/todos/todo") == -1) {
                 $scope.todos = todoservice.getTodosByTag($scope.filtertag, $scope.showdone);
             } else {
                 $location.path("/")
             }
-        }).catch(function(error){
+        }).catch(function(error) {
             showError(error.message)
         })
     }
 
     $scope.togDone = function(item) {
-        var _update = function(){
+        var _update = function() {
             if ($location.path().indexOf("/todos/todo") == -1) {
                 $scope.todos = todoservice.getTodosByTag($scope.filtertag, $scope.showdone);
             }
             $scope.tags = todoservice.getTags();
         }
         if (item.done) {
-            todoservice.undone(item).then(function(){
+            todoservice.undone(item).then(function() {
                 _update()
-            }).catch(function(e){
+            }).catch(function(e) {
                 showError(e.message)
             })
         } else {
-            todoservice.done(item).then(function(){
+            todoservice.done(item).then(function() {
                 _update()
-            }).catch(function(e){
+            }).catch(function(e) {
                 showError(e.message)
             })
         }
     }
 
     $scope.saveedittodo = function(todo) {
-        $scope.showedit = false;
+        $scope.showedit = false
         var otodotopic = todo.topic
-        todoservice.update(todo).then(function(){
-            if($location.path().indexOf('todos/todo') != -1 ){
+        todoservice.update(todo).then(function() {
+            if ($location.path().indexOf('todos/todo') != -1) {
                 $route.reload()
             } else {
                 $scope.todos = todoservice.getTodosByTag($scope.filtertag, $scope.showdone)
             }
-        }).catch(function(error){
+        }).catch(function(error) {
             showError(error.message)
-            todoservice.todos.forEach(function(obj){
-                if(obj.id == todo.id){
+            todoservice.todos.forEach(function(obj) {
+                if (obj.id == todo.id) {
                     obj.topic = otodotopic
                 }
             })
@@ -218,7 +258,7 @@ tdapp.controller("mainCtrl", function(
         if ($scope.user != undefined) { // Avoid displaying an "Unauthorized"-Error before login
             showError(error.statusText)
         }
-        if(error.data==null){
+        if (error.data == null) {
             showError("A backend problem occured. Please try again later.")
         }
     })

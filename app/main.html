@@ -1,7 +1,7 @@
 <div>
 	<ul class="list-group">
 		<li class="list-group-item">
-			<button class="btn btn-default dropdown-toggle" type="button" id="filter1" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true" data-toggle="tooltip" data-placement="top" title="Filter ToDos by tag">
+			<button class="btn btn-default dropdown-toggle" type="button" id="filter1" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true" data-toggle="tooltip" data-placement="top" title="Filter by tag">
 			  Filter {{filtertag}}
 			  <span class="caret"></span>
 			</button>
@@ -18,7 +18,9 @@
 			<span class="pull-right colgreen fnt14" style="padding-top:6px;">Show&nbsp;</span>
 		</li>
 		<li class="list-group-item">
-			<input id="todotxta" ng-model="newtodotxt" ng-keydown="newtodoKeydown($event)" class="form-control" placeholder="New ToDo..."></input>
+			<div class="input-group">
+				<input id="todotxta" ng-model="newtodotxt" ng-keydown="newtodoKeydown($event)" class="form-control" placeholder="New ToDo..."></input>
+			</div>
 		</li>
 		<li class="list-group-item" contenteditable="false" ng-repeat="todo in todos">
 			<span id="todoid{{todo.id}}">
@@ -31,8 +33,8 @@
 				</span>
 				<!-- copy link -->
 				<span class="pull-left">
-					<span class="mo mr12 colgreen fnt16">
-						<span class="mo glyphicon glyphicon-cloud-download" ng-click="todocopylink(todo.id)" data-toggle="tooltip" data-placement="top" title="Copy ToDo-URL to clipboard"></span>
+					<span class="mo mr12 colgrey fnt16">
+						<span class="mo glyphicon glyphicon-link" ng-click="todocopylink(todo.id)" data-toggle="tooltip" data-placement="top" title="Copy URL to clipboard"></span>
 					</span>
 				</span>
 				<!-- del -->
@@ -41,7 +43,7 @@
 						<span class="mo glyphicon glyphicon-trash" contenteditable="false" ng-click="deltodo(todo)" data-toggle="tooltip" data-placement="top" title="Delete"></span>
 					</span>
 				</span>
-				<span id="todocontent{{todo.id}}" e-ng-keypress="editTodoKeydown($event)" editable-textarea="todo.topic" e-rows="8" e-cols="20" onbeforesave="saveedittodo(todo)">
+				<span id="todocontent{{todo.id}}" e-ng-keypress="editTodoKeydown($event,todo.id)" editable-textarea="todo.topic" e-rows="8" e-cols="20" onbeforesave="saveedittodo(todo)">
 					{{ todo.topic }}
 				</span>
 			</span>

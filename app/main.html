@@ -20,6 +20,7 @@
 		<li class="list-group-item">
 			<div class="input-group">
 				<input id="todotxta" ng-model="newtodotxt" ng-keydown="newtodoKeydown($event)" class="form-control" placeholder="New ToDo..."></input>
+				<span id="todotxtacount" class="input-group-addon colgrey fnt12 mo" data-toggle="tooltip" data-placement="top" title="Length">{{todotxtacount}} / {{_maxlen}}</span>
 			</div>
 		</li>
 		<li class="list-group-item" contenteditable="false" ng-repeat="todo in todos">

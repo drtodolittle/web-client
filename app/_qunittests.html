@@ -3,464 +3,189 @@
 <head>
 	<meta charset="utf-8">
 	<meta name="viewport" content="width=device-width">
-	<title>DrToDoLittle:QUnitTests</title>
+	<title>Dr ToDo Little : QUnitTests</title>
 	<link rel="stylesheet" href="https://code.jquery.com/qunit/qunit-1.22.0.css">
 </head>
 <body>
 	<div id="qunit"></div>
 	<div id="qunit-fixture"></div>
 	<script src="//code.jquery.com/qunit/qunit-1.22.0.js"></script>
-	
-	<!-- Scripts -->
-	<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.5.0/angular.min.js"></script>
-	<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.5.0/angular-cookies.min.js"></script>
-	<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.5.0/angular-route.min.js"></script>
-	<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
-	<script src="https://www.gstatic.com/firebasejs/3.2.1/firebase.js"></script>
-	<script src="js/jwt-decode.min.js"></script>
-	<script src="js/tdapp.bundled.min.js"></script>
-	
-	<!--
 
-		Tests TDMgr ********************************************************************************
-		
-	-->
+	<!-- Libraries -->
+	<script src="js/angular.min.js"></script>
+	<script src="js/angular-route.min.js"></script>
+	<script src="js/jquery.min.js"></script>
+	<script src="js/bootstrap.min.js"></script>
+	<script src="js/firebase.js"></script>
+	<script src="js/angularfire.min.js"></script>
+	<script src="js/angular-local-storage.min.js"></script>
+	<script src="js/xeditable.min.js"></script>
+	<script src="js/drtodolittle.js"></script>
 
+	<!-- Todoservice tests -->
 	<script>
 
-	QUnit.test("TDMgr", function(assert){	
-		var injector = angular.injector(["ng","tdapp"]);	
-		var TDMgr = injector.get("TDMgr");		
+	// General
 
-		// Test...
-		assert.ok(TDMgr!=undefined,"TDMgr!=undefined");
+	QUnit.test("todoservice", function(assert){
+		var injector = angular.injector(["ng","tdapp"])
+		var todoservice = injector.get("todoservice")
+		assert.ok(todoservice!=undefined,"todoservice!=undefined")
+		assert.ok(todoservice.todos.length==0,"initial todoservice.todos.length==0")
+		assert.ok(todoservice.tags.length==0,"initial todoservice.tags.length==0")
 	});
 
-	QUnit.test("TDMgr.clearTodos", function(assert){	
-		var injector = angular.injector(["ng","tdapp"]);	
-		var TDMgr = injector.get("TDMgr");
-		
-		// Test...
-		TDMgr.clearTodos();
-		assert.equal(TDMgr.getTodos().length,0,"TDMgr.clearToDos() -> TDMgr.getTodos().length==0");
-		assert.equal(TDMgr.getTags().length,0,"TDMgr.clearToDos() -> TDMgr.getTags().length==0");
-	});
-	
-	QUnit.test("TDMgr.getTodos", function(assert){	
-		var injector = angular.injector(["ng","tdapp"]);	
-		var TDMgr = injector.get("TDMgr");		
+	// Unit test for functions without backend interaction
 
-		// Test...
-		assert.equal(TDMgr.getTodos().length,0,"TDMgr.getTodos().length==0");
-		assert.equal(TDMgr.getTags().length,0,"TDMgr.getTags().length==0");
-		
-		// Test...
-		TDMgr.clearTodos();
-		assert.equal(TDMgr.getTodos().length,0,"TDMgr.clearToDos() -> TDMgr.getTodos().length==0");
-		assert.equal(TDMgr.getTags().length,0,"TDMgr.clearToDos() -> TDMgr.getTags().length==0");
-	});
-	
-	QUnit.test("TDMgr.setTodos", function(assert){	
-		var injector = angular.injector(["ng","tdapp"]);	
-		var TDMgr = injector.get("TDMgr");
-		
-		// Test...
-		TDMgr.setTodos([]);
-		assert.equal(TDMgr.getTodos().length,0,"TDMgr.setTodos([]) -> TDMgr.getTodos().length==0");
-		assert.equal(TDMgr.getTags().length,0,"TDMgr.setTodos([]) -> TDMgr.getTags().length==0");
-		TDMgr.clearTodos();
+	QUnit.test("todoservice.clearTodos", function(assert){
+		var injector = angular.injector(["ng","tdapp"])
+		var todoservice = injector.get("todoservice")
+		assert.ok(todoservice.todos.length==0,"initial todoservice.todos.length==0")
+		assert.ok(todoservice.tags.length==0,"initial todoservice.tags.length==0")
+		todoservice.clearTodos()
+		assert.ok(todoservice.todos.length==0,"todoservice.clearTodos -> todoservice.todos.length==0")
+		assert.ok(todoservice.tags.length==0,"todoservice.clearTodos -> todoservice.tags.length==0")
+	})
 
-		// Test...
-		TDMgr.setTodos([{}]);
-		assert.equal(TDMgr.getTodos().length,1,"TDMgr.setTodos([{}]) -> TDMgr.getTodos().length==1");
-		TDMgr.clearTodos();
-		
-		// Test...
-		TDMgr.setTodos([{},{}]);
-		assert.equal(TDMgr.getTodos().length,2,"TDMgr.setTodos([{},{}]) -> TDMgr.getTodos().length==2");
-		TDMgr.clearTodos();
-		
-		// Test...
-		TDMgr.clearTodos();
-		assert.equal(TDMgr.getTodos().length,0,"TDMgr.clearToDos() -> TDMgr.getTodos().length==0");
-		
-		// Test...
-		TDMgr.setTodos({});
-		assert.equal(TDMgr.getTodos().length,undefined,"TDMgr.setTodos({}) -> TDMgr.getTodos().length==undefined");
-		TDMgr.clearTodos();
-		
-		// Test...
-		TDMgr.setTodos([
-			{topic:"test",done:false},
-			{topic:"#tag",done:false}
-		]);
-		assert.ok(TDMgr.getTodos().length==2,"TDMgr.setTodos([{...},{...}]) -> TDMgr.getTodos().length==2");
-		assert.ok(TDMgr.getTodos().length==2,"TDMgr.setTodos([{...},{.#tag.}]) -> TDMgr.getTags().length==1");		
-		TDMgr.clearTodos();
-	});
+	QUnit.test("todoservice.addTodo", function(assert){
+		var injector = angular.injector(["ng","tdapp"])
+		var todoservice = injector.get("todoservice")
+		assert.ok(todoservice.todos.length==0,"initial todoservice.todos.length==0")
+		todoservice.clearTodos()
+		todoservice.addTodo("derdr")
+		assert.ok(todoservice.todos.length==1,"new todo without tag -> todoservice.todos.length==1")
+		assert.ok(todoservice.tags.length==0,"new todo without tag  -> todoservice.tags.length==0")
+	})
 
-	QUnit.test("TDMgr.addTodo", function(assert){
-		var injector = angular.injector(["ng","tdapp"]);		
-		var TDMgr = injector.get("TDMgr");
+	QUnit.test("todoservice.addTodoObj", function(assert){
+		var injector = angular.injector(["ng","tdapp"])
+		var todoservice = injector.get("todoservice")
+		todoservice.clearTodos()
+		var todo = {}
+		todo.topic = "derdr"
+		todo.done = false
+		todoservice.addTodoObj(todo)
+		assert.ok(todoservice.todos.length==1,"new todo obj without tag -> todoservice.todos.length==1")
+		assert.ok(todoservice.tags.length==0,"new todo obj without tag  -> todoservice.tags.length==0")
+	})
 
-		// Test...
-		var todo = TDMgr.addTodo("test");
-		assert.ok(todo!=null,"TDMgr.addTodo('test'); todo!=null");
-		assert.equal(TDMgr.getTodos().length,1,"TDMgr.getTodos().length==1");
-		assert.equal(todo.done,false,"TDMgr.addTodo('test'); todo.done==false");
-		assert.equal(todo.tags.length,0,"TDMgr.addTodo('test').tags.length==0");
-		TDMgr.clearTodos();
-		assert.equal(TDMgr.getTodos().length,0,"TDMgr.clearTodos()->TDMgr.getTodos().length==0");
-		TDMgr.clearTodos();
-		
-		// Test...
-		todo = TDMgr.addTodo("test");
-		assert.ok(
-			TDMgr.getTodos()[0].tag==undefined,
-			"td = TDMgr.addTodo('test'); TDMgr.getTodos()[0].tag=='undefined'"
-		);
-		TDMgr.clearTodos();
-		
-		// Test...
-		todo = TDMgr.addTodo("#test");
-		assert.ok(
-			TDMgr.getTodos()[0].tags[0]=="#test",
-			"todo = TDMgr.addTodo('#test'); TDMgr.getTodos()[0].tags[0]=='#test'"
-		);
-		console.log(todo);
-		assert.ok(
-			TDMgr.getTags()[0]=="#test",
-			"todo = TDMgr.addTodo('#test'); TDMgr.getTags()[0]=='#test'"
-		);
-		TDMgr.addTodo('#tag');
-		// Reminder: New tags will be appended at the end of the tag-list.
-		assert.ok(
-			TDMgr.getTags()[1]=="#tag",
-			"TDMgr.addTodo('#test'); TDMgr.addTodo('#tag'); TDMgr.getTags()[1]=='#tag'"
-		);
-		TDMgr.addTodo('#tag');
-		// Reminder: Tag already exists
-		assert.ok(
-			TDMgr.getTags().length==2,
-			"TDMgr.addTodo('#test'); TDMgr.addTodo('#tag'); TDMgr.addTodo('#tag'); TDMgr.getTags().length==2"
-		);		
-		TDMgr.clearTodos();
+	QUnit.test("todoservice.getTodosByTag (1)", function(assert){
+		var injector = angular.injector(["ng","tdapp"])
+		var todoservice = injector.get("todoservice")
+		todoservice.clearTodos()
+		assert.ok(todoservice.getTodosByTag('',false).length==0,"todoservice.getTodosByTag('',false).length==0")
+		assert.ok(todoservice.getTodosByTag('',true).length==0,"todoservice.getTodosByTag('',true).length==0")
+		assert.ok(todoservice.getTodosByTag('#derdr',false).length==0,"todoservice.getTodosByTag('#derdr',false).length==0")
+		assert.ok(todoservice.getTodosByTag('#derdr',true).length==0,"todoservice.getTodosByTag('#derdr',true).length==0")
+	})
 
-		// Test...
-		todo = TDMgr.addTodo("test tag #test");
-		assert.ok(
-			TDMgr.getTodos()[0].tags[0]=="#test",
-			"todo = TDMgr.addTodo('test tag #test'); TDMgr.getTodos()[0].tags[0]=='#test'"
-		);
-		TDMgr.clearTodos();
-		
-		// Test...
-		todo = TDMgr.addTodo("test #test tag");
-		assert.ok(
-			TDMgr.getTodos()[0].tags[0]=="#test",
-			"todo = TDMgr.addTodo('test #test tag'); TDMgr.getTodos()[0].tags[0]=='#test'"
-		);
-		TDMgr.clearTodos();
+	QUnit.test("todoservice.getTodoById", function(assert){
+		var injector = angular.injector(["ng","tdapp"])
+		var todoservice = injector.get("todoservice")
+		todoservice.clearTodos()
+		assert.ok(todoservice.getTodoById('xyz')==undefined,"todoservice.getTodoById('xyz')==undefined")
+		todoservice.addTodoObj({
+			topic:"derdr",
+			done:"false",
+			id:"42"
+		})
+		assert.ok(todoservice.getTodoById('42')!=undefined,"new todo with id 42 -> todoservice.getTodoById('42')!=undefined")
+	})
 
-		// Test...
-		todo = TDMgr.addTodo("test #test #tag untag");
-		assert.ok(
-			TDMgr.getTodos()[0].tags.length==2,
-			"todo = TDMgr.addTodo('test #test #tag untag'); TDMgr.getTodos()[0].tags.length==2"
-		);
-		TDMgr.clearTodos();
+	QUnit.test("todoservice.checkForHashtag", function(assert){
+		var injector = angular.injector(["ng","tdapp"])
+		var todoservice = injector.get("todoservice")
+		var todo
 
-		// Test...
-		todo = TDMgr.addTodo("test #tag #test untag");
-		assert.ok(
-			TDMgr.getTodos()[0].tags[0]=='#tag',
-			"todo = TDMgr.addTodo('test #tag #test untag'); TDMgr.getTodos()[0].tags[0]=='#tag'"
-		);
-		TDMgr.clearTodos();
+		todoservice.clearTodos()
+		todo = {}
+		todo.topic = "derdr"
+		todoservice.checkForHashtag(todo);
+		assert.ok(todo.tags.length==0,"todo with no tag -> todo.tags.length==0")
+		assert.ok(todoservice.tags.length==0,"todo with no tag -> todoservice.tags.length==0")
 
-		// Test...
-		todo = TDMgr.addTodo("test #tag #test untag");
-		assert.ok(
-			TDMgr.getTodos()[0].tags[1]=='#test',
-			"todo = TDMgr.addTodo('test #tag #test untag'); TDMgr.getTodos()[0].tags[1]=='#test'"
-		);
-		TDMgr.clearTodos();
-		
-		// Test...
-		todo = TDMgr.addTodo("##test");
-		assert.ok(
-			TDMgr.getTodos()[0].tags[0]=="##test",
-			"todo = TDMgr.addTodo('##test'); TDMgr.getTodos()[0].tags[0]=='##test'"
-		);
-		TDMgr.clearTodos();
+		todoservice.clearTodos()
+		todo = {}
+		todo.topic = "derdr #test"
+		todoservice.checkForHashtag(todo);
+		assert.ok(todo.tags.length==1,"todo with tag #test -> todo.tags.length==1")
+		assert.ok(todo.tags[0]=='#test',"todo with tag #test -> todo.tags[0]=='#test'")
+		assert.ok(todoservice.tags[0]=='#test',"todo with tag #test: -> todoservice.tags[0]=='#test'")
 
-		// Test...
-		todo = TDMgr.addTodo("test##");
-		assert.ok(
-			TDMgr.getTodos()[0].tags[0]=="##",
-			"todo = TDMgr.addTodo('test##'); TDMgr.getTodos()[0].tags[0]=='##'"
-		);
-		TDMgr.clearTodos();		
-		
-		// Test...
-		todo = TDMgr.addTodo("test#");
-		assert.ok(
-			TDMgr.getTodos()[0].tag==undefined,
-			"todo = TDMgr.addTodo('test#'); TDMgr.getTodos()[0].tag==undefined"
-		);
-		assert.ok(
-			TDMgr.getTags().length==0,
-			"todo = TDMgr.addTodo('test# '); TDMgr.getTags().length==0"
-		);
-		TDMgr.clearTodos();
+		todoservice.clearTodos()
+		todo = {}
+		todo.topic = "derdr ##test"
+		todoservice.checkForHashtag(todo);
+		assert.ok(todo.tags.length==1,"todo with tag ##test -> todo.tags.length==1")
+		assert.ok(todo.tags[0]=='#test',"todo with tag ##test -> todo.tags[0]=='#test'")
+		assert.ok(todoservice.tags[0]=='#test',"todo with tag #test: -> todoservice.tags[0]=='#test'")
 
-		// Test...
-		todo = TDMgr.addTodo("test# ");
-		assert.ok(
-			TDMgr.getTodos()[0].tag==undefined,
-			"todo = TDMgr.addTodo('test# '); TDMgr.getTodos()[0].tag==undefined"
-		);
-		assert.ok(
-			TDMgr.getTags().length==0,
-			"todo = TDMgr.addTodo('test# '); TDMgr.getTags().length==0"
-		);
-		TDMgr.clearTodos();		
-	});
+		todoservice.clearTodos()
+		todo = {}
+		todo.topic = "derdr ###test"
+		todoservice.checkForHashtag(todo);
+		assert.ok(todo.tags.length==1,"todo with tag ###test -> todo.tags.length==1")
+		assert.ok(todo.tags[0]=='#test',"todo with tag ###test -> todo.tags[0]=='#test'")
+		assert.ok(todoservice.tags[0]=='#test',"todo with tag #test: -> todoservice.tags[0]=='#test'")
 
-	QUnit.test("TDMgr.delTodo", function(assert){
-		var injector = angular.injector(["ng","tdapp"]);		
-		var TDMgr = injector.get("TDMgr");
+		todoservice.clearTodos()
+		todo = {}
+		todo.topic = "derdr #test: derdr"
+		todoservice.checkForHashtag(todo);
+		assert.ok(todo.tags.length==1,"todo with tag #test: -> todo.tags.length==1")
+		assert.ok(todo.tags[0]=='#test',"todo with tag #test: -> todo.tags[0]=='#test'")
+		assert.ok(todoservice.tags[0]=='#test',"todo with tag #test: -> todoservice.tags[0]=='#test'")
 
-		// Test...
-		var todo = TDMgr.addTodo("test");
-		TDMgr.delTodo(todo);
-		assert.ok(
-			TDMgr.getTodos().length==0,
-			"todo = TDMgr.addTodo('test'); TDMgr.delTodo(todo); TDMgr.getTodos().length==0"
-		);
-		TDMgr.clearTodos();
-		
-		//Test...
-		TDMgr.addTodo("test");
-		TDMgr.delTodo({});
-		assert.ok(
-			TDMgr.getTodos().length==1,
-			"todo = TDMgr.addTodo('test'); TDMgr.delTodo({}); TDMgr.getTodos().length==1"
-		);
-		TDMgr.clearTodos();
+		todoservice.clearTodos()
+		todo = {}
+		todo.topic = "derdr #test#. derdr"
+		todoservice.checkForHashtag(todo);
+		assert.ok(todo.tags.length==1,"todo with tag #test#. -> todo.tags.length==1")
+		assert.ok(todo.tags[0]=='#test',"todo with tag #test#. -> todo.tags[0]=='#test'")
+		assert.ok(todoservice.tags[0]=='#test',"todo with tag #test: -> todoservice.tags[0]=='#test'")
 
-		// Test...
-		TDMgr.addTodo("test");
-		TDMgr.delTodo();
-		assert.ok(
-			TDMgr.getTodos().length==1,
-			"todo = TDMgr.addTodo('test'); TDMgr.delTodo(); TDMgr.getTodos().length==1"
-		);
-		TDMgr.clearTodos();
-		
-		// Test...
-		var td1 = TDMgr.addTodo("test1");
-		var td2 = TDMgr.addTodo("test2");
-		TDMgr.delTodo(td1);
-		assert.ok(
-			TDMgr.getTodos().length==1,
-			"td1 = TDMgr.addTodo('test1'); td2 = TDMgr.addTodo('test2'); TDMgr.delTodo(td1); TDMgr.getTodos().length==1"
-		);
-		assert.ok(
-			TDMgr.getTodos()[0]==td2,
-			"td1 = TDMgr.addTodo('test1'); td2 = TDMgr.addTodo('test2'); TDMgr.delTodo(td1); TDMgr.getTodos[0]==td1"
-		);
-		TDMgr.clearTodos();
-		
-		// Test...
-		td1 = TDMgr.addTodo("test1");
-		td2 = TDMgr.addTodo("test2");
-		var td3 = TDMgr.addTodo("test3");
-		// Reminder: New todos will be attached at the beginning of the todo-list.
-		TDMgr.delTodo(td2);
-		// So after deletion of td2 the todo-list will look like this: [td3,td1]
-		assert.ok(
-			TDMgr.getTodos()[0]==td3,
-			"TDMgr.addTodo(td1,td2,td3); TDMgr.delTodo(td2); TDMgr.getTodos[0]==td1"
-		);
-		assert.ok(
-			TDMgr.getTodos()[1]==td1,
-			"TDMgr.addTodo(td1,td2,td3); TDMgr.delTodo(td2); TDMgr.getTodos[1]==td3"
-		);
-		TDMgr.clearTodos();
-	});
+		todoservice.clearTodos()
+		todo = {}
+		todo.topic = "derdr #test #new derdr"
+		todoservice.checkForHashtag(todo);
+		assert.ok(todo.tags.length==2,"todo with tags #test and #new -> todo.tags.length==2")
+		assert.ok(todo.tags[0]=='#test',"todo with tags #test and #new -> todo.tags[0]=='#test'")
+		assert.ok(todo.tags[1]=='#new',"todo with tags #test and #new -> todo.tags[1]=='#new'")
+		assert.ok(todoservice.tags[0]=='#test',"todo with tags #test and #new -> todoservice.tags[0]=='#test'")
+		assert.ok(todoservice.tags[1]=='#new',"todo with tags #test and #new -> todoservice.tags[1]=='#new'")
+	})
 
-	QUnit.test("TDMgr.togDone", function(assert){
-		var injector = angular.injector(["ng","tdapp"]);		
-		var TDMgr = injector.get("TDMgr");
+	QUnit.test("todoservice.getTodosByTag (2)", function(assert){
+		var injector = angular.injector(["ng","tdapp"])
+		var todoservice = injector.get("todoservice")
+		var todo
+		todoservice.clearTodos()
+		todo = {}
+		todo.topic = "derdr #test #new derdr"
+		todo.done = false
+		todoservice.addTodoObj(todo)
+		assert.ok(todoservice.getTodosByTag('#bla',false).length==0,"todoservice.getTodosByTag('#bla',false).length==0")
+		assert.ok(todoservice.getTodosByTag('#bla',true).length==0,"todoservice.getTodosByTag('#bla',true).length==0")
+		assert.ok(todoservice.getTodosByTag('#test',false).length==1,"todoservice.getTodosByTag('#test',false).length==1")
+		assert.ok(todoservice.getTodosByTag('#test',true).length==0,"todoservice.getTodosByTag('#test',true).length==0")
+		assert.ok(todoservice.getTodosByTag('#new',false).length==1,"todoservice.getTodosByTag('#new',false).length==1")
+		assert.ok(todoservice.getTodosByTag('#new',true).length==0,"todoservice.getTodosByTag('#new',true).length==0")
+	})
 
-		// Test...
-		var td1 = TDMgr.addTodo("test1");
-		assert.ok(
-			TDMgr.getTodos()[0].done==false,
-			"td1 = TDMgr.addTodo('test1'); TDMgr.getTodos()[0].done==false"
-		);
-		TDMgr.togDone(TDMgr.getTodos()[0]);
-		assert.ok(
-			TDMgr.getTodos()[0].done==true,
-			"TDMgr.togDone(TDMgr.getTodos()[0]); TDMgr.getTodos()[0].done==true"
-		);
-		TDMgr.togDone(TDMgr.getTodos()[0]);
-		assert.ok(
-			TDMgr.getTodos()[0].done==false,
-			"TDMgr.togDone(TDMgr.getTodos()[0]); TDMgr.getTodos()[0].done==false"
-		);
-		TDMgr.clearTodos();
-		
-		// Test...
-		td1 = {topic:"test",done:false};
-		TDMgr.togDone(td1);
-		assert.ok(
-			td1.done==false,
-			"Empty todolist; TDMgr.togDone({topic:'test',done:false}); td1.done==false"
-		);
-		
-	});
-	
-	QUnit.test("TDMgr.getTodosByTag", function(assert){
-		var injector = angular.injector(["ng","tdapp"]);		
-		var TDMgr = injector.get("TDMgr");
+	// Unit tests for function with backend interaction (WIP)
 
-		// Test...
-		assert.ok(
-			TDMgr.getTodosByTag('').length==0,
-			"Empty todolist; TDMgr.getTodosByTag('').length==0"
-		);
-		assert.ok(
-			TDMgr.getTodosByTag('All').length==0,
-			"Empty todolist; TDMgr.getTodosByTag('').length==0"
-		);
-		assert.ok(
-			TDMgr.getTodosByTag('Open').length==0,
-			"Empty todolist; TDMgr.getTodosByTag('Open').length==0"
-		);		
-		assert.ok(
-			TDMgr.getTodosByTag('Done').length==0,
-			"Empty todolist; TDMgr.getTodosByTag('Done').length==0"
-		);
-		
-		// Test...
-		var td1 = TDMgr.addTodo("#test");
-		assert.ok(
-			TDMgr.getTodosByTag('').length==1,
-			"td1 = TDMgr.addTodo('#test'); TDMgr.getTodosByTag('').length==1"
-		);
-		assert.ok(
-			TDMgr.getTodosByTag('#test').length==1,
-			"td1 = TDMgr.addTodo('#test'); TDMgr.getTodosByTag('#test').length==1"
-		);
-		assert.ok(
-			TDMgr.getTodosByTag('#tag').length==0,
-			"td1 = TDMgr.addTodo('#test'); TDMgr.getTodosByTag('#tag').length==0"
-		);
-		TDMgr.clearTodos();
-		assert.ok(
-			TDMgr.getTodosByTag('Open').length==0,
-			"TDMgr.clearTodos(); TDMgr.getTodosByTag('Open').length==0"
-		);
-		assert.ok(
-			TDMgr.getTodosByTag('All').length==0,
-			"TDMgr.clearTodos(); TDMgr.getTodosByTag('All').length==0"
-		);
-		assert.ok(
-			TDMgr.getTodosByTag('#test').length==0,
-			"TDMgr.clearTodos(); TDMgr.getTodosByTag('#test').length==0"
-		);
-		assert.ok(
-			TDMgr.getTodosByTag().length==0,
-			"TDMgr.clearTodos(); TDMgr.getTodosByTag().length==0"
-		);
-		assert.ok(
-			TDMgr.getTodosByTag(undefined).length==0,
-			"TDMgr.clearTodos(); TDMgr.getTodosByTag(undefined).length==0"
-		);
-		TDMgr.clearTodos();
-		
-		// Test...
-		TDMgr.addTodoObj({topic:"#test 1",done:false});
-		TDMgr.addTodoObj({topic:"#test 2",done:false});
-		TDMgr.addTodoObj({topic:"#tag 1",done:false});
-		TDMgr.addTodoObj({topic:"#tag 2",done:false});
-		assert.ok(
-			TDMgr.getTodosByTag('').length==4,
-			"TDMgr.addTodo( 4x ); TDMgr.getTodosByTag('').length==4"
-		);
-		assert.ok(
-			TDMgr.getTodosByTag('#tag').length==2,
-			"TDMgr.addTodo( 4x ); TDMgr.getTodosByTag('#tag').length==2"
-		);
-		assert.ok(
-			TDMgr.getTodosByTag('#test').length==2,
-			"TDMgr.addTodo( 4x ); TDMgr.getTodosByTag('#test').length==2"
-		);
-		assert.ok(
-			TDMgr.getTodosByTag('#x').length==0,
-			"TDMgr.addTodo( 4x ); TDMgr.getTodosByTag('#x').length==0"
-		);
-		TDMgr.clearTodos();
+	/*
+	QUnit.test("todoservice.getTodos", function(assert){
+		var injector = angular.injector(["ng","tdapp"])
+		var todoservice = injector.get("todoservice")
+		var promise = todoservice.getTodos()
+		return promise.then(function(todos){
+			assert.ok(todos.length!=0,"todoservice.getTodos().length!=0");
+		})
+	})
+	*/
 
-		// Test...
-		TDMgr.addTodoObj({topic:"#test 1",done:false});
-		TDMgr.addTodoObj({topic:"#test #tag 1",done:false});
-		assert.ok(
-			TDMgr.getTodosByTag('#test').length==2,
-			"TDMgr.addTodo( 2x ); TDMgr.getTodosByTag('#test').length==2"
-		);
-		assert.ok(
-			TDMgr.getTodosByTag('#tag').length==1,
-			"TDMgr.addTodo( 2x ); TDMgr.getTodosByTag('#tag').length==2"
-		);
-	});
-	
 	</script>
-	
-	<!--
-	
-		Tests Controller (WIP) ********************************************************************************
-		
-	-->
-	
-	<script>
-	// Logout function has been moved into the settings controller
-	// QUnit.test("MainCtrl", function(assert){
-		/*
-		var injector = angular.injector(["ng","tdapp"]);	
-		var ctrlScope = injector.get("$rootScope").$new();
-		var ctrlHttp = injector.get('$httpBackend');		
-		var _win = {};
-		var _appdata = {};
-		var _TDMgr = injector.get("TDMgr");
 
-		// Preparation...
-		injector.get('$controller')('MainCtrl',{
-			$scope: ctrlScope,
-			$http: ctrlHttp,
-			TDMgr: _TDMgr,
-			Autologin:{
-				setScope: function(){},
-				check: function(){}
-			},
-			Backend: {
-				setScope: function(){},
-			},
-			appdata: _appdata,
-			$window: _win,
-		});
-
-		// Test...
-		ctrlScope.dologout();
-		assert.ok(_win.location=="/#/working","MainCtrl.dologout -> window.location = working");
-		
-		// Test...
-		assert.ok(_TDMgr.getTodos().length==0,"MainCtrl.dologout -> TDMgr.getTodos().length == 0");
-		*/
-	// });
-	</script>
-	
 </body>
 </html>

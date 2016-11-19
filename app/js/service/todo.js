@@ -169,13 +169,13 @@ tdapp.service("todoservice", function(backend, $q) { // ToDoManager
             if (tag != undefined && service.tags.indexOf(tag) < 0) {
                 service.tags.push(tag)
             }
-            s = todo.topic.indexOf('#', s + 1)
+            s = todo.topic.indexOf('#', e)
         }
     }
     service.getTags = function() {
         return service.tags
     }
-    service.getTodosByTag = function(tag, done) {
+    service.getTodosByTag = function(tag, done) { // Assuming the tag starts with #
         if (tag == '' || tag == 'All' || tag == undefined) {
             var ret = []
             if (done) {

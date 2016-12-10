@@ -132,6 +132,10 @@ body,div,p,span{
 .bwidth224{
 	width:224px;
 }
+.poweredby{
+	color:#888888;
+	text-align:center;
+}
 
 /*
   Error (old) ----------------------------------------

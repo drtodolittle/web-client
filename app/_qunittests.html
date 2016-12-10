@@ -173,7 +173,7 @@
 			assert.ok(todoservice.getTodosByTag('#new', true).length == 0, "todoservice.getTodosByTag('#new',true).length==0")
 		})
 
-		// Unit tests for function with backend interaction (WIP)
+		// Unit tests for function with backend interaction
 
 		QUnit.test("todoservice.getTodos *1*", function(assert) {
 			var injector = angular.injector(["ng", "tdapp"])
@@ -184,8 +184,8 @@
 			backend.getTodos = function() {
 				return new Promise(function(resolve, reject) {
 					resolve({
-						statusText : "Ok",
-						data : [{
+						statusText: "Ok",
+						data: [{
 							topic: 'derdr',
 							done: false,
 							id: 42
@@ -217,8 +217,8 @@
 			backend.getTodos = function() {
 				return new Promise(function(resolve, reject) {
 					reject({
-						statusText : "Error",
-						data : []
+						statusText: "Error",
+						data: []
 					})
 				})
 			}
@@ -228,16 +228,86 @@
 			var todoservice = injector.get('todoservice')
 			var thenable = new Promise(function(resolve, reject) {
 				todoservice.getTodos()
-				.catch(function(error) {
-					assert.ok(error.data.length == 0, "todoservice.getTodos().length==0")
-					assert.ok(todoservice.todos.length == 0, "todoservice.todos.length==0")
-					assert.ok(todoservice.tags.length == 0, "todoservice.tags.length==0")
-					resolve()
-				})
+					.catch(function(error) {
+						assert.ok(error.data.length == 0, "todoservice.getTodos().length==0")
+						assert.ok(todoservice.todos.length == 0, "todoservice.todos.length==0")
+						assert.ok(todoservice.tags.length == 0, "todoservice.tags.length==0")
+						resolve()
+					})
 			})
 			return thenable
 		})
 
+		QUnit.test("todoservice.create *1*", function(assert) {
+			var injector = angular.injector(["ng", "tdapp"])
+			var backend = injector.get("backend")
+			var todoservice = injector.get("todoservice")
+
+			// Create unique id
+			var _id = Date.now()
+
+			// Mock backend-service function 'postTodo' by hand
+			backend.postTodo = function(newtodo) {
+				return new Promise(function(resolve, reject) {
+					newtodo.id = _id
+					resolve({
+						statusText: "Ok",
+						data: newtodo
+					})
+				})
+			}
+
+			// Now test the todo-service function 'create' (it's a promise)
+			assert.expect(4)
+			var newtodo = {
+				topic: "test",
+				done: false,
+				id: 0
+			}
+			var thenable = new Promise(function(resolve, reject) {
+				todoservice.create(newtodo).then(function() {
+					assert.ok(todoservice.todos.length == 1, "todoservice.todos.length==1")
+					assert.ok(todoservice.todos[0].id != 0, "todoservice.todos[0].id!=0")
+					assert.ok(todoservice.todos[0].id == _id, "todoservice.todos[0].id==" + _id)
+					assert.ok(todoservice.todos[0].topic == 'test', "todoservice.todos[0].topic=='test'")
+					resolve()
+				})
+			})
+			return thenable;
+		})
+
+		QUnit.test("todoservice.create *2*", function(assert) {
+			var injector = angular.injector(["ng", "tdapp"])
+			var backend = injector.get("backend")
+			var todoservice = injector.get("todoservice")
+
+			// Mock backend-service function 'postTodo' by hand
+			// Return a response object with no data (an error)
+			backend.postTodo = function(newtodo) {
+				return new Promise(function(resolve, reject) {
+					reject({
+						statusText: "Error",
+						data: []
+					})
+				})
+			}
+
+			// Now test the todo-service function 'create' (it's a promise)
+			// and expect a rejection
+			assert.expect(1)
+			var newtodo = {
+				topic: "test",
+				done: false,
+				id: 0
+			}
+			var thenable = new Promise(function(resolve, reject) {
+				todoservice.create(newtodo).catch(function() {
+					assert.ok(todoservice.todos.length == 0, "todoservice.todos.length==0")
+					resolve()
+				})
+			})
+			return thenable;
+		})
 	</script>
 
 </body>

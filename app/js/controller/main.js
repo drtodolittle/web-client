@@ -207,6 +207,11 @@ tdapp.controller("mainCtrl", function(
 
     $scope.getTodosByTag = todoservice.getTodosByTag;
     todoservice.getTodos().then(function(todos) {
+        // Check for previews url
+        if($scope._url != "/"){
+            $location.path($scope._url)
+            $scope._url = undefined
+        }
         // Normal
         $scope.todos = todoservice.getTodosByTag($scope.filtertag, $scope.showdone);
         $scope.tags = todoservice.getTags();

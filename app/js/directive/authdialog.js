@@ -124,6 +124,7 @@ tdapp.directive('authdialog', function() {
             // Helper
 
             $scope.open_dialog = function() {
+                $scope._url = $location.path() // URL will be checked later...
                 $scope.cdusermodal = true;
                 $scope.select_login();
             };

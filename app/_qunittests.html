@@ -370,7 +370,7 @@
 				todoservice.done(newtodo).then(function() {
 					assert.ok(newtodo.done, "newtodo.done == true")
 					assert.ok(todoservice.todos.length == 1, "todoservice.todos.length == 1")
-					assert.ok(todoservice.todos[0].done == true, "todoservice.todos[0].done == true")
+					assert.ok(todoservice.todos[0].done, "todoservice.todos[0].done == true")
 					resolve()
 				})
 			})
@@ -400,6 +400,104 @@
 			var thenable = new Promise(function(resolve, reject) {
 				todoservice.done(newtodo).catch(function(resp) {
 					assert.ok(newtodo.done == false, "newtodo.done == false (no change)")
+					assert.ok(resp.message != undefined, "response.message != undefined")
+					resolve()
+				})
+			})
+			return thenable
+		})
+
+		QUnit.test("todoservice.undone *1*", function(assert) {
+			var injector = angular.injector(["ng", "tdapp"])
+			var backend = injector.get("backend")
+			var todoservice = injector.get("todoservice")
+
+			// Mock backend-service function 'undoneTodo' by hand
+			// Return a response object with no data (only ok status)
+			backend.undoneTodo = function(todo) {
+				return new Promise(function(resolve, reject) {
+					todo.done = false
+					resolve({
+						statusText: "Ok",
+					})
+				})
+			}
+
+			// Now test the todo-service function 'undone' (it's a promise)
+			assert.expect(2)
+			var newtodo = {
+				topic: "test",
+				done: true,
+				id: 77
+			}
+			var thenable = new Promise(function(resolve, reject) {
+				todoservice.undone(newtodo).then(function() {
+					assert.ok(!newtodo.done, "newtodo.done == false")
+					assert.ok(todoservice.todos.length == 0, "todoservice.todos.length == 0")
+					resolve()
+				})
+			})
+			return thenable
+		})
+
+		QUnit.test("todoservice.undone *2*", function(assert) {
+			var injector = angular.injector(["ng", "tdapp"])
+			var backend = injector.get("backend")
+			var todoservice = injector.get("todoservice")
+
+			// Mock backend-service function 'undoneTodo' by hand
+			// Return a response object with no data (only ok status)
+			backend.undoneTodo = function(todo) {
+				return new Promise(function(resolve, reject) {
+					todo.done = false
+					resolve({
+						statusText: "Ok",
+					})
+				})
+			}
+
+			// Now test the todo-service function 'undone' (it's a promise)
+			assert.expect(3)
+			var newtodo = {
+				topic: "test",
+				done: true,
+				id: 42
+			}
+			todoservice.addTodoObj(newtodo)
+			var thenable = new Promise(function(resolve, reject) {
+				todoservice.undone(newtodo).then(function() {
+					assert.ok(!newtodo.done, "newtodo.done == false")
+					assert.ok(todoservice.todos.length == 1, "todoservice.todos.length == 1")
+					assert.ok(!todoservice.todos[0].done, "todoservice.todos[0].done == false")
+					resolve()
+				})
+			})
+			return thenable
+		})
+
+		QUnit.test("todoservice.undone *3*", function(assert) {
+			var injector = angular.injector(["ng", "tdapp"])
+			var backend = injector.get("backend")
+			var todoservice = injector.get("todoservice")
+
+			// Mock backend-service function 'undoneTodo' by hand
+			// Return a rejection
+			backend.undoneTodo = function(todo) {
+				return new Promise(function(resolve, reject) {
+					reject()
+				})
+			}
+
+			// Now test the todo-service function 'undone' (it's a promise)
+			assert.expect(2)
+			var newtodo = {
+				topic: "test",
+				done: true,
+				id: 42
+			}
+			var thenable = new Promise(function(resolve, reject) {
+				todoservice.undone(newtodo).catch(function(resp) {
+					assert.ok(newtodo.done, "newtodo.done == true (no change)")
 					assert.ok(resp.message != undefined, "response.message != undefined")
 					resolve()
 				})

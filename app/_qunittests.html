@@ -505,6 +505,74 @@
 			return thenable
 		})
 
+		QUnit.test("todoservice.update *1*", function(assert) {
+			var injector = angular.injector(["ng", "tdapp"])
+			var backend = injector.get("backend")
+			var todoservice = injector.get("todoservice")
+
+			// Mock backend-service function 'putTodo' by hand
+			// Return a response object with no data (only ok status)
+			backend.putTodo = function(todo) {
+				return new Promise(function(resolve, reject) {
+					resolve({
+						statusText: "Ok",
+					})
+				})
+			}
+
+			// Now test the todo-service function 'update' (it's a promise)
+			assert.expect(3)
+			var newtodo = {
+				topic: "blablabla",
+				done: false,
+				id: 123
+			}
+			todoservice.addTodoObj(newtodo)
+			newtodo.topic = "tataaa #newtag"
+			var thenable = new Promise(function(resolve, reject) {
+				todoservice.update(newtodo).then(function() {
+					assert.ok(todoservice.todos.length == 1, "todoservice.todos.length == 1")
+					assert.ok(todoservice.todos[0].topic == 'tataaa #newtag', "newtodo.topic == 'tataaa #newtag'")
+					assert.ok(todoservice.tags[0] == '#newtag',"todoservice.tags[0] == '#newtag'")
+					resolve()
+				})
+			})
+			return thenable
+		})
+
+		QUnit.test("todoservice.update *2*", function(assert) {
+			var injector = angular.injector(["ng", "tdapp"])
+			var backend = injector.get("backend")
+			var todoservice = injector.get("todoservice")
+
+			// Mock backend-service function 'putTodo' by hand
+			// Return a rejection
+			backend.putTodo = function(todo) {
+				return new Promise(function(resolve, reject) {
+					reject()
+				})
+			}
+
+			// Now test the todo-service function 'update' (it's a promise)
+			assert.expect(3)
+			var newtodo = {
+				topic: "tataaa",
+				done: false,
+				id: 777
+			}
+			todoservice.addTodoObj(newtodo)
+			newtodo.topic = 'hahaha! #newtag'
+			var thenable = new Promise(function(resolve, reject) {
+				todoservice.update(newtodo).catch(function(resp) {
+					assert.ok(resp.message != undefined, "response.message != undefined")
+					assert.ok(todoservice.todos.length == 1,"todoservice.todos.length == 1")
+					assert.ok(todoservice.tags.length == 0,"todoservice.tags.length == 0 (no change)")
+					resolve()
+				})
+			})
+			return thenable
+		})
+
 	</script>
 
 </body>

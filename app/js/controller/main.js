@@ -25,12 +25,14 @@ tdapp.controller("mainCtrl", function(
     $scope._maxlen = 1024
     $interval(function() {
         var content = $("#todotxta").val()
-        var len = content.length
-        if(len>=$scope._maxlen){
-            $("#todotxta").val(content.substring(0,$scope._maxlen))
-            len = $scope._maxlen
+        if(content != undefined){
+            var len = content.length
+            if(len>=$scope._maxlen){
+                $("#todotxta").val(content.substring(0,$scope._maxlen))
+                len = $scope._maxlen
+            }
+            $scope.todotxtacount = len
         }
-        $scope.todotxtacount = len
     }, 64)
 
     // Keyboard

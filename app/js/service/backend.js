@@ -5,7 +5,7 @@
 
 */
 
-tdapp.service('backend', function($http, appdata, localStorageService) {
+tdapp.service('backend', function($q, $http, $firebaseAuth, appdata, localStorageService) {
 
     // Misc
 
@@ -14,8 +14,28 @@ tdapp.service('backend', function($http, appdata, localStorageService) {
         $http.defaults.headers.common['Authorization'] = "Bearer " + token
     }
 
-    // Dr ToDo Little backend
+    // Refresh token (promise)
 
+    function _refreshToken() {
+        return $q(function(resolve,reject){
+            var auth = $firebaseAuth().$getAuth();
+            if (auth != null) {
+                auth.getToken(true)
+                .then(function(token) {
+                    $http.defaults.headers.common['Authorization'] = "Bearer " + token
+                    resolve()
+                })
+                .catch(function(){
+                    reject()
+                })
+            } else {
+                reject()
+            }
+        })
+    }
+
+    // Old Dr ToDo Little backend (without token refresh)
+    /*
     this.postTodo = function(obj) {
         return $http({
             method: "post",
@@ -61,7 +81,131 @@ tdapp.service('backend', function($http, appdata, localStorageService) {
         return $http({
             method: "get",
             url: appdata.server,
-			timeout: 3000
+            timeout: 3000
+        })
+    }
+    */
+
+    // New Dr ToDo Little backend (with token refresh for each interaction)
+
+    this.getTodos = function(){
+        return $q(function(resolve,reject){
+            $http({
+                method: "get",
+                url: appdata.server,
+                timeout: 3000
+            })
+            .then(function(resp){
+                _refreshToken().then(function(x){
+                    resolve(resp)
+                }).catch(function(x){
+                    reject()
+                })
+            })
+            .catch(function(resp){
+                reject(resp)
+            })
+        })
+    }
+    this.postTodo = function(obj) {
+        return $q(function(resolve,reject){
+            $http({
+                method: "post",
+                url: appdata.server,
+                timeout: 3000,
+                header: "application/json",
+                data: obj
+            })
+            .then(function(resp){
+                _refreshToken().then(function(x){
+                    resolve(resp)
+                }).catch(function(x){
+                    reject()
+                })
+            })
+            .catch(function(resp){
+                reject(resp)
+            })
+        })
+    }
+    this.putTodo = function(obj) {
+        return $q(function(resolve,reject){
+            $http({
+                method: "put",
+                url: appdata.server + "/" + obj.id,
+                header: "application/json",
+                data: obj,
+                timeout: 3000
+            })
+            .then(function(resp){
+                _refreshToken().then(function(x){
+                    resolve(resp)
+                }).catch(function(x){
+                    reject()
+                })
+            })
+            .catch(function(resp){
+                reject(resp)
+            })
+        })
+    }
+    this.delTodo = function(obj) {
+        return $q(function(resolve,reject){
+            $http({
+                method: "delete",
+                url: appdata.server + "/" + obj.id,
+                header: "application/json",
+                timeout: 3000,
+                data: obj
+            })
+            .then(function(resp){
+                _refreshToken().then(function(x){
+                    resolve(resp)
+                }).catch(function(x){
+                    reject()
+                })
+            })
+            .catch(function(resp){
+                reject(resp)
+            })
+        })
+    }
+    this.doneTodo = function(obj) {
+        return $q(function(resolve,reject){
+            $http({
+                method: "get",
+                url: appdata.server + "/" + obj.id + "/done",
+                timeout: 3000
+            })
+            .then(function(resp){
+                _refreshToken().then(function(x){
+                    resolve(resp)
+                }).catch(function(x){
+                    reject()
+                })
+            })
+            .catch(function(resp){
+                reject(resp)
+            })
+        })
+    }
+    this.undoneTodo = function(obj) {
+        return $q(function(resolve,reject){
+            $http({
+                method: "get",
+                url: appdata.server + "/" + obj.id + "/undone",
+                timeout: 3000
+            })
+            .then(function(resp){
+                _refreshToken().then(function(x){
+                    resolve(resp)
+                }).catch(function(x){
+                    reject()
+                })
+            })
+            .catch(function(resp){
+                reject(resp)
+            })
         })
     }
 

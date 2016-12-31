@@ -28,7 +28,7 @@ tdapp.controller("navigation", function(
     }
 
     $scope.home = function() {
-        $location.path('/')
+        $location.path('/todos/open/all')
         cNavbar();
     }
 

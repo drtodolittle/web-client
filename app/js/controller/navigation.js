@@ -25,7 +25,6 @@ tdapp.controller("navigation", function(
         $scope.password = "";
         cNavbar();
         $location.path("/");
-        $route.reload();
     }
 
     $scope.home = function() {

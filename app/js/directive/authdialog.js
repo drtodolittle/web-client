@@ -108,7 +108,6 @@ tdapp.directive('authdialog', function() {
                                 localStorageService.set("logintoken", res);
                             }
                             $location.path('todos/open/all')
-                            $route.reload();
                         }).catch(function(error) {
                             _showError(error.message)
                         });

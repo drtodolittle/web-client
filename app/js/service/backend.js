@@ -94,16 +94,14 @@ tdapp.service('backend', function($q, $http, $firebaseAuth, appdata, localStorag
                 method: "get",
                 url: appdata.server,
                 timeout: 3000
-            })
-            .then(function(resp){
-                _refreshToken().then(function(x){
+            }).then(function (resp){
+                _refreshToken().then(function(){
                     resolve(resp)
                 }).catch(function(x){
                     reject()
                 })
-            })
-            .catch(function(resp){
-                reject(resp)
+            }).catch(function(){
+                reject()
             })
         })
     }

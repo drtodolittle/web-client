@@ -210,7 +210,7 @@ tdapp.controller("mainCtrl", function(
     $scope.getTodosByTag = todoservice.getTodosByTag;
     todoservice.getTodos().then(function(todos) {
         // Check for previews url
-        if($scope._url != "/"){
+        if($scope._url != "/" && $scope._url != "/todos/open/all"){
             $location.path($scope._url)
             $scope._url = undefined
         }
@@ -262,6 +262,7 @@ tdapp.controller("mainCtrl", function(
             }
         }
     }).catch(function(error) {
+        if(error == undefined) return
         if ($scope.user != undefined) { // Avoid displaying an "Unauthorized"-Error before login
             showError(error.statusText)
         }

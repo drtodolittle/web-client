@@ -41,9 +41,11 @@ tdapp.service("todoservice", function(backend, $q) { // ToDoManager
         return $q(function(resolve, reject) {
             backend.getTodos().then(function(response) {
                     service.clearTodos()
-                    response.data.forEach(function(todo) {
-                        service.addTodoObj(todo)
-                    })
+                    if(response != undefined){
+                        response.data.forEach(function(todo) {
+                            service.addTodoObj(todo)
+                        })
+                    }
                     resolve(service.todos)
                 })
                 .catch(function(error) {

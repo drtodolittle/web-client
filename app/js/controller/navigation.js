@@ -24,7 +24,11 @@ tdapp.controller("navigation", function(
         $http.defaults.headers.common['Authorization'] = "";
         $scope.password = "";
         cNavbar();
-        $location.path("/");
+        if($location.path()=="/"){
+            $location.path("/todos/open/all");
+        } else {
+            $location.path("/");
+        }
     }
 
     $scope.home = function() {

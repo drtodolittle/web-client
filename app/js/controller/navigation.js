@@ -6,11 +6,14 @@
 */
 tdapp.controller("navigation", function(
     $scope,
+    $rootScope,
     $http,
     localStorageService,
     $route,
     $location,
-    $timeout
+    $timeout,
+    $firebaseAuth,
+    todoservice
 ) {
 
     function cNavbar(){
@@ -20,15 +23,18 @@ tdapp.controller("navigation", function(
     }
 
     $scope.logout = function() {
+        $('#todoarea').css('visibility',"hidden")
         localStorageService.remove("logintoken");
         $http.defaults.headers.common['Authorization'] = "";
         $scope.password = "";
         cNavbar();
-        if($location.path()=="/"){
-            $location.path("/todos/open/all");
-        } else {
+        $firebaseAuth().$signOut().then(function(){
             $location.path("/");
-        }
+            $rootScope.open_dialog()
+            $timeout(function() {
+                $('#signin-email').focus()
+            }, 256)
+        })
     }
 
     $scope.home = function() {

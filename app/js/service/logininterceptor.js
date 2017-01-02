@@ -50,6 +50,7 @@ tdapp.service('logininterceptor', function($q, $injector, $firebaseAuth, $locati
     return {
         'responseError': function(rejection) {
             if (rejection.status == 401) {
+                $('#todoarea').css('visibility',"hidden")
                 if (localStorageService.get("logintoken") != undefined) {
                     localStorageService.remove("logintoken")
                 }

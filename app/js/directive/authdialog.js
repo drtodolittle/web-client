@@ -85,7 +85,9 @@ tdapp.directive('authdialog', function() {
                                 if ($scope.rememberme) {
                                     localStorageService.set("logintoken", response);
                                 }
-                                $location.path('todos/open/all')
+                                $timeout(function(){
+                                    $location.path('todos/open/all')
+                                },512)
                             })
                             .catch(function(error) {
                                 _showError(error.message)

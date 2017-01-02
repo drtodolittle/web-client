@@ -7,12 +7,15 @@
 
 tdapp.controller("mainCtrl", function(
     $scope,
+    $rootScope,
     $timeout,
     $interval,
     $location,
     $route,
+    $http,
     $routeParams,
-    todoservice
+    todoservice,
+    localStorageService
 ) {
 
     // Initial filter setting
@@ -206,9 +209,14 @@ tdapp.controller("mainCtrl", function(
     }
 
     // Get/Prepare todos
-
     $scope.getTodosByTag = todoservice.getTodosByTag;
+    var _t = localStorageService.get("logintoken")
+    if (_t == null){
+        _t = $http.defaults.headers.common['Authorization']
+    }
+    if (_t != null)
     todoservice.getTodos().then(function(todos) {
+        $('#todoarea').css('visibility',"visible")
         // Check for previews url
         if($scope._url != "/" && $scope._url != "/todos/open/all"){
             $location.path($scope._url)
@@ -261,8 +269,12 @@ tdapp.controller("mainCtrl", function(
                 $scope.todos = todoservice.getTodosByTag('All', $scope.showdone)
             }
         }
+        $("#todotxta").focus();
     }).catch(function(error) {
-        if(error == undefined) return
+        if(error == undefined) {
+            $rootScope.open_dialog();
+            return;
+        }
         if ($scope.user != undefined) { // Avoid displaying an "Unauthorized"-Error before login
             showError(error.statusText)
         }
@@ -270,6 +282,13 @@ tdapp.controller("mainCtrl", function(
             showError("A backend problem occured. Please try again later.")
         }
     })
+    else {
+        $location.path("/")
+        $rootScope.open_dialog()
+        $timeout(function(){
+            $('#signin-email').focus()
+        },128)
+    }
 
     // Finish
 

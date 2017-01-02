@@ -16,6 +16,7 @@
 	<!-- Libraries -->
 	<script src="js/angular.min.js"></script>
 	<script src="js/angular-route.min.js"></script>
+    <script src="js/angular-mocks.js"></script>
 	<script src="js/jquery.min.js"></script>
 	<script src="js/bootstrap.min.js"></script>
 	<script src="js/firebase.js"></script>
@@ -24,161 +25,159 @@
 	<script src="js/xeditable.min.js"></script>
 	<script src="js/drtodolittle.js"></script>
 
-	<!-- Todoservice tests -->
+	<!-- Tests -->
 	<script>
-		// General
 
-		QUnit.test("todoservice", function(assert) {
-			var injector = angular.injector(["ng", "tdapp"])
-			var todoservice = injector.get("todoservice")
-			assert.ok(todoservice != undefined, "todoservice!=undefined")
-			assert.ok(todoservice.todos.length == 0, "initial todoservice.todos.length==0")
-			assert.ok(todoservice.tags.length == 0, "initial todoservice.tags.length==0")
-		});
+        var injector
+        var backend
+        var todoservice
 
-		// Unit test for functions without backend interaction
+        module("todoservice", {
+            setup: function() {
+                angular.module('tdapp');
+                injector = angular.injector(['ngMock','ng','tdapp']);
+                todoservice = injector.get('todoservice');
+                backend = injector.get('backend');
+            },
+            teardown: function() {
+            }
+        });
 
-		QUnit.test("todoservice.clearTodos", function(assert) {
-			var injector = angular.injector(["ng", "tdapp"])
-			var todoservice = injector.get("todoservice")
-			assert.ok(todoservice.todos.length == 0, "initial todoservice.todos.length==0")
-			assert.ok(todoservice.tags.length == 0, "initial todoservice.tags.length==0")
+        // General
+
+        test("init", function() {
+            ok(todoservice != undefined, "todoservice != undefined")
+            ok(backend != undefined, "backend != undefined")
+            ok(todoservice.todos.length == 0, "initial todoservice.todos.length==0")
+            ok(todoservice.tags.length == 0, "initial todoservice.tags.length==0")
+        });
+
+        // Tests for functions without backend interaction
+
+        test("clearTodos", function() {
+			ok(todoservice.todos.length == 0, "initial todoservice.todos.length==0")
+			ok(todoservice.tags.length == 0, "initial todoservice.tags.length==0")
 			todoservice.clearTodos()
-			assert.ok(todoservice.todos.length == 0, "todoservice.clearTodos -> todoservice.todos.length==0")
-			assert.ok(todoservice.tags.length == 0, "todoservice.clearTodos -> todoservice.tags.length==0")
+			ok(todoservice.todos.length == 0, "todoservice.clearTodos -> todoservice.todos.length==0")
+			ok(todoservice.tags.length == 0, "todoservice.clearTodos -> todoservice.tags.length==0")
 		})
 
-		QUnit.test("todoservice.addTodo", function(assert) {
-			var injector = angular.injector(["ng", "tdapp"])
-			var todoservice = injector.get("todoservice")
-			assert.ok(todoservice.todos.length == 0, "initial todoservice.todos.length==0")
+        test("addTodo", function() {
+			ok(todoservice.todos.length == 0, "initial todoservice.todos.length==0")
 			todoservice.clearTodos()
 			todoservice.addTodo("derdr")
-			assert.ok(todoservice.todos.length == 1, "new todo without tag -> todoservice.todos.length==1")
-			assert.ok(todoservice.tags.length == 0, "new todo without tag  -> todoservice.tags.length==0")
+			ok(todoservice.todos.length == 1, "new todo without tag -> todoservice.todos.length==1")
+			ok(todoservice.tags.length == 0, "new todo without tag  -> todoservice.tags.length==0")
 		})
 
-		QUnit.test("todoservice.addTodoObj", function(assert) {
-			var injector = angular.injector(["ng", "tdapp"])
-			var todoservice = injector.get("todoservice")
+        test("addTodoObj", function() {
 			todoservice.clearTodos()
 			var todo = {}
 			todo.topic = "derdr"
 			todo.done = false
 			todoservice.addTodoObj(todo)
-			assert.ok(todoservice.todos.length == 1, "new todo obj without tag -> todoservice.todos.length==1")
-			assert.ok(todoservice.tags.length == 0, "new todo obj without tag  -> todoservice.tags.length==0")
+			ok(todoservice.todos.length == 1, "new todo obj without tag -> todoservice.todos.length==1")
+			ok(todoservice.tags.length == 0, "new todo obj without tag  -> todoservice.tags.length==0")
 		})
 
-		QUnit.test("todoservice.getTodosByTag *1*", function(assert) {
-			var injector = angular.injector(["ng", "tdapp"])
-			var todoservice = injector.get("todoservice")
+        test("getTodosByTag *1*", function() {
 			todoservice.clearTodos()
-			assert.ok(todoservice.getTodosByTag('', false).length == 0, "todoservice.getTodosByTag('',false).length==0")
-			assert.ok(todoservice.getTodosByTag('', true).length == 0, "todoservice.getTodosByTag('',true).length==0")
-			assert.ok(todoservice.getTodosByTag('#derdr', false).length == 0, "todoservice.getTodosByTag('#derdr',false).length==0")
-			assert.ok(todoservice.getTodosByTag('#derdr', true).length == 0, "todoservice.getTodosByTag('#derdr',true).length==0")
+			ok(todoservice.getTodosByTag('', false).length == 0, "todoservice.getTodosByTag('',false).length==0")
+			ok(todoservice.getTodosByTag('', true).length == 0, "todoservice.getTodosByTag('',true).length==0")
+			ok(todoservice.getTodosByTag('#derdr', false).length == 0, "todoservice.getTodosByTag('#derdr',false).length==0")
+			ok(todoservice.getTodosByTag('#derdr', true).length == 0, "todoservice.getTodosByTag('#derdr',true).length==0")
 		})
 
-		QUnit.test("todoservice.getTodoById", function(assert) {
-			var injector = angular.injector(["ng", "tdapp"])
-			var todoservice = injector.get("todoservice")
+        test("getTodoById", function() {
 			todoservice.clearTodos()
-			assert.ok(todoservice.getTodoById('xyz') == undefined, "todoservice.getTodoById('xyz')==undefined")
+			ok(todoservice.getTodoById('xyz') == undefined, "todoservice.getTodoById('xyz')==undefined")
 			todoservice.addTodoObj({
 				topic: "derdr",
 				done: "false",
 				id: "42"
 			})
-			assert.ok(todoservice.getTodoById('42') != undefined, "new todo with id 42 -> todoservice.getTodoById('42')!=undefined")
+			ok(todoservice.getTodoById('42') != undefined, "new todo with id 42 -> todoservice.getTodoById('42')!=undefined")
 		})
 
-		QUnit.test("todoservice.checkForHashtag", function(assert) {
-			var injector = angular.injector(["ng", "tdapp"])
-			var todoservice = injector.get("todoservice")
+        test("checkForHashtag", function() {
 			var todo
 
 			todoservice.clearTodos()
 			todo = {}
 			todo.topic = "derdr"
 			todoservice.checkForHashtag(todo);
-			assert.ok(todo.tags.length == 0, "todo with no tag -> todo.tags.length==0")
-			assert.ok(todoservice.tags.length == 0, "todo with no tag -> todoservice.tags.length==0")
+			ok(todo.tags.length == 0, "todo with no tag -> todo.tags.length==0")
+			ok(todoservice.tags.length == 0, "todo with no tag -> todoservice.tags.length==0")
 
 			todoservice.clearTodos()
 			todo = {}
 			todo.topic = "derdr #test"
 			todoservice.checkForHashtag(todo);
-			assert.ok(todo.tags.length == 1, "todo with tag #test -> todo.tags.length==1")
-			assert.ok(todo.tags[0] == '#test', "todo with tag #test -> todo.tags[0]=='#test'")
-			assert.ok(todoservice.tags[0] == '#test', "todo with tag #test: -> todoservice.tags[0]=='#test'")
+			ok(todo.tags.length == 1, "todo with tag #test -> todo.tags.length==1")
+			ok(todo.tags[0] == '#test', "todo with tag #test -> todo.tags[0]=='#test'")
+			ok(todoservice.tags[0] == '#test', "todo with tag #test: -> todoservice.tags[0]=='#test'")
 
 			todoservice.clearTodos()
 			todo = {}
 			todo.topic = "derdr ##test"
 			todoservice.checkForHashtag(todo);
-			assert.ok(todo.tags.length == 1, "todo with tag ##test -> todo.tags.length==1")
-			assert.ok(todo.tags[0] == '#test', "todo with tag ##test -> todo.tags[0]=='#test'")
-			assert.ok(todoservice.tags[0] == '#test', "todo with tag #test: -> todoservice.tags[0]=='#test'")
+			ok(todo.tags.length == 1, "todo with tag ##test -> todo.tags.length==1")
+			ok(todo.tags[0] == '#test', "todo with tag ##test -> todo.tags[0]=='#test'")
+			ok(todoservice.tags[0] == '#test', "todo with tag #test: -> todoservice.tags[0]=='#test'")
 
 			todoservice.clearTodos()
 			todo = {}
 			todo.topic = "derdr ###test"
 			todoservice.checkForHashtag(todo);
-			assert.ok(todo.tags.length == 1, "todo with tag ###test -> todo.tags.length==1")
-			assert.ok(todo.tags[0] == '#test', "todo with tag ###test -> todo.tags[0]=='#test'")
-			assert.ok(todoservice.tags[0] == '#test', "todo with tag #test: -> todoservice.tags[0]=='#test'")
+			ok(todo.tags.length == 1, "todo with tag ###test -> todo.tags.length==1")
+			ok(todo.tags[0] == '#test', "todo with tag ###test -> todo.tags[0]=='#test'")
+			ok(todoservice.tags[0] == '#test', "todo with tag #test: -> todoservice.tags[0]=='#test'")
 
 			todoservice.clearTodos()
 			todo = {}
 			todo.topic = "derdr #test: derdr"
 			todoservice.checkForHashtag(todo);
-			assert.ok(todo.tags.length == 1, "todo with tag #test: -> todo.tags.length==1")
-			assert.ok(todo.tags[0] == '#test', "todo with tag #test: -> todo.tags[0]=='#test'")
-			assert.ok(todoservice.tags[0] == '#test', "todo with tag #test: -> todoservice.tags[0]=='#test'")
+			ok(todo.tags.length == 1, "todo with tag #test: -> todo.tags.length==1")
+			ok(todo.tags[0] == '#test', "todo with tag #test: -> todo.tags[0]=='#test'")
+			ok(todoservice.tags[0] == '#test', "todo with tag #test: -> todoservice.tags[0]=='#test'")
 
 			todoservice.clearTodos()
 			todo = {}
 			todo.topic = "derdr #test#. derdr"
 			todoservice.checkForHashtag(todo);
-			assert.ok(todo.tags.length == 1, "todo with tag #test#. -> todo.tags.length==1")
-			assert.ok(todo.tags[0] == '#test', "todo with tag #test#. -> todo.tags[0]=='#test'")
-			assert.ok(todoservice.tags[0] == '#test', "todo with tag #test: -> todoservice.tags[0]=='#test'")
+			ok(todo.tags.length == 1, "todo with tag #test#. -> todo.tags.length==1")
+			ok(todo.tags[0] == '#test', "todo with tag #test#. -> todo.tags[0]=='#test'")
+			ok(todoservice.tags[0] == '#test', "todo with tag #test: -> todoservice.tags[0]=='#test'")
 
 			todoservice.clearTodos()
 			todo = {}
 			todo.topic = "derdr #test #new derdr"
 			todoservice.checkForHashtag(todo);
-			assert.ok(todo.tags.length == 2, "todo with tags #test and #new -> todo.tags.length==2")
-			assert.ok(todo.tags[0] == '#test', "todo with tags #test and #new -> todo.tags[0]=='#test'")
-			assert.ok(todo.tags[1] == '#new', "todo with tags #test and #new -> todo.tags[1]=='#new'")
-			assert.ok(todoservice.tags[0] == '#test', "todo with tags #test and #new -> todoservice.tags[0]=='#test'")
-			assert.ok(todoservice.tags[1] == '#new', "todo with tags #test and #new -> todoservice.tags[1]=='#new'")
+			ok(todo.tags.length == 2, "todo with tags #test and #new -> todo.tags.length==2")
+			ok(todo.tags[0] == '#test', "todo with tags #test and #new -> todo.tags[0]=='#test'")
+			ok(todo.tags[1] == '#new', "todo with tags #test and #new -> todo.tags[1]=='#new'")
+			ok(todoservice.tags[0] == '#test', "todo with tags #test and #new -> todoservice.tags[0]=='#test'")
+			ok(todoservice.tags[1] == '#new', "todo with tags #test and #new -> todoservice.tags[1]=='#new'")
 		})
 
-		QUnit.test("todoservice.getTodosByTag *2*", function(assert) {
-			var injector = angular.injector(["ng", "tdapp"])
-			var todoservice = injector.get("todoservice")
+        test("getTodosByTag *2*", function() {
 			var todo
 			todoservice.clearTodos()
 			todo = {}
 			todo.topic = "derdr #test #new derdr"
 			todo.done = false
 			todoservice.addTodoObj(todo)
-			assert.ok(todoservice.getTodosByTag('#bla', false).length == 0, "todoservice.getTodosByTag('#bla',false).length==0")
-			assert.ok(todoservice.getTodosByTag('#bla', true).length == 0, "todoservice.getTodosByTag('#bla',true).length==0")
-			assert.ok(todoservice.getTodosByTag('#test', false).length == 1, "todoservice.getTodosByTag('#test',false).length==1")
-			assert.ok(todoservice.getTodosByTag('#test', true).length == 0, "todoservice.getTodosByTag('#test',true).length==0")
-			assert.ok(todoservice.getTodosByTag('#new', false).length == 1, "todoservice.getTodosByTag('#new',false).length==1")
-			assert.ok(todoservice.getTodosByTag('#new', true).length == 0, "todoservice.getTodosByTag('#new',true).length==0")
+			ok(todoservice.getTodosByTag('#bla', false).length == 0, "todoservice.getTodosByTag('#bla',false).length==0")
+			ok(todoservice.getTodosByTag('#bla', true).length == 0, "todoservice.getTodosByTag('#bla',true).length==0")
+			ok(todoservice.getTodosByTag('#test', false).length == 1, "todoservice.getTodosByTag('#test',false).length==1")
+			ok(todoservice.getTodosByTag('#test', true).length == 0, "todoservice.getTodosByTag('#test',true).length==0")
+			ok(todoservice.getTodosByTag('#new', false).length == 1, "todoservice.getTodosByTag('#new',false).length==1")
+			ok(todoservice.getTodosByTag('#new', true).length == 0, "todoservice.getTodosByTag('#new',true).length==0")
 		})
 
-		// Unit tests for function with backend interaction
+        // Unit tests for function with backend interaction
 
-		QUnit.test("todoservice.getTodos *1*", function(assert) {
-			var injector = angular.injector(["ng", "tdapp"])
-			var backend = injector.get("backend")
-
+        test("getTodos *1*", function() {
 			// Mock backend-service function 'getTodos' by hand
 			// Return a response object with data (a todo object)
 			backend.getTodos = function() {
@@ -193,25 +192,16 @@
 					})
 				})
 			}
-
 			// Now test the todo-service function 'getTodos' (it's a promise)
-			assert.expect(3)
-			var todoservice = injector.get('todoservice')
-			var thenable = new Promise(function(resolve, reject) {
-				todoservice.getTodos().then(function(resp) {
-					assert.ok(resp.length == 1, "todoservice.getTodos().length==1")
-					assert.ok(todoservice.todos.length == 1, "todoservice.todos.length==1")
-					assert.ok(todoservice.tags.length == 0, "todoservice.tags.length==0")
-					resolve(resp)
-				})
+			expect(3)
+			return todoservice.getTodos().then(function(resp) {
+				ok(resp.length == 1, "todoservice.getTodos().length==1")
+				ok(todoservice.todos.length == 1, "todoservice.todos.length==1")
+				ok(todoservice.tags.length == 0, "todoservice.tags.length==0")
 			})
-			return thenable;
 		})
 
-		QUnit.test("todoservice.getTodos *2*", function(assert) {
-			var injector = angular.injector(["ng", "tdapp"])
-			var backend = injector.get("backend")
-
+        test("getTodos *2*", function() {
 			// Mock backend-service function 'getTodos' by hand
 			// Return a response object with no data (an error)
 			backend.getTodos = function() {
@@ -222,30 +212,18 @@
 					})
 				})
 			}
-
 			// Now test the todo-service function 'getTodos' (it's a promise)
-			assert.expect(3)
-			var todoservice = injector.get('todoservice')
-			var thenable = new Promise(function(resolve, reject) {
-				todoservice.getTodos()
-					.catch(function(error) {
-						assert.ok(error.data.length == 0, "todoservice.getTodos().length==0")
-						assert.ok(todoservice.todos.length == 0, "todoservice.todos.length==0")
-						assert.ok(todoservice.tags.length == 0, "todoservice.tags.length==0")
-						resolve()
-					})
+			expect(3)
+			return todoservice.getTodos().catch(function(error) {
+				ok(error.data.length == 0, "todoservice.getTodos().length==0")
+				ok(todoservice.todos.length == 0, "todoservice.todos.length==0")
+				ok(todoservice.tags.length == 0, "todoservice.tags.length==0")
 			})
-			return thenable
 		})
 
-		QUnit.test("todoservice.create *1*", function(assert) {
-			var injector = angular.injector(["ng", "tdapp"])
-			var backend = injector.get("backend")
-			var todoservice = injector.get("todoservice")
-
+        test("create *1*", function() {
 			// Create unique id
 			var _id = Date.now()
-
 			// Mock backend-service function 'postTodo' by hand
 			backend.postTodo = function(newtodo) {
 				return new Promise(function(resolve, reject) {
@@ -256,31 +234,22 @@
 					})
 				})
 			}
-
 			// Now test the todo-service function 'create' (it's a promise)
-			assert.expect(4)
+			expect(4)
 			var newtodo = {
 				topic: "test",
 				done: false,
 				id: 0
 			}
-			var thenable = new Promise(function(resolve, reject) {
-				todoservice.create(newtodo).then(function() {
-					assert.ok(todoservice.todos.length == 1, "todoservice.todos.length==1")
-					assert.ok(todoservice.todos[0].id != 0, "todoservice.todos[0].id!=0")
-					assert.ok(todoservice.todos[0].id == _id, "todoservice.todos[0].id==" + _id)
-					assert.ok(todoservice.todos[0].topic == 'test', "todoservice.todos[0].topic=='test'")
-					resolve()
-				})
+			return todoservice.create(newtodo).then(function() {
+				ok(todoservice.todos.length == 1, "todoservice.todos.length==1")
+				ok(todoservice.todos[0].id != 0, "todoservice.todos[0].id!=0")
+				ok(todoservice.todos[0].id == _id, "todoservice.todos[0].id==" + _id)
+				ok(todoservice.todos[0].topic == 'test', "todoservice.todos[0].topic=='test'")
 			})
-			return thenable;
 		})
 
-		QUnit.test("todoservice.create *2*", function(assert) {
-			var injector = angular.injector(["ng", "tdapp"])
-			var backend = injector.get("backend")
-			var todoservice = injector.get("todoservice")
-
+        test("create *2*", function() {
 			// Mock backend-service function 'postTodo' by hand
 			// Return a response object with no data (an error)
 			backend.postTodo = function(newtodo) {
@@ -291,29 +260,20 @@
 					})
 				})
 			}
-
 			// Now test the todo-service function 'create' (it's a promise)
 			// and expect a rejection
-			assert.expect(1)
+			expect(1)
 			var newtodo = {
 				topic: "test",
 				done: false,
 				id: 0
 			}
-			var thenable = new Promise(function(resolve, reject) {
-				todoservice.create(newtodo).catch(function() {
-					assert.ok(todoservice.todos.length == 0, "todoservice.todos.length==0")
-					resolve()
-				})
+			return todoservice.create(newtodo).catch(function() {
+				ok(todoservice.todos.length == 0, "todoservice.todos.length==0")
 			})
-			return thenable;
 		})
 
-		QUnit.test("todoservice.done *1*", function(assert) {
-			var injector = angular.injector(["ng", "tdapp"])
-			var backend = injector.get("backend")
-			var todoservice = injector.get("todoservice")
-
+        test("done *1*", function() {
 			// Mock backend-service function 'doneTodo' by hand
 			// Return a response object with no data (only ok status)
 			backend.doneTodo = function(todo) {
@@ -324,29 +284,20 @@
 					})
 				})
 			}
-
 			// Now test the todo-service function 'done' (it's a promise)
-			assert.expect(2)
+			expect(2)
 			var newtodo = {
 				topic: "test",
 				done: false,
 				id: 42
 			}
-			var thenable = new Promise(function(resolve, reject) {
-				todoservice.done(newtodo).then(function() {
-					assert.ok(newtodo.done, "newtodo.done == true")
-					assert.ok(todoservice.todos.length == 0, "todoservice.todos.length == 0")
-					resolve()
-				})
+			return todoservice.done(newtodo).then(function() {
+				ok(newtodo.done, "newtodo.done == true")
+				ok(todoservice.todos.length == 0, "todoservice.todos.length == 0")
 			})
-			return thenable
 		})
 
-		QUnit.test("todoservice.done *2*", function(assert) {
-			var injector = angular.injector(["ng", "tdapp"])
-			var backend = injector.get("backend")
-			var todoservice = injector.get("todoservice")
-
+        test("done *2*", function() {
 			// Mock backend-service function 'doneTodo' by hand
 			// Return a response object with no data (only ok status)
 			backend.doneTodo = function(todo) {
@@ -357,31 +308,22 @@
 					})
 				})
 			}
-
 			// Now test the todo-service function 'done' (it's a promise)
-			assert.expect(3)
+			expect(3)
 			var newtodo = {
 				topic: "test",
 				done: false,
 				id: 42
 			}
 			todoservice.addTodoObj(newtodo)
-			var thenable = new Promise(function(resolve, reject) {
-				todoservice.done(newtodo).then(function() {
-					assert.ok(newtodo.done, "newtodo.done == true")
-					assert.ok(todoservice.todos.length == 1, "todoservice.todos.length == 1")
-					assert.ok(todoservice.todos[0].done, "todoservice.todos[0].done == true")
-					resolve()
-				})
+			return todoservice.done(newtodo).then(function() {
+				ok(newtodo.done, "newtodo.done == true")
+				ok(todoservice.todos.length == 1, "todoservice.todos.length == 1")
+				ok(todoservice.todos[0].done, "todoservice.todos[0].done == true")
 			})
-			return thenable
 		})
 
-		QUnit.test("todoservice.done *3*", function(assert) {
-			var injector = angular.injector(["ng", "tdapp"])
-			var backend = injector.get("backend")
-			var todoservice = injector.get("todoservice")
-
+        test("done *3*", function() {
 			// Mock backend-service function 'doneTodo' by hand
 			// Return a rejection
 			backend.doneTodo = function(todo) {
@@ -389,29 +331,20 @@
 					reject()
 				})
 			}
-
 			// Now test the todo-service function 'done' (it's a promise)
-			assert.expect(2)
+			expect(2)
 			var newtodo = {
 				topic: "test",
 				done: false,
 				id: 42
 			}
-			var thenable = new Promise(function(resolve, reject) {
-				todoservice.done(newtodo).catch(function(resp) {
-					assert.ok(newtodo.done == false, "newtodo.done == false (no change)")
-					assert.ok(resp.message != undefined, "response.message != undefined")
-					resolve()
-				})
+			return todoservice.done(newtodo).catch(function(resp) {
+				ok(newtodo.done == false, "newtodo.done == false (no change)")
+				ok(resp.message != undefined, "response.message != undefined")
 			})
-			return thenable
 		})
 
-		QUnit.test("todoservice.undone *1*", function(assert) {
-			var injector = angular.injector(["ng", "tdapp"])
-			var backend = injector.get("backend")
-			var todoservice = injector.get("todoservice")
-
+        test("undone *1*", function() {
 			// Mock backend-service function 'undoneTodo' by hand
 			// Return a response object with no data (only ok status)
 			backend.undoneTodo = function(todo) {
@@ -422,29 +355,20 @@
 					})
 				})
 			}
-
 			// Now test the todo-service function 'undone' (it's a promise)
-			assert.expect(2)
+			expect(2)
 			var newtodo = {
 				topic: "test",
 				done: true,
 				id: 77
 			}
-			var thenable = new Promise(function(resolve, reject) {
-				todoservice.undone(newtodo).then(function() {
-					assert.ok(!newtodo.done, "newtodo.done == false")
-					assert.ok(todoservice.todos.length == 0, "todoservice.todos.length == 0")
-					resolve()
-				})
+			return todoservice.undone(newtodo).then(function() {
+				ok(!newtodo.done, "newtodo.done == false")
+				ok(todoservice.todos.length == 0, "todoservice.todos.length == 0")
 			})
-			return thenable
 		})
 
-		QUnit.test("todoservice.undone *2*", function(assert) {
-			var injector = angular.injector(["ng", "tdapp"])
-			var backend = injector.get("backend")
-			var todoservice = injector.get("todoservice")
-
+        test("undone *2*", function() {
 			// Mock backend-service function 'undoneTodo' by hand
 			// Return a response object with no data (only ok status)
 			backend.undoneTodo = function(todo) {
@@ -455,31 +379,22 @@
 					})
 				})
 			}
-
 			// Now test the todo-service function 'undone' (it's a promise)
-			assert.expect(3)
+			expect(3)
 			var newtodo = {
 				topic: "test",
 				done: true,
 				id: 42
 			}
 			todoservice.addTodoObj(newtodo)
-			var thenable = new Promise(function(resolve, reject) {
-				todoservice.undone(newtodo).then(function() {
-					assert.ok(!newtodo.done, "newtodo.done == false")
-					assert.ok(todoservice.todos.length == 1, "todoservice.todos.length == 1")
-					assert.ok(!todoservice.todos[0].done, "todoservice.todos[0].done == false")
-					resolve()
-				})
+			return todoservice.undone(newtodo).then(function() {
+				ok(!newtodo.done, "newtodo.done == false")
+				ok(todoservice.todos.length == 1, "todoservice.todos.length == 1")
+				ok(!todoservice.todos[0].done, "todoservice.todos[0].done == false")
 			})
-			return thenable
 		})
 
-		QUnit.test("todoservice.undone *3*", function(assert) {
-			var injector = angular.injector(["ng", "tdapp"])
-			var backend = injector.get("backend")
-			var todoservice = injector.get("todoservice")
-
+        test("undone *3*", function() {
 			// Mock backend-service function 'undoneTodo' by hand
 			// Return a rejection
 			backend.undoneTodo = function(todo) {
@@ -487,29 +402,20 @@
 					reject()
 				})
 			}
-
 			// Now test the todo-service function 'undone' (it's a promise)
-			assert.expect(2)
+			expect(2)
 			var newtodo = {
 				topic: "test",
 				done: true,
 				id: 42
 			}
-			var thenable = new Promise(function(resolve, reject) {
-				todoservice.undone(newtodo).catch(function(resp) {
-					assert.ok(newtodo.done, "newtodo.done == true (no change)")
-					assert.ok(resp.message != undefined, "response.message != undefined")
-					resolve()
-				})
+			return todoservice.undone(newtodo).catch(function(resp) {
+				ok(newtodo.done, "newtodo.done == true (no change)")
+				ok(resp.message != undefined, "response.message != undefined")
 			})
-			return thenable
 		})
 
-		QUnit.test("todoservice.update *1*", function(assert) {
-			var injector = angular.injector(["ng", "tdapp"])
-			var backend = injector.get("backend")
-			var todoservice = injector.get("todoservice")
-
+        test("update *1*", function() {
 			// Mock backend-service function 'putTodo' by hand
 			// Return a response object with no data (only ok status)
 			backend.putTodo = function(todo) {
@@ -519,9 +425,8 @@
 					})
 				})
 			}
-
 			// Now test the todo-service function 'update' (it's a promise)
-			assert.expect(3)
+			expect(3)
 			var newtodo = {
 				topic: "blablabla",
 				done: false,
@@ -529,22 +434,14 @@
 			}
 			todoservice.addTodoObj(newtodo)
 			newtodo.topic = "tataaa #newtag"
-			var thenable = new Promise(function(resolve, reject) {
-				todoservice.update(newtodo).then(function() {
-					assert.ok(todoservice.todos.length == 1, "todoservice.todos.length == 1")
-					assert.ok(todoservice.todos[0].topic == 'tataaa #newtag', "newtodo.topic == 'tataaa #newtag'")
-					assert.ok(todoservice.tags[0] == '#newtag',"todoservice.tags[0] == '#newtag'")
-					resolve()
-				})
+			return	todoservice.update(newtodo).then(function() {
+				ok(todoservice.todos.length == 1, "todoservice.todos.length == 1")
+				ok(todoservice.todos[0].topic == 'tataaa #newtag', "newtodo.topic == 'tataaa #newtag'")
+				ok(todoservice.tags[0] == '#newtag',"todoservice.tags[0] == '#newtag'")
 			})
-			return thenable
 		})
 
-		QUnit.test("todoservice.update *2*", function(assert) {
-			var injector = angular.injector(["ng", "tdapp"])
-			var backend = injector.get("backend")
-			var todoservice = injector.get("todoservice")
-
+        test("update *2*", function() {
 			// Mock backend-service function 'putTodo' by hand
 			// Return a rejection
 			backend.putTodo = function(todo) {
@@ -552,9 +449,8 @@
 					reject()
 				})
 			}
-
 			// Now test the todo-service function 'update' (it's a promise)
-			assert.expect(3)
+			expect(3)
 			var newtodo = {
 				topic: "tataaa",
 				done: false,
@@ -562,22 +458,14 @@
 			}
 			todoservice.addTodoObj(newtodo)
 			newtodo.topic = 'hahaha! #newtag'
-			var thenable = new Promise(function(resolve, reject) {
-				todoservice.update(newtodo).catch(function(resp) {
-					assert.ok(resp.message != undefined, "response.message != undefined")
-					assert.ok(todoservice.todos.length == 1,"todoservice.todos.length == 1")
-					assert.ok(todoservice.tags.length == 0,"todoservice.tags.length == 0 (no change)")
-					resolve()
-				})
+			return todoservice.update(newtodo).catch(function(resp) {
+				ok(resp.message != undefined, "response.message != undefined")
+				ok(todoservice.todos.length == 1,"todoservice.todos.length == 1")
+				ok(todoservice.tags.length == 0,"todoservice.tags.length == 0 (no change)")
 			})
-			return thenable
 		})
 
-		QUnit.test("todoservice.delTodo *1*", function(assert) {
-			var injector = angular.injector(["ng", "tdapp"])
-			var backend = injector.get("backend")
-			var todoservice = injector.get("todoservice")
-
+        test("delTodo *1*", function() {
 			// Mock backend-service function 'delTodo' by hand
 			// Return a response object with no data (only ok status)
 			backend.delTodo = function(todo) {
@@ -587,40 +475,28 @@
 					})
 				})
 			}
-
 			// Now test the todo-service function 'delTodo' (it's a promise)
-			assert.expect(3)
-
+			expect(3)
 			var newtodo1 = {
 				topic: "todo1",
 				done: false,
 				id: 1
 			}
 			todoservice.addTodoObj(newtodo1)
-
 			var newtodo2 = {
 				topic: "todo2",
 				done: false,
 				id: 2
 			}
 			todoservice.addTodoObj(newtodo2)
-
-			var thenable = new Promise(function(resolve, reject) {
-				todoservice.delTodo(newtodo2).then(function() {
-					assert.ok(todoservice.todos.length == 1, "todoservice.todos.length == 1")
-					assert.ok(todoservice.todos[0].topic == 'todo1', "todoservice.todos[0].topic == 'todo1'")
-					assert.ok(todoservice.tags.length == 0,"todoservice.tags.length == 0")
-					resolve()
-				})
+			return todoservice.delTodo(newtodo2).then(function() {
+				ok(todoservice.todos.length == 1, "todoservice.todos.length == 1")
+				ok(todoservice.todos[0].topic == 'todo1', "todoservice.todos[0].topic == 'todo1'")
+				ok(todoservice.tags.length == 0,"todoservice.tags.length == 0")
 			})
-			return thenable
 		})
 
-		QUnit.test("todoservice.delTodo *2*", function(assert) {
-			var injector = angular.injector(["ng", "tdapp"])
-			var backend = injector.get("backend")
-			var todoservice = injector.get("todoservice")
-
+        test("delTodo *2*", function() {
 			// Mock backend-service function 'delTodo' by hand
 			// Return a response object with no data (only ok status)
 			backend.delTodo = function(todo) {
@@ -630,40 +506,28 @@
 					})
 				})
 			}
-
 			// Now test the todo-service function 'delTodo' (it's a promise)
-			assert.expect(3)
-
+			expect(3)
 			var newtodo1 = {
 				topic: "todo1",
 				done: false,
 				id: 1
 			}
 			todoservice.addTodoObj(newtodo1)
-
 			var newtodo2 = {
 				topic: "todo2 #new",
 				done: false,
 				id: 2
 			}
 			todoservice.addTodoObj(newtodo2)
-
-			var thenable = new Promise(function(resolve, reject) {
-				todoservice.delTodo(newtodo2).then(function() {
-					assert.ok(todoservice.todos.length == 1, "todoservice.todos.length == 1")
-					assert.ok(todoservice.todos[0].topic == 'todo1', "todoservice.todos[0].topic == 'todo1'")
-					assert.ok(todoservice.tags.length == 0,"todoservice.tags.length == 0")
-					resolve()
-				})
+			return todoservice.delTodo(newtodo2).then(function() {
+				ok(todoservice.todos.length == 1, "todoservice.todos.length == 1")
+				ok(todoservice.todos[0].topic == 'todo1', "todoservice.todos[0].topic == 'todo1'")
+				ok(todoservice.tags.length == 0,"todoservice.tags.length == 0")
 			})
-			return thenable
 		})
 
-		QUnit.test("todoservice.delTodo *3*", function(assert) {
-			var injector = angular.injector(["ng", "tdapp"])
-			var backend = injector.get("backend")
-			var todoservice = injector.get("todoservice")
-
+        test("delTodo *3*", function() {
 			// Mock backend-service function 'delTodo' by hand
 			// Return a response object with no data (only ok status)
 			backend.delTodo = function(todo) {
@@ -673,40 +537,28 @@
 					})
 				})
 			}
-
 			// Now test the todo-service function 'delTodo' (it's a promise)
-			assert.expect(3)
-
+			expect(3)
 			var newtodo1 = {
 				topic: "todo1",
 				done: false,
 				id: 1
 			}
 			todoservice.addTodoObj(newtodo1)
-
 			var newtodo2 = {
 				topic: "todo2 #new",
 				done: false,
 				id: 2
 			}
 			todoservice.addTodoObj(newtodo2)
-
-			var thenable = new Promise(function(resolve, reject) {
-				todoservice.delTodo(newtodo1).then(function() {
-					assert.ok(todoservice.todos.length == 1, "todoservice.todos.length == 1")
-					assert.ok(todoservice.todos[0].topic == 'todo2 #new', "todoservice.todos[0].topic == 'todo2 #new'")
-					assert.ok(todoservice.tags.length == 1,"todoservice.tags.length == 1")
-					resolve()
-				})
+			return todoservice.delTodo(newtodo1).then(function() {
+				ok(todoservice.todos.length == 1, "todoservice.todos.length == 1")
+				ok(todoservice.todos[0].topic == 'todo2 #new', "todoservice.todos[0].topic == 'todo2 #new'")
+				ok(todoservice.tags.length == 1,"todoservice.tags.length == 1")
 			})
-			return thenable
 		})
 
-		QUnit.test("todoservice.delTodo *4*", function(assert) {
-			var injector = angular.injector(["ng", "tdapp"])
-			var backend = injector.get("backend")
-			var todoservice = injector.get("todoservice")
-
+        test("delTodo *4*", function() {
 			// Mock backend-service function 'delTodo' by hand
 			// Return a rejection
 			backend.delTodo = function(todo) {
@@ -714,24 +566,19 @@
 					reject()
 				})
 			}
-
 			// Now test the todo-service function 'delTodo' (it's a promise)
-			assert.expect(3)
+			expect(3)
 			var newtodo = {
 				topic: "rappatapapp",
 				done: false,
 				id: 64
 			}
 			todoservice.addTodoObj(newtodo)
-			var thenable = new Promise(function(resolve, reject) {
-				todoservice.delTodo(newtodo).catch(function(resp) {
-					assert.ok(resp.message != undefined, "response.message != undefined")
-					assert.ok(todoservice.todos.length == 1,"todoservice.todos.length == 1")
-					assert.ok(todoservice.tags.length == 0,"todoservice.tags.length == 0 (no change)")
-					resolve()
-				})
+			return todoservice.delTodo(newtodo).catch(function(resp) {
+				ok(resp.message != undefined, "response.message != undefined")
+				ok(todoservice.todos.length == 1,"todoservice.todos.length == 1")
+				ok(todoservice.tags.length == 0,"todoservice.tags.length == 0 (no change)")
 			})
-			return thenable
 		})
 
 	</script>

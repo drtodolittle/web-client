@@ -5,7 +5,7 @@
 
 */
 
-tdapp.service("todoservice", function(backend, $q) { // ToDoManager
+tdapp.service("todoservice", function(backend) { // ToDoManager
 
     // Data
 
@@ -38,7 +38,7 @@ tdapp.service("todoservice", function(backend, $q) { // ToDoManager
     // Functions with backend interaction
 
     service.getTodos = function() {
-        return $q(function(resolve, reject) {
+        return new Promise(function(resolve, reject) {
             backend.getTodos().then(function(response) {
                     service.clearTodos()
                     if(response != undefined){
@@ -54,7 +54,7 @@ tdapp.service("todoservice", function(backend, $q) { // ToDoManager
         })
     }
     service.create = function(newtodo) {
-        return $q(function(resolve, reject) {
+        return new Promise(function(resolve, reject) {
             backend.postTodo(newtodo).then(function(response) {
                 newtodo.id = response.data.id
                 backend.incTodosTotal()
@@ -69,7 +69,7 @@ tdapp.service("todoservice", function(backend, $q) { // ToDoManager
         })
     }
     service.done = function(item) {
-        return $q(function(resolve, reject) {
+        return new Promise(function(resolve, reject) {
             backend.doneTodo(item).then(function() {
                 item.done = true
                 _update(item)
@@ -83,7 +83,7 @@ tdapp.service("todoservice", function(backend, $q) { // ToDoManager
         })
     }
     service.undone = function(item) {
-        return $q(function(resolve, reject) {
+        return new Promise(function(resolve, reject) {
             backend.undoneTodo(item).then(function() {
                 item.done = false
                 _update(item)
@@ -97,7 +97,7 @@ tdapp.service("todoservice", function(backend, $q) { // ToDoManager
         })
     }
     service.update = function(todo) {
-        return $q(function(resolve, reject) {
+        return new Promise(function(resolve, reject) {
             backend.putTodo(todo).then(function() {
                 service.checkForHashtag(todo)
                 _updateTags()
@@ -111,7 +111,7 @@ tdapp.service("todoservice", function(backend, $q) { // ToDoManager
         })
     }
     service.delTodo = function(item) {
-        return $q(function(resolve, reject) {
+        return new Promise(function(resolve, reject) {
             backend.delTodo(item).then(function() {
                 backend.incTodosDeleted()
                 var idx = service.todos.indexOf(item)

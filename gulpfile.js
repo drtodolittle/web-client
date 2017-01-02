@@ -69,7 +69,6 @@ gulp.task('bowerjs', function() {
   gulp.src([
     config.bowerDir + '/angular/angular.min.js',
     config.bowerDir + '/angular/angular.js',
-    config.bowerDir + '/angular/angular-mocks.js',
     config.bowerDir + '/angular/angular.min.js.map',
     config.bowerDir + '/angular-route/angular-route.min.js',
     config.bowerDir + '/angular-route/angular-route.js',

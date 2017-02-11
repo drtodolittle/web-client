@@ -280,6 +280,7 @@ tdapp.controller("mainCtrl", function(
         }
         if (error.data == null) {
             showError("A backend problem occured. Please try again later.")
+            console.log(error) // Because of a lot of backend erros today (11.02.2017)
         }
     })
     else {

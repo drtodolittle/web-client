@@ -35,6 +35,22 @@ tdapp.service("todoservice", function(backend) { // ToDoManager
         })
     }
 
+    var _sort = function(tags){
+        return tags.sort(
+            function(a, b) {
+                var tagA = a.toUpperCase();
+                var tagB = b.toUpperCase();
+                if (tagA < tagB) {
+                    return -1;
+                }
+                if (tagA > tagB) {
+                    return 1;
+                }
+                return 0;
+          }
+        )
+    }
+
     // Functions with backend interaction
 
     service.getTodos = function() {
@@ -173,9 +189,10 @@ tdapp.service("todoservice", function(backend) { // ToDoManager
             }
             s = todo.topic.indexOf('#', e)
         }
+        service.tags = _sort(service.tags)
     }
     service.getTags = function() {
-        return service.tags
+        return _sort(service.tags)
     }
     service.getTodosByTag = function(tag, done) { // Assuming the tag starts with #
         if (tag == '' || tag == 'All' || tag == undefined) {

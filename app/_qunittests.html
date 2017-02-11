@@ -159,8 +159,8 @@
 			ok(todo.tags.length == 2, "todo with tags #test and #new -> todo.tags.length==2")
 			ok(todo.tags[0] == '#test', "todo with tags #test and #new -> todo.tags[0]=='#test'")
 			ok(todo.tags[1] == '#new', "todo with tags #test and #new -> todo.tags[1]=='#new'")
-			ok(todoservice.tags[0] == '#test', "todo with tags #test and #new -> todoservice.tags[0]=='#test'")
-			ok(todoservice.tags[1] == '#new', "todo with tags #test and #new -> todoservice.tags[1]=='#new'")
+			ok(todoservice.tags[0] == '#new', "todo with tags #test and #new -> todoservice.tags[0]=='#test'")
+			ok(todoservice.tags[1] == '#test', "todo with tags #test and #new -> todoservice.tags[1]=='#new'")
 		})
 
         test("getTodosByTag *2*", function() {

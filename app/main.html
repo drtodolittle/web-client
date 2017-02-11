@@ -45,7 +45,7 @@
 						<span class="mo glyphicon glyphicon-trash" contenteditable="false" ng-click="deltodo(todo)" data-toggle="tooltip" data-placement="top" title="Delete"></span>
 					</span>
 				</span>
-				<span id="todocontent{{todo.id}}" e-ng-keypress="editTodoKeydown($event,todo.id)" editable-textarea="todo.topic" e-rows="8" e-cols="20" onbeforesave="saveedittodo(todo)">
+				<span id="todocontent{{todo.id}}" e-ng-keypress="editTodoKeydown($event,todo.id)" editable-textarea="todo.topic" e-rows="8" e-cols="20" onbeforesave="saveedittodo(todo,$data)">
 					{{ todo.topic }}
 				</span>
 			</span>

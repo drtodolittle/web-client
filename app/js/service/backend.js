@@ -77,13 +77,14 @@ tdapp.service('backend', function($q, $http, $firebaseAuth, appdata, localStorag
         })
     }
     this.putTodo = function(obj) {
+        var jsobj = JSON.stringify(obj)
         return $q(function(resolve,reject){
             _refreshToken().then(function(){
                 $http({
                     method: "put",
                     url: appdata.server + "/" + obj.id,
                     header: "application/json",
-                    data: obj,
+                    data: jsobj,
                     timeout: 5000
                 }).then(function(resp){
                     resolve(resp)

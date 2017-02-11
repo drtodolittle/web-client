@@ -147,7 +147,8 @@ tdapp.controller("mainCtrl", function(
         }
     }
 
-    $scope.saveedittodo = function(todo) {
+    $scope.saveedittodo = function(todo,data) {
+        todo.topic = data.replace(/"/g, '\\"') // Avoid server error (if " is used in todo topic)
         $scope.showedit = false
         var otodotopic = todo.topic
         todoservice.update(todo).then(function() {

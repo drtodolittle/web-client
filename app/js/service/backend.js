@@ -46,7 +46,7 @@ tdapp.service('backend', function($q, $http, $firebaseAuth, appdata, localStorag
                 $http({
                     method: "get",
                     url: appdata.server,
-                    timeout: 3000
+                    timeout: 5000
                 }).then(function(resp){
                     resolve(resp)
                 }).catch(function(resp){
@@ -63,7 +63,7 @@ tdapp.service('backend', function($q, $http, $firebaseAuth, appdata, localStorag
                 $http({
                     method: "post",
                     url: appdata.server,
-                    timeout: 3000,
+                    timeout: 5000,
                     header: "application/json",
                     data: obj
                 }).then(function(resp){
@@ -84,7 +84,7 @@ tdapp.service('backend', function($q, $http, $firebaseAuth, appdata, localStorag
                     url: appdata.server + "/" + obj.id,
                     header: "application/json",
                     data: obj,
-                    timeout: 3000
+                    timeout: 5000
                 }).then(function(resp){
                     resolve(resp)
                 }).catch(function(resp){
@@ -102,7 +102,7 @@ tdapp.service('backend', function($q, $http, $firebaseAuth, appdata, localStorag
                     method: "delete",
                     url: appdata.server + "/" + obj.id,
                     header: "application/json",
-                    timeout: 3000,
+                    timeout: 5000,
                     data: obj
                 }).then(function(resp){
                     resolve(resp)
@@ -120,7 +120,7 @@ tdapp.service('backend', function($q, $http, $firebaseAuth, appdata, localStorag
                 $http({
                     method: "get",
                     url: appdata.server + "/" + obj.id + "/done",
-                    timeout: 3000
+                    timeout: 5000
                 }).then(function(resp){
                     resolve(resp)
                 }).catch(function(resp){
@@ -137,7 +137,7 @@ tdapp.service('backend', function($q, $http, $firebaseAuth, appdata, localStorag
                 $http({
                     method: "get",
                     url: appdata.server + "/" + obj.id + "/undone",
-                    timeout: 3000
+                    timeout: 5000
                 }).then(function(resp){
                     resolve(resp)
                 }).catch(function(resp){
@@ -148,182 +148,6 @@ tdapp.service('backend', function($q, $http, $firebaseAuth, appdata, localStorag
             })
         })
     }
-
-    // Old Dr ToDo Little backend (with token refresh for each interaction)
-
-    /*
-    this.getTodos = function(){
-        return $q(function(resolve,reject){
-            $http({
-                method: "get",
-                url: appdata.server,
-                timeout: 3000
-            }).then(function (resp){
-                _refreshToken().then(function(){
-                    resolve(resp)
-                }).catch(function(x){
-                    reject()
-                })
-            }).catch(function(){
-                reject()
-            })
-        })
-    }
-    this.postTodo = function(obj) {
-        return $q(function(resolve,reject){
-            $http({
-                method: "post",
-                url: appdata.server,
-                timeout: 3000,
-                header: "application/json",
-                data: obj
-            })
-            .then(function(resp){
-                _refreshToken().then(function(x){
-                    resolve(resp)
-                }).catch(function(x){
-                    reject()
-                })
-            })
-            .catch(function(resp){
-                reject(resp)
-            })
-        })
-    }
-    this.putTodo = function(obj) {
-        return $q(function(resolve,reject){
-            $http({
-                method: "put",
-                url: appdata.server + "/" + obj.id,
-                header: "application/json",
-                data: obj,
-                timeout: 3000
-            })
-            .then(function(resp){
-                _refreshToken().then(function(x){
-                    resolve(resp)
-                }).catch(function(x){
-                    reject()
-                })
-            })
-            .catch(function(resp){
-                reject(resp)
-            })
-        })
-    }
-    this.delTodo = function(obj) {
-        return $q(function(resolve,reject){
-            $http({
-                method: "delete",
-                url: appdata.server + "/" + obj.id,
-                header: "application/json",
-                timeout: 3000,
-                data: obj
-            })
-            .then(function(resp){
-                _refreshToken().then(function(x){
-                    resolve(resp)
-                }).catch(function(x){
-                    reject()
-                })
-            })
-            .catch(function(resp){
-                reject(resp)
-            })
-        })
-    }
-    this.doneTodo = function(obj) {
-        return $q(function(resolve,reject){
-            $http({
-                method: "get",
-                url: appdata.server + "/" + obj.id + "/done",
-                timeout: 3000
-            })
-            .then(function(resp){
-                _refreshToken().then(function(x){
-                    resolve(resp)
-                }).catch(function(x){
-                    reject()
-                })
-            })
-            .catch(function(resp){
-                reject(resp)
-            })
-        })
-    }
-    this.undoneTodo = function(obj) {
-        return $q(function(resolve,reject){
-            $http({
-                method: "get",
-                url: appdata.server + "/" + obj.id + "/undone",
-                timeout: 3000
-            })
-            .then(function(resp){
-                _refreshToken().then(function(x){
-                    resolve(resp)
-                }).catch(function(x){
-                    reject()
-                })
-            })
-            .catch(function(resp){
-                reject(resp)
-            })
-        })
-    }
-    */
-
-    // Very old Dr ToDo Little backend (without token refresh)
-
-    /*
-    this.postTodo = function(obj) {
-        return $http({
-            method: "post",
-            url: appdata.server,
-			timeout: 3000,
-            header: "application/json",
-            data: obj
-        })
-    }
-    this.putTodo = function(obj) {
-        return $http({
-            method: "put",
-            url: appdata.server + "/" + obj.id,
-            header: "application/json",
-            data: obj,
-            timeout: 3000
-        })
-    }
-    this.delTodo = function(obj) {
-        return $http({
-            method: "delete",
-            url: appdata.server + "/" + obj.id,
-            header: "application/json",
-            timeout: 3000,
-            data: obj
-        })
-    }
-    this.doneTodo = function(obj) {
-        return $http({
-            method: "get",
-            url: appdata.server + "/" + obj.id + "/done",
-            timeout: 3000
-        })
-    }
-    this.undoneTodo = function(obj) {
-        return $http({
-            method: "get",
-            url: appdata.server + "/" + obj.id + "/undone",
-            timeout: 3000
-        })
-    }
-    this.getTodos = function() {
-        return $http({
-            method: "get",
-            url: appdata.server,
-            timeout: 3000
-        })
-    }
-    */
 
     // Firebase realtime database backend
 

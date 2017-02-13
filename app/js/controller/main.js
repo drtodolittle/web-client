@@ -22,6 +22,11 @@ tdapp.controller("mainCtrl", function(
 
     $scope.showdone = false;
 
+    // Hashtags
+
+    $scope.showhashtags = false;
+    $scope.hashtagptr = 0;
+
     // Initial todotextarea count setting / maximal length of todo
 
     $scope.todotxtacount = 0
@@ -36,6 +41,19 @@ tdapp.controller("mainCtrl", function(
             }
             $scope.todotxtacount = len
         }
+        if($scope.showhashtags){
+            var html = ""
+            todoservice.tags.forEach(function(t){
+                html += '<p id=tag' + todoservice.tags.indexOf(t) + '>' + t + '</p>';
+            })
+            $('#hashtags').html(html);
+            $('#hashtags').css('visibility','visible');
+            $('#tag'+$scope.hashtagptr).css('background','#eeeeee')
+        } else {
+            // Clear shown hashtags
+            $('#hashtags').html('');
+            $('#hashtags').css('visibility','hidden');
+        }
     }, 64)
 
     // Keyboard
@@ -44,6 +62,13 @@ tdapp.controller("mainCtrl", function(
         var k = e.keyCode;
         if (k == 13) { // Return
             e.preventDefault();
+            if($scope.showhashtags){
+                var selht = todoservice.tags[$scope.hashtagptr];
+                $('#todotxta').val($scope.newtodotxt + selht.substring(1,selht.length));
+                $scope.newtodotxt = $('#todotxta').val();
+                $scope.showhashtags = false;
+                return
+            }
             if ($scope.newtodotxt != "") {
                 var newtodo = {}
                 newtodo.topic = $scope.newtodotxt
@@ -61,9 +86,39 @@ tdapp.controller("mainCtrl", function(
         }
         if (k == 9) { // Tab
             e.preventDefault();
+            $scope.showhashtags = false;
             return
         }
         if (k == 8 || k == 37 || k == 39 || k == 46) { // Back + Left + Right + Del
+            $scope.showhashtags = false;
+            return
+        }
+        if (k == 163) { // Hashkey
+            if(todoservice.tags.length > 0){
+                $scope.showhashtags = true;
+                $scope.hashtagptr = 0;
+                $('#tag'+$scope.hashtagptr).css('background','#eeeeee')
+            }
+            return
+        }
+        if (k == 38){ // Up (for selecting a hashtag)
+            if($scope.showhashtags){
+                $('#tag'+$scope.hashtagptr).css('background','#ffffff')
+                $scope.hashtagptr--;
+                if($scope.hashtagptr < 0){
+                    $scope.hashtagptr = todoservice.tags.length-1;
+                }
+            }
+            return
+        }
+        if (k == 40){ // Down (for selecting a hashtag)
+            if($scope.showhashtags){
+                $('#tag'+$scope.hashtagptr).css('background','#ffffff')
+                $scope.hashtagptr++;
+                if($scope.hashtagptr >= todoservice.tags.length){
+                    $scope.hashtagptr = 0;
+                }
+            }
             return
         }
         // Limit amount of characters in todotextarea
@@ -75,6 +130,7 @@ tdapp.controller("mainCtrl", function(
             e.preventDefault()
             return
         }
+        $scope.showhashtags = false;
     }
 
     $scope.editTodoKeydown = function(e,id) {

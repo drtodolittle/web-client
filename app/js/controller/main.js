@@ -26,6 +26,7 @@ tdapp.controller("mainCtrl", function(
 
     $scope.showhashtags = false;
     $scope.hashtagptr = 0;
+    $scope.hashtagpos = 0;
 
     // Initial todotextarea count setting / maximal length of todo
 
@@ -64,7 +65,11 @@ tdapp.controller("mainCtrl", function(
             e.preventDefault();
             if($scope.showhashtags){
                 var selht = todoservice.tags[$scope.hashtagptr];
-                $('#todotxta').val($scope.newtodotxt + selht.substring(1,selht.length));
+                var curpos = $scope.hashtagpos;
+                var curin = $scope.newtodotxt
+                var pre = curin.substring(0,curpos);
+                var pos = curin.substring(curpos+1,curin.length+1);
+                $('#todotxta').val(pre + selht + pos);
                 $scope.newtodotxt = $('#todotxta').val();
                 $scope.showhashtags = false;
                 return
@@ -95,6 +100,27 @@ tdapp.controller("mainCtrl", function(
         }
         if (k == 163) { // Hashkey
             if(todoservice.tags.length > 0){
+
+                jQuery.fn.getSelectionStart = function(){
+                	if(this.lengh == 0) return -1;
+                	var input = this[0];
+                	var pos = input.value.length;
+                	if (input.createTextRange) {
+                		var r = document.selection.createRange().duplicate();
+                		r.moveEnd('character', input.value.length);
+                		if (r.text == '')
+                		pos = input.value.length;
+                		pos = input.value.lastIndexOf(r.text);
+                	} else if(typeof(input.selectionStart)!="undefined")
+                	pos = input.selectionStart;
+                	return pos;
+                }
+                jQuery.fn.getCursorPosition = function(){
+                	if(this.lengh == 0) return -1;
+                	return $(this).getSelectionStart();
+                }
+
+                $scope.hashtagpos = $('#todotxta').getCursorPosition();
                 $scope.showhashtags = true;
                 $scope.hashtagptr = 0;
                 $('#tag'+$scope.hashtagptr).css('background','#eeeeee')

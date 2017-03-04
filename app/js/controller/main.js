@@ -28,6 +28,26 @@ tdapp.controller("mainCtrl", function(
     $scope.hashtagptr = 0;
     $scope.hashtagpos = 0;
 
+    function _showht(){
+        if(todoservice.tags.length > 0){
+            $scope.showhashtags = true;
+            $scope.hashtagptr = 0;
+            var html = '';
+            todoservice.tags.forEach(function(t){
+                html += '<p id=tag' + todoservice.tags.indexOf(t) + '>' + t + '</p>';
+            })
+            $('#hashtags').html(html);
+            $('#hashtags').css('visibility','visible');
+            $('#tag'+$scope.hashtagptr).css('background','#eeeeee')
+        }
+    }
+    function _hideht(){
+        $scope.showhashtags = false;
+        $scope.hashtagptr = 0;
+        $('#hashtags').html('');
+        $('#hashtags').css('visibility','hidden');
+    }
+
     // Initial todotextarea count setting / maximal length of todo
 
     $scope.todotxtacount = 0
@@ -41,19 +61,6 @@ tdapp.controller("mainCtrl", function(
                 len = $scope._maxlen
             }
             $scope.todotxtacount = len
-        }
-        if($scope.showhashtags){
-            var html = ""
-            todoservice.tags.forEach(function(t){
-                html += '<p id=tag' + todoservice.tags.indexOf(t) + '>' + t + '</p>';
-            })
-            $('#hashtags').html(html);
-            $('#hashtags').css('visibility','visible');
-            $('#tag'+$scope.hashtagptr).css('background','#eeeeee')
-        } else {
-            // Clear shown hashtags
-            $('#hashtags').html('');
-            $('#hashtags').css('visibility','hidden');
         }
     }, 64)
 
@@ -71,7 +78,7 @@ tdapp.controller("mainCtrl", function(
                 var pos = curin.substring(curpos+1,curin.length+1);
                 $('#todotxta').val(pre + selht + pos);
                 $scope.newtodotxt = $('#todotxta').val();
-                $scope.showhashtags = false;
+                _hideht();
                 return
             }
             if ($scope.newtodotxt != "") {
@@ -87,20 +94,21 @@ tdapp.controller("mainCtrl", function(
                     showError(error.message)
                 })
             }
+            _hideht();
             return
         }
         if (k == 9) { // Tab
             e.preventDefault();
-            $scope.showhashtags = false;
+            _hideht();
             return
         }
         if (k == 8 || k == 37 || k == 39 || k == 46) { // Back + Left + Right + Del
-            $scope.showhashtags = false;
+            _hideht();
             return
         }
         if (k == 163) { // Hashkey
             if(todoservice.tags.length > 0){
-
+                _showht();
                 jQuery.fn.getSelectionStart = function(){
                 	if(this.lengh == 0) return -1;
                 	var input = this[0];
@@ -119,10 +127,7 @@ tdapp.controller("mainCtrl", function(
                 	if(this.lengh == 0) return -1;
                 	return $(this).getSelectionStart();
                 }
-
                 $scope.hashtagpos = $('#todotxta').getCursorPosition();
-                $scope.showhashtags = true;
-                $scope.hashtagptr = 0;
                 $('#tag'+$scope.hashtagptr).css('background','#eeeeee')
             }
             return
@@ -134,6 +139,7 @@ tdapp.controller("mainCtrl", function(
                 if($scope.hashtagptr < 0){
                     $scope.hashtagptr = todoservice.tags.length-1;
                 }
+                $('#tag'+$scope.hashtagptr).css('background','#eeeeee')
             }
             return
         }
@@ -144,6 +150,7 @@ tdapp.controller("mainCtrl", function(
                 if($scope.hashtagptr >= todoservice.tags.length){
                     $scope.hashtagptr = 0;
                 }
+                $('#tag'+$scope.hashtagptr).css('background','#eeeeee')
             }
             return
         }
@@ -156,7 +163,6 @@ tdapp.controller("mainCtrl", function(
             e.preventDefault()
             return
         }
-        $scope.showhashtags = false;
     }
 
     $scope.editTodoKeydown = function(e,id) {

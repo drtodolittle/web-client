@@ -24,28 +24,74 @@ tdapp.controller("mainCtrl", function(
 
     // Hashtags
 
-    $scope.showhashtags = false;
-    $scope.hashtagptr = 0;
-    $scope.hashtagpos = 0;
+    jQuery.fn.getSelectionStart = function(){
+        if(this.lengh == 0) return -1;
+        var input = this[0];
+        var pos = input.value.length;
+        if (input.createTextRange) {
+            var r = document.selection.createRange().duplicate();
+            r.moveEnd('character', input.value.length);
+            if (r.text == '')
+            pos = input.value.length;
+            pos = input.value.lastIndexOf(r.text);
+        } else if(typeof(input.selectionStart)!="undefined")
+        pos = input.selectionStart;
+        return pos;
+    }
+
+    jQuery.fn.getCursorPosition = function(){
+        if(this.lengh == 0) return -1;
+        return $(this).getSelectionStart();
+    }
+
+    $scope.hashtags = {
+        show : false,
+        ptr : 0,
+        hashtagpos : 0,
+        hashtaginput : '#'
+    }
+
+    //$scope.showhashtags = false;
+    //$scope.hashtagptr = 0;
+    //$scope.hashtagpos = 0;
 
     function _showht(){
         if(todoservice.tags.length > 0){
-            $scope.showhashtags = true;
-            $scope.hashtagptr = 0;
+            $scope.hashtags.show = true;
+            $scope.hashtags.ptr = 0;
             var html = '';
             todoservice.tags.forEach(function(t){
                 html += '<p id=tag' + todoservice.tags.indexOf(t) + '>' + t + '</p>';
             })
             $('#hashtags').html(html);
             $('#hashtags').css('visibility','visible');
-            $('#tag'+$scope.hashtagptr).css('background','#eeeeee')
+            $('#tag'+$scope.hashtags.ptr).css('background','#eeeeee')
         }
     }
     function _hideht(){
-        $scope.showhashtags = false;
-        $scope.hashtagptr = 0;
+        $scope.hashtags.show = false;
+        $scope.hashtags.ptr = 0;
         $('#hashtags').html('');
         $('#hashtags').css('visibility','hidden');
+    }
+    function _updateht(){
+        var html = '';
+        var idx = -1;
+        todoservice.tags.forEach(function(t){
+            if(t.startsWith($scope.hashtags.hashtaginput)){
+                if(idx == -1){
+                    idx = todoservice.tags.indexOf(t);
+                }
+                html += '<p id=tag' + todoservice.tags.indexOf(t) + '>' + t + '</p>';
+            }
+        })
+        if(html==''){
+            $scope.hashtags.show = false;
+        }
+        $scope.hashtags.ptr = idx;
+        $('#hashtags').html(html);
+        $('#hashtags').css('visibility','visible');
+        $('#tag'+$scope.hashtags.ptr).css('background','#eeeeee')
     }
 
     // Initial todotextarea count setting / maximal length of todo
@@ -70,12 +116,13 @@ tdapp.controller("mainCtrl", function(
         var k = e.keyCode;
         if (k == 13) { // Return
             e.preventDefault();
-            if($scope.showhashtags){
-                var selht = todoservice.tags[$scope.hashtagptr];
-                var curpos = $scope.hashtagpos;
+            if($scope.hashtags.show){
+                var selht = todoservice.tags[$scope.hashtags.ptr];
+                var curpos = $scope.hashtags.hashtagpos;
                 var curin = $scope.newtodotxt
                 var pre = curin.substring(0,curpos);
                 var pos = curin.substring(curpos+1,curin.length+1);
+                pos = pos.substring($scope.hashtags.hashtaginput.length-1,pos.length);
                 $('#todotxta').val(pre + selht + pos);
                 $scope.newtodotxt = $('#todotxta').val();
                 _hideht();
@@ -100,57 +147,51 @@ tdapp.controller("mainCtrl", function(
         if (k == 9) { // Tab
             e.preventDefault();
             _hideht();
-            return
+            return;
         }
         if (k == 8 || k == 37 || k == 39 || k == 46) { // Back + Left + Right + Del
-            _hideht();
-            return
+            if ($scope.hashtags.show) {
+                if (k == 8) {
+                    var htinp = $scope.hashtags.hashtaginput;
+                    var redin = htinp.substring(0,htinp.length-1)
+                    $scope.hashtags.hashtaginput = redin;
+                    if (redin.length<=0) {
+                        _hideht();
+                    } else {
+                        _updateht();
+                    }
+                }
+            }
+            return;
         }
         if (k == 163) { // Hashkey
             if(todoservice.tags.length > 0){
                 _showht();
-                jQuery.fn.getSelectionStart = function(){
-                	if(this.lengh == 0) return -1;
-                	var input = this[0];
-                	var pos = input.value.length;
-                	if (input.createTextRange) {
-                		var r = document.selection.createRange().duplicate();
-                		r.moveEnd('character', input.value.length);
-                		if (r.text == '')
-                		pos = input.value.length;
-                		pos = input.value.lastIndexOf(r.text);
-                	} else if(typeof(input.selectionStart)!="undefined")
-                	pos = input.selectionStart;
-                	return pos;
-                }
-                jQuery.fn.getCursorPosition = function(){
-                	if(this.lengh == 0) return -1;
-                	return $(this).getSelectionStart();
-                }
-                $scope.hashtagpos = $('#todotxta').getCursorPosition();
-                $('#tag'+$scope.hashtagptr).css('background','#eeeeee')
+                $scope.hashtags.hashtaginput = "#";
+                $scope.hashtags.hashtagpos = $('#todotxta').getCursorPosition();
+                $('#tag'+$scope.hashtags.hashtagptr).css('background','#eeeeee')
             }
             return
         }
         if (k == 38){ // Up (for selecting a hashtag)
-            if($scope.showhashtags){
-                $('#tag'+$scope.hashtagptr).css('background','#ffffff')
-                $scope.hashtagptr--;
-                if($scope.hashtagptr < 0){
-                    $scope.hashtagptr = todoservice.tags.length-1;
+            if($scope.hashtags.show){
+                $('#tag'+$scope.hashtags.ptr).css('background','#ffffff')
+                $scope.hashtags.ptr--;
+                if($scope.hashtags.ptr < 0){
+                    $scope.hashtags.ptr = todoservice.tags.length-1;
                 }
-                $('#tag'+$scope.hashtagptr).css('background','#eeeeee')
+                $('#tag'+$scope.hashtags.ptr).css('background','#eeeeee')
             }
             return
         }
         if (k == 40){ // Down (for selecting a hashtag)
-            if($scope.showhashtags){
-                $('#tag'+$scope.hashtagptr).css('background','#ffffff')
-                $scope.hashtagptr++;
-                if($scope.hashtagptr >= todoservice.tags.length){
-                    $scope.hashtagptr = 0;
+            if($scope.hashtags.show){
+                $('#tag'+$scope.hashtags.ptr).css('background','#ffffff')
+                $scope.hashtags.ptr++;
+                if($scope.hashtags.ptr >= todoservice.tags.length){
+                    $scope.hashtags.ptr = 0;
                 }
-                $('#tag'+$scope.hashtagptr).css('background','#eeeeee')
+                $('#tag'+$scope.hashtags.ptr).css('background','#eeeeee')
             }
             return
         }
@@ -162,6 +203,13 @@ tdapp.controller("mainCtrl", function(
             $scope.todotxtacount = $scope._maxlen
             e.preventDefault()
             return
+        }
+        // Add new character to hashtaginput (if # was entered before)
+        if($scope.hashtags.show){
+            if(e.key!="Shift"){
+                $scope.hashtags.hashtaginput += e.key;
+            }
+            _updateht();
         }
     }
 

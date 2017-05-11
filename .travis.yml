@@ -8,7 +8,10 @@ script: gulp travis-build
 after_success:
   - docker login -e $DOCKER_EMAIL -u $DOCKER_USER -p $DOCKER_PASS
   - export REPO=drtodolittle/web-client
+  - export TAG=1.0.0-SNAPSHOT
   - docker build -f Dockerfile -t $REPO:latest .
+  - docker tag $REPO:latest $REPO:$TAG
+  - docker tag $REPO:latest $REPO:latest
   - docker push $REPO
 env:
   global:

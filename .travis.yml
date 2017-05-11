@@ -2,8 +2,8 @@ language: node.js
 service: docker
 before_script:
 - npm install
-- bower install
-script: gulp build
+
+script: gulp travis-build
 after_success:
   - docker login -e $DOCKER_EMAIL -u $DOCKER_USER -p $DOCKER_PASS
   - export REPO=drtodolittle/web-client

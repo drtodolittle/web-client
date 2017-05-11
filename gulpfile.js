@@ -30,6 +30,10 @@ gulp.task('jenkins-build', function() {
   runSequence('bower', ['templates', 'html', 'images', 'css', 'js', 'bowerjs', 'bowercss', 'bowerfonts'], 'publish');
 })
 
+gulp.task('travis-build', function() {
+  runSequence('bower', ['templates', 'html', 'images', 'css', 'js', 'bowerjs', 'bowercss', 'bowerfonts']);
+})
+
 gulp.task('webserver', function() {
   gulp.src(config.destPath)
     .pipe(webserver({

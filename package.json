@@ -18,7 +18,7 @@
   "homepage": "https://github.com/drtodolittle/web-client#readme",
   "devDependencies": {
     "del": "^2.2.2",
-    "fs": "0.0.1-security",
+    "fs": "0.0.2",
     "gulp": "^3.9.1",
     "bower": "^1.7.9",
     "gulp-bower": "0.0.13",
@@ -27,7 +27,7 @@
     "gulp-jsdoc-to-markdown": "^1.2.2",
     "gulp-ng-annotate": "^2.0.0",
     "gulp-rename": "^1.2.2",
-    "gulp-string-replace": "^0.2.0",
+    "gulp-string-replace": "^0.4.0",
     "gulp-strip-debug": "^1.1.0",
     "gulp-uglify": "^2.0.0",
     "gulp-util": "^3.0.7",

@@ -1,0 +1,3 @@
+# Remove all files from docker build contexct and add only the dist directory
+**/*
+!dist

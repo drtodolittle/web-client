@@ -1,5 +1,6 @@
 language: node.js
-service: docker
+services:
+- docker
 before_script:
 - npm install
 - npm install -g gulp

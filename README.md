@@ -1,5 +1,7 @@
 # web-client
 
+[![Greenkeeper badge](https://badges.greenkeeper.io/drtodolittle/web-client.svg)](https://greenkeeper.io/)
+
 ## Bauen und Ausführen der App
 
 1. npm install

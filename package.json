@@ -29,7 +29,7 @@
     "gulp-rename": "^1.2.2",
     "gulp-string-replace": "^0.4.0",
     "gulp-strip-debug": "^1.1.0",
-    "gulp-uglify": "^2.0.0",
+    "gulp-uglify": "^3.0.0",
     "gulp-util": "^3.0.7",
     "gulp-webserver": "^0.9.1",
     "run-sequence": "^1.2.2"

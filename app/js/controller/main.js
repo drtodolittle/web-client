@@ -116,6 +116,10 @@ tdapp.controller("mainCtrl", function(
         var k = e.keyCode;
         if (k == 13) { // Return
             e.preventDefault();
+            if($scope.newtodotxt == "" || $('#todotxta').val().length == 0){
+                showInfo('Please enter some text!');
+                return;
+            }
             if($scope.hashtags.show){
                 var selht = todoservice.tags[$scope.hashtags.ptr];
                 var curpos = $scope.hashtags.hashtagpos;

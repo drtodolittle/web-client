@@ -66,7 +66,7 @@ tdapp.config(function(
 
 // Check for test envirionment
 
-var serverurl = "https://rest-api.sloppy.zone/api/todos";
+var serverurl = "https://app.drtodolittle.de/api/todos";
 if (window.location.host.startsWith("test")) {
     serverurl = "http://test.drtodolittle.de/api/todos";
 }

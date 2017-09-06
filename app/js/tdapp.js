@@ -66,7 +66,7 @@ tdapp.config(function(
 
 // Check for test envirionment
 
-var serverurl = "http://api.drtodolittle.de/api/todos";
+var serverurl = "https://api.drtodolittle.de/api/todos";
 if (window.location.host.startsWith("test")) {
     serverurl = "http://test.drtodolittle.de/api/todos";
 }

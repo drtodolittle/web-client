@@ -17,10 +17,10 @@
   },
   "homepage": "https://github.com/drtodolittle/web-client#readme",
   "devDependencies": {
+    "bower": "^1.7.9",
     "del": "^2.2.2",
     "fs": "0.0.2",
     "gulp": "^3.9.1",
-    "bower": "^1.7.9",
     "gulp-bower": "0.0.13",
     "gulp-concat": "^2.6.0",
     "gulp-iife": "^0.3.0",

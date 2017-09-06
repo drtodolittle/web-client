@@ -123,7 +123,7 @@ gulp.task('templates', function() {
 });
 
 gulp.task('html', function() {
-    return gulp.src([config.srcPath + '/*.html', config.srcPath + '/favicon.ico'])
+    return gulp.src([config.srcPath + '/*.html', config.srcPath + '/favicon.ico', config.srcPath + '/_redirects'])
         .pipe(gulp.dest(config.destPath));
 });
 

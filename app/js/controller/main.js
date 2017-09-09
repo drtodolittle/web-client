@@ -110,6 +110,13 @@ tdapp.controller("mainCtrl", function(
         }
     }, 64)
 
+    // Initial todo counting
+
+    $scope.numOfTodos = {
+        current : 0,
+        all : 0
+    };
+
     // Keyboard
 
     $scope.newtodoKeydown = function(e) {
@@ -347,6 +354,7 @@ tdapp.controller("mainCtrl", function(
         } else {
             $scope.todos = todoservice.getTodosByTag($scope.filtertag, $scope.showdone);
         }
+        $scope.numOfTodos.current = $scope.todos.length;
     }
 
     // Get/Prepare todos
@@ -357,6 +365,7 @@ tdapp.controller("mainCtrl", function(
     }
     if (_t != null)
     todoservice.getTodos().then(function(todos) {
+        $scope.numOfTodos.all = todos.length;
         $('#todoarea').css('visibility',"visible")
         // Check for previews url
         if($scope._url != "/" && $scope._url != "/todos/open/all"){
@@ -366,6 +375,7 @@ tdapp.controller("mainCtrl", function(
         // Normal
         $scope.todos = todoservice.getTodosByTag($scope.filtertag, $scope.showdone);
         $scope.tags = todoservice.getTags();
+        $scope.numOfTodos.current = $scope.todos.length;
         // Routeparams
         if ( // Direct
             $routeParams.type != undefined &&
@@ -396,6 +406,7 @@ tdapp.controller("mainCtrl", function(
                 $scope.showdone = true;
             }
             $scope.filtertag = '#' + $routeParams.id
+            $scope.numOfTodos.current = $scope.todos.length;
         }
         if ( // All
             $routeParams.type != undefined &&
@@ -409,6 +420,7 @@ tdapp.controller("mainCtrl", function(
                 $scope.showdone = true
                 $scope.todos = todoservice.getTodosByTag('All', $scope.showdone)
             }
+            $scope.numOfTodos.current = $scope.todos.length;
         }
         $("#todotxta").focus();
     }).catch(function(error) {

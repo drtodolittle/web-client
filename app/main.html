@@ -11,6 +11,7 @@
 				  <a href="" ng-click="displaytodos(tag)">{{tag}}</a>
 			  </li>
 			</ul>
+			<span data-toggle="tooltip" data-placement="top" title="Number of currently filtered Todos / Number of all ToDos">&nbsp;{{ numOfTodos.current }} / {{ numOfTodos.all }}</span>
 			<span class="pull-right colgreen fnt16" style="padding-top:6px;">
 				<span ng-if="showdone" class="mo glyphicon glyphicon-check" ng-click="togShowdone()" data-toggle="tooltip" data-placement="top" title="Show Open"></span>
 				<span ng-if="!showdone" class="mo glyphicon glyphicon-unchecked" ng-click="togShowdone()" data-toggle="tooltip" data-placement="top" title="Show Done"></span>

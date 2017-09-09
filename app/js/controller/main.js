@@ -148,6 +148,8 @@ tdapp.controller("mainCtrl", function(
                     $scope.todos = todoservice.getTodosByTag($scope.filtertag, $scope.showdone)
                     window.scrollTo(0, 0)
                     $("#todotxta").focus()
+                    $scope.numOfTodos.all ++;
+                    $scope.numOfTodos.current ++;
                 }).catch(function(error) {
                     showError(error.message)
                 })
@@ -267,6 +269,8 @@ tdapp.controller("mainCtrl", function(
             } else {
                 $location.path("/")
             }
+            $scope.numOfTodos.all --;
+            $scope.numOfTodos.current --;            
         }).catch(function(error) {
             showError(error.message)
         })

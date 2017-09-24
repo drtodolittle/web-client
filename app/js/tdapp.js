@@ -70,6 +70,13 @@ var serverurl = "https://api.drtodolittle.de/api/todos";
 if (window.location.host.startsWith("test")) {
     serverurl = "http://test.drtodolittle.de/api/todos";
 }
+if (document.location.search != undefined) {
+	var params = new URLSearchParams(document.location.search.substring(1));
+	var resturl = params.get("resturl"); 
+	if (resturl != undefined) {
+		serverurl=resturl;
+	}
+}
 
 // Datastore
 

@@ -14,12 +14,12 @@ tdapp.controller("profileCtrl",function(
     todoservice
 ){
 
-    var user = firebase.auth().currentUser
+    $scope.numOfTodos = "n/a";
+    var user = firebase.auth().currentUser;
     if(user){
         todoservice.getTodos().then(function(todos) {
             $scope.numOfTodos = todos.length;
         }).catch(function(err){
-            $scope.numOfTodos = "n/a";
             // TODO: Presetn error message to user.
         });
         if(user.providerData.length>0){

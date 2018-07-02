@@ -156,6 +156,15 @@
 		        $('#nfo').append(ee)
 		    }
 		</script>
-
+		<script>
+			<!-- Workaround -->
+			setTimeout(function(){
+				var c = ""+document.getElementById('___numOfTodos').innerHTML;
+				if (c=="&nbsp;{{ numOfTodos.current }} / {{ numOfTodos.all }}"){
+					alert("An error occured! The website has to be reloaded!")
+					window.location.reload();
+				}
+			},1024*3);
+		</script>
 </body>
 </html>

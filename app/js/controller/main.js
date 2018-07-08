@@ -177,7 +177,7 @@ tdapp.controller("mainCtrl", function(
             }
             return;
         }
-        if (k == 163) { // Hashkey
+        if (k == 191 || k == 163) { // Hashkey
             if(todoservice.tags.length > 0){
                 _showht();
                 $scope.hashtags.hashtaginput = "#";
@@ -270,7 +270,7 @@ tdapp.controller("mainCtrl", function(
                 $location.path("/")
             }
             $scope.numOfTodos.all --;
-            $scope.numOfTodos.current --;            
+            $scope.numOfTodos.current --;
         }).catch(function(error) {
             showError(error.message)
         })
@@ -284,12 +284,14 @@ tdapp.controller("mainCtrl", function(
             $scope.tags = todoservice.getTags();
         }
         if (item.done) {
+            item.done = false;
             todoservice.undone(item).then(function() {
                 _update()
             }).catch(function(e) {
                 showError(e.message)
             })
         } else {
+            item.done = true;
             todoservice.done(item).then(function() {
                 _update()
             }).catch(function(e) {

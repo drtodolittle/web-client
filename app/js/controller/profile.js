@@ -24,7 +24,12 @@ tdapp.controller("profileCtrl",function(
         });
         if(user.providerData.length>0){
             $scope.user = user.providerData[0].email;
-            $scope.userphotourl = user.providerData[0].photoURL;
+            var photoURL = user.providerData[0].photoURL;
+            if( photoURL != null){
+                $scope.userphotourl = user.providerData[0].photoURL;
+            } else {
+                $("#profileuserphoto").remove();
+            }
         } else {
             $scope.user = "n/a";
             $scope.userphotourl = "null";

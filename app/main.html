@@ -1,4 +1,4 @@
-<div>
+<div id="todoarea" style="visibility:hidden">
 	<ul class="list-group">
 		<li class="list-group-item">
 			<button class="btn btn-default dropdown-toggle" type="button" id="filter1" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true" data-toggle="tooltip" data-placement="top" title="Filter by tag">
@@ -11,6 +11,7 @@
 				  <a href="" ng-click="displaytodos(tag)">{{tag}}</a>
 			  </li>
 			</ul>
+			<!-- ng-non-bindable -->
 			<span id="___numOfTodos" class="mo" data-toggle="tooltip" data-placement="top" title="Number of currently filtered Todos / Number of all ToDos">&nbsp;{{ numOfTodos.current }} / {{ numOfTodos.all }}</span>
 			<span class="pull-right colgreen fnt16" style="padding-top:6px;">
 				<span ng-if="showdone" class="mo glyphicon glyphicon-check" ng-click="togShowdone()" data-toggle="tooltip" data-placement="top" title="Show Open"></span>
@@ -25,7 +26,8 @@
 			</div>
 			<div id='hashtags' style="visibility:hidden"></div>
 		</li>
-		<div id="todoarea" style="visibility:hidden">
+		<!-- id="todoarea" style="visibility:hidden" -->
+		<div>
 		<li class="list-group-item" contenteditable="false" ng-repeat="todo in todos">
 			<span id="todoid{{todo.id}}">
 				<!-- done/undone -->

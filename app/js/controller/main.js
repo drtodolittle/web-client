@@ -371,8 +371,8 @@ tdapp.controller("mainCtrl", function(
     }
     if (_t != null)
     todoservice.getTodos().then(function(todos) {
+        $('#todoarea').css('visibility',"visible");
         $scope.numOfTodos.all = todos.length;
-        $('#todoarea').css('visibility',"visible")
         // Check for previews url
         if($scope._url != "/" && $scope._url != "/todos/open/all"){
             $location.path($scope._url)
@@ -430,6 +430,8 @@ tdapp.controller("mainCtrl", function(
         }
         $("#todotxta").focus();
     }).catch(function(error) {
+        $('#todoarea').css('visibility',"visible"); // Show the whole todo area
+        $('#todoareacontent').css('visibility',"hidden"); // Only show the error message (without the content area)
         if(error == undefined) {
             $rootScope.open_dialog();
             return;

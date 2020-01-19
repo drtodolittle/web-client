@@ -59,6 +59,13 @@
 					<a href="https://camunda.org/" target="_blank">Camunda</a>
 				</div>
 				<div>&nbsp;</div>
+				<div class="poweredby fnt10">
+					Additional information<br>
+					<a href="https://www.cloud57.de" target="_blank">Cloud57</a>
+					<a href="https://www.drtodolittle.de/impressum.html" target="_blank">Impressum</a>
+				</div>
+				<div>&nbsp;</div>
+
 			</div>
 		</div>
 	</nav>
@@ -149,6 +156,15 @@
 		        $('#nfo').append(ee)
 		    }
 		</script>
-
+		<script>
+			<!-- Workaround -->
+			setTimeout(function(){
+				var c = ""+document.getElementById('___numOfTodos').innerHTML;
+				if (c=="&nbsp;{{ numOfTodos.current }} / {{ numOfTodos.all }}"){
+					console.log("An error occured! The website has to be reloaded!");
+					window.location.reload();
+				}
+			},1024*3);
+		</script>
 </body>
 </html>

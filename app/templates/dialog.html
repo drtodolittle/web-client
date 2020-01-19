@@ -3,8 +3,8 @@
     <div class="cd-user-modal-container">
         <!-- this is the container wrapper -->
         <ul class="cd-switcher">
-            <li><a ng-class="{'is-selected': loginselected}" ng-click="select_login()" href="javascript:void(0);">Login</a></li>
-            <li><a ng-class="{'is-selected': registerselected}" ng-click="select_register()" href="javascript:void(0);">Register</a></li>
+            <li><a ng-class="{'is-selected': loginselected}" ng-click="select_login()" href="#">Login</a></li>
+            <li><a ng-class="{'is-selected': registerselected}" ng-click="select_register()" href="#">Register</a></li>
         </ul>
 
         <div id="cd-login" ng-class="{'is-selected': loginselected}">
@@ -12,7 +12,7 @@
             <form class="cd-form">
                 <p class="social-login">
                     <!--<span class="social-login-facebook"><a href="#"><i class="fa fa-facebook"></i> Facebook</a></span>-->
-                    <span class="social-login-google"><a href="javascript:void(0);" ng-click="loginWithGoogle()"><i class="fa fa-google"></i> Google</a></span>
+                    <span class="social-login-google"><a href="#" ng-click="loginWithGoogle()"><i class="fa fa-google"></i> Google</a></span>
                     <!--<span class="social-login-twitter"><a href="#"><i class="fa fa-twitter"></i> Twitter</a></span>-->
                 </p>
 
@@ -46,7 +46,8 @@
                 </p>
             </form>
 
-            <p class="cd-form-bottom-message"><a href="javascript:void(0);" ng-click="select_reset()">Forgot your password?</a></p>
+            <p class="cd-form-bottom-message"><a href="#" ng-click="select_reset()">Forgot your password?</a> &nbsp;|&nbsp;<a target="_blank" href="https://www.drtodolittle.de/impressum.html">Impressum</a></p>
+
             <!-- <a href="javascript:void(0);" class="cd-close-form">Close</a> -->
         </div>
         <!-- cd-login -->
@@ -56,7 +57,7 @@
             <form class="cd-form">
                 <p class="social-login">
                     <!--<span class="social-login-facebook"><a href="#"><i class="fa fa-facebook"></i> Facebook</a></span>-->
-                    <span class="social-login-google"><a href="javascript:void(0);" ng-click="loginWithGoogle()"><i class="fa fa-google"></i> Google</a></span>
+                    <span class="social-login-google"><a href="#" ng-click="loginWithGoogle()"><i class="fa fa-google"></i> Google</a></span>
                     <!--<span class="social-login-twitter"><a href="#"><i class="fa fa-twitter"></i> Twitter</a></span>-->
                 </p>
 
@@ -82,7 +83,7 @@
 
                 <p class="fieldset">
                     <input type="checkbox" id="accept-terms"></input>
-                    <label for="accept-terms">I agree to the <a href="javascript:void(0);">Terms</a></label>
+                    <label for="accept-terms">I agree to the <a href="#">Terms</a></label>
                 </p>
 
                 <p class="fieldset">
@@ -110,7 +111,7 @@
                 </p>
             </form>
 
-            <p class="cd-form-bottom-message"><a href="javascript:void(0);" ng-click="select_login()">Back to log-in</a></p>
+            <p class="cd-form-bottom-message"><a href="#" ng-click="select_login()">Back to LOGIN</a></p>
         </div>
         <!-- cd-reset-password -->
         <!-- <a href="javascript:void(0);" class="cd-close-form" ng-click="close_dialog()">Close</a> -->

@@ -177,7 +177,7 @@ tdapp.controller("mainCtrl", function(
             }
             return;
         }
-        if (k == 163) { // Hashkey
+        if (k == 191 || k == 163) { // Hashkey
             if(todoservice.tags.length > 0){
                 _showht();
                 $scope.hashtags.hashtaginput = "#";
@@ -270,7 +270,7 @@ tdapp.controller("mainCtrl", function(
                 $location.path("/")
             }
             $scope.numOfTodos.all --;
-            $scope.numOfTodos.current --;            
+            $scope.numOfTodos.current --;
         }).catch(function(error) {
             showError(error.message)
         })
@@ -284,12 +284,14 @@ tdapp.controller("mainCtrl", function(
             $scope.tags = todoservice.getTags();
         }
         if (item.done) {
+            item.done = false;
             todoservice.undone(item).then(function() {
                 _update()
             }).catch(function(e) {
                 showError(e.message)
             })
         } else {
+            item.done = true;
             todoservice.done(item).then(function() {
                 _update()
             }).catch(function(e) {
@@ -369,8 +371,8 @@ tdapp.controller("mainCtrl", function(
     }
     if (_t != null)
     todoservice.getTodos().then(function(todos) {
+        $('#todoarea').css('visibility',"visible");
         $scope.numOfTodos.all = todos.length;
-        $('#todoarea').css('visibility',"visible")
         // Check for previews url
         if($scope._url != "/" && $scope._url != "/todos/open/all"){
             $location.path($scope._url)
@@ -428,6 +430,8 @@ tdapp.controller("mainCtrl", function(
         }
         $("#todotxta").focus();
     }).catch(function(error) {
+        $('#todoarea').css('visibility',"visible"); // Show the whole todo area
+        $('#todoareacontent').css('visibility',"hidden"); // Only show the error message (without the content area)
         if(error == undefined) {
             $rootScope.open_dialog();
             return;

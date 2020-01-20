@@ -2,7 +2,7 @@ import {
     createAddToDoAction,
     createDeleteToDoAction,
     createEditToDoAction,
-    createCompleteToDoAction,
+    createSetCompletionStateToDoAction,
     createUncompleteToDoAction
 } from '../redux/action';
 import { store } from '../redux/store';
@@ -22,12 +22,14 @@ export function editToDo(model) {
     store.dispatch(editAction);
 }
 
-export function completeToDo(model) {
-    let completeAction = createCompleteToDoAction(model);
+export function setCompletionState(id, completionState) {
+    let model = getToDo(id);
+    model.completed = completionState;
+    let completeAction = createSetCompletionStateToDoAction(model);
     store.dispatch(completeAction);
 }
 
-export function UncompleteToDo(model) {
+export function uncompleteToDo(model) {
     let uncompleteAction = createUncompleteToDoAction(model);
     store.dispatch(uncompleteAction);
 }

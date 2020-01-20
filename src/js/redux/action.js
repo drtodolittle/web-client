@@ -5,8 +5,7 @@
 export const ADD_TODO = 'ADD_TODO';
 export const DELETE_TODO = 'DELETE_TODO';
 export const EDIT_TODO = 'EDIT_TODO';
-export const COMPLETE_TODO = 'COMPLETE_TODO';
-export const UNCOMPLETE_TODO = 'UNCOMPLETE_TODO';
+export const COMPLETION_TODO = 'COMPLETION_TODO';
 
 
 /*
@@ -25,10 +24,7 @@ export function createEditToDoAction(model) {
     return { type: EDIT_TODO, model}
 }
 
-export function createCompleteToDoAction(model) {
-  return { type: COMPLETE_TODO, model}
+export function createSetCompletionStateToDoAction(model) {
+  return { type: COMPLETION_TODO, model}
 }
 
-export function createUnCompleteToDoAction(model) {
-  return { type: UNCOMPLETE_TODO, model}
-}

@@ -69,14 +69,18 @@
             </div>
         </main>
         <template id="todo-template">
-            <li id="todo_{{=it.id}}" class="mdl-list__item">
+            <li id="{{=it.id}}" class="mdl-list__item">
                 <span class="mdl-list__item-primary-content">
                     {{!it.todo}}
                 </span>
                 <span class="mdl-list__item-secondary-action">
-                    <label class="mdl-checkbox mdl-js-checkbox mdl-js-ripple-effect" for="list-checkbox-{{=it.id}}">
-                        <input type="checkbox" id="list-checkbox-{{=it.id}}" class="mdl-checkbox__input" />
-                    </label>
+                    <i class="uncompleted material-icons">check_box_outline_blank</i>
+                </span>
+                <span class="mdl-list__item-secondary-action hidden">
+                    <i class="completed material-icons">check_box</i>
+                </span>
+                <span class="mdl-list__item-secondary-action">
+                    <i class="delete material-icons">delete</i>
                 </span>
             </li>
         </template>

@@ -70,14 +70,18 @@
         </main>
         <template id="todo-template">
             <li id="{{=it.id}}" class="mdl-list__item">
+                <span class="mdl-list__item-primary-action">
+                    <i class="uncompleted material-icons">check_box_outline_blank</i>
+                </span>
+                <span class="mdl-list__item-primary-action hidden">
+                    <i class="completed material-icons">check_box</i>
+                </span>
+                <span class="spacer"></span>
                 <span class="mdl-list__item-primary-content">
                     {{!it.todo}}
                 </span>
                 <span class="mdl-list__item-secondary-action">
-                    <i class="uncompleted material-icons">check_box_outline_blank</i>
-                </span>
-                <span class="mdl-list__item-secondary-action hidden">
-                    <i class="completed material-icons">check_box</i>
+                    <i class="edit material-icons">edit</i>
                 </span>
                 <span class="mdl-list__item-secondary-action">
                     <i class="delete material-icons">delete</i>

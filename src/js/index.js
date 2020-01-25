@@ -12,6 +12,10 @@ initUI();
 if (getUser() == null) {
     login();
 }
+else {
+    console.log("User: " + getUser().displayName);
+}
+
 
 let processFlowListener = () => {
     let state = store.getState();

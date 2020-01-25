@@ -68,11 +68,11 @@ export function switchEditMode(id, editButton) {
 export function showToDo(newItem) {
     let newElement = document.createElement("div");
     newElement.innerHTML = todoTemplate(newItem);
-
     document.querySelector('#todolist').appendChild(newElement.firstElementChild);
     document.querySelector("#newtodo").value = "";
     document.querySelector("#newtodo").parentElement.classList.remove("is-dirty");
     document.querySelector("#newtodo").focus();
+    showCompletionState(newItem);
 }
 
 export function removeToDo(item) {

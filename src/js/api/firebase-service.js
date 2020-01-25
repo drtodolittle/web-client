@@ -38,14 +38,11 @@ export function login() {
     }, function (error) {
         console.log("Error in RedirectResult");
     });
-
-
 }
 
 export function loadToDos() {
     let firestore = firebase.firestore();
     let user = getUser();
-    console.log("Current user is " + user.email);
 
     let userDocRef = firestore.collection("users").doc(user.email);
     let todosRef = userDocRef.collection("/todos").get().then(querySnapshot => {

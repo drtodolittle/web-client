@@ -43,31 +43,33 @@
             </nav>
         </div>
         <main class="mdl-layout__content">
-            <div class="mdl-layout--large-screen-only">
-                <form action="javascript:document.activeElement.blur();">
-                    <div class="mdl-grid">
-                        <div class="mdl-cell mdl-cell--2-col"></div>
-                        <div class="mdl-cell mdl-cell--8-col">
-                            <div class="drtodolittle-textfield mdl-textfield mdl-js-textfield">
-                                <input class="mdl-textfield__input" type="text" id="newtodo">
-                                <label class="mdl-textfield__label" for="newtodo">Enter new todo...</label>
-                            </div>
-                        </div>
-                        <div class="mdl-cell mdl-cell--2-col">
-                            <button type="submit" id="bt_new"
-                                class="mdl-button mdl-js-button mdl-button--fab mdl-button--mini-fab">
-                                <i class="material-icons">add</i>
-                            </button>
-                            <div class="mdl-tooltip" for="bt_new">Add</div>
+            <div id="firebaseui-auth-container"></div>
+
+            <form action="javascript:document.activeElement.blur();">
+                <div class="mdl-grid">
+                    <div class="mdl-cell mdl-cell--2-col"></div>
+                    <div class="mdl-cell mdl-cell--8-col">
+                        <div class="drtodolittle-textfield mdl-textfield mdl-js-textfield">
+                            <input class="mdl-textfield__input" type="text" id="newtodo">
+                            <label class="mdl-textfield__label" for="newtodo">Enter new todo...</label>
                         </div>
                     </div>
-                </form>
-            </div>
+                    <div class="mdl-cell mdl-cell--2-col">
+                        <button type="submit" id="bt_new"
+                            class="mdl-button mdl-js-button mdl-button--fab mdl-button--mini-fab">
+                            <i class="material-icons">add</i>
+                        </button>
+                        <div class="mdl-tooltip" for="bt_new">Add</div>
+                    </div>
+                </div>
+            </form>
+
             <div class="page-content">
                 <ul id="todolist" class="mdl-list">
                 </ul>
             </div>
         </main>
+
         <template id="todo-template">
             <li id="{{=it.id}}" class="mdl-list__item">
                 <span class="mdl-list__item-primary-action">
@@ -77,14 +79,14 @@
                     <i class="completed material-icons">check_box</i>
                 </span>
                 <span class="spacer"></span>
-                <span class="mdl-list__item-primary-content">
+                <span class="mdl-list__item-primary-content" contenteditable="false">
                     {{!it.todo}}
                 </span>
                 <span class="mdl-list__item-secondary-action">
-                    <i class="edit material-icons">edit</i>
+                    <i class="editbutton material-icons">edit</i>
                 </span>
                 <span class="mdl-list__item-secondary-action">
-                    <i class="delete material-icons">delete</i>
+                    <i class="deletebutton material-icons">delete</i>
                 </span>
             </li>
         </template>
@@ -98,6 +100,7 @@
             </div>
         </footer>
     </div>
+
     <script src="https://cdnjs.cloudflare.com/ajax/libs/dialog-polyfill/0.4.10/dialog-polyfill.min.js"></script>
     <script src="js/index.js"></script>
 </body>

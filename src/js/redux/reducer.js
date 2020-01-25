@@ -2,7 +2,8 @@ import {
     ADD_TODO,
     EDIT_TODO,
     DELETE_TODO,
-    COMPLETION_TODO
+    COMPLETION_TODO,
+    LOAD_TODO
 } from "./action";
 
 import { Map, List } from 'immutable';
@@ -20,6 +21,7 @@ function ToDoApp(state = initialState, action) {
     let todoList = state.get('todoList');
 
     switch (action.type) {
+        case LOAD_TODO:
         case ADD_TODO:
             newState = state.update('todoList', (list) => list.push(action.model));
             newState = newState.set('currenttodo', action.model);

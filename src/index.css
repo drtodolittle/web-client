@@ -14,3 +14,7 @@
 .spacer {
     width: 15px;
 }
+
+.editmode {
+    color: grey;
+}

@@ -3,7 +3,8 @@ import {
     createDeleteToDoAction,
     createEditToDoAction,
     createSetCompletionStateToDoAction,
-    createUncompleteToDoAction
+    createUncompleteToDoAction,
+    createLoadToDoAction
 } from '../redux/action';
 import { store } from '../redux/store';
 
@@ -38,5 +39,10 @@ export function getToDo(id) {
     let todoList = store.getState().get('todoList');
     let index = todoList.findKey(model => model.id == id);
     return todoList.get(index);
+}
+
+export function loadToDo(model) {
+    let loadToDoAction = createLoadToDoAction(model);
+    store.dispatch(loadToDoAction);
 }
 

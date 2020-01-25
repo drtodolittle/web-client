@@ -86,4 +86,5 @@ export class ToDoModel {
         this.todo = todo;
         this.completed = completed;
     }
+
 }

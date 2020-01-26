@@ -2,8 +2,9 @@ import MaterialDesign from 'material-design-lite';
 import { initFirebase, getUser,login, storeToDo, deleteToDo } from './api/firebase-service';
 import { initUI } from './ui/todo';
 import { store } from './redux/store';
-import { ADD_TODO, DELETE_TODO, COMPLETION_TODO, EDIT_TODO, LOAD_TODO } from './redux/action';
+import { ADD_TODO, DELETE_TODO, COMPLETION_TODO, EDIT_TODO, LOAD_TODO, LOGIN } from './redux/action';
 import { showToDo, removeToDo, showCompletionState } from './ui/todo';
+import { showUserImage } from './ui/userimage';
 
 initFirebase();
 initUI();
@@ -20,6 +21,9 @@ else {
 let processFlowListener = () => {
     let state = store.getState();
     let actionType = state.get('actionType');
+    if (actionType === LOGIN) {
+        showUserImage();
+    }
     if (actionType === ADD_TODO || actionType === LOAD_TODO) {
         showToDo(state.get('currenttodo'));
     }

@@ -1,10 +1,16 @@
+.drtodolittle-create-todo {
+    padding-left: 1em;
+    padding-right: 1em;
+    width: 100%;
+}
+
 .drtodolittle-textfield {
-    width: 2000px;
+    width: 80%;
 }
 
 .page-content {
-    padding-left: 1em;
-    padding-right: 1em;
+    padding-left: 0em;
+    padding-right: 0em;
 }
 
 .hidden {

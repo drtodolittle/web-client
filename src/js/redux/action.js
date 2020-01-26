@@ -7,6 +7,7 @@ export const DELETE_TODO = 'DELETE_TODO';
 export const EDIT_TODO = 'EDIT_TODO';
 export const COMPLETION_TODO = 'COMPLETION_TODO';
 export const LOAD_TODO = 'LOAD_TODO';
+export const LOGIN = '';
 
 
 /*
@@ -31,4 +32,8 @@ export function createSetCompletionStateToDoAction(model) {
 
 export function createLoadToDoAction(model) {
   return { type: LOAD_TODO, model}
+}
+
+export function createLoginAction() {
+  return { type: LOGIN }
 }

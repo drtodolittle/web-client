@@ -22,8 +22,8 @@
                 <!-- Add spacer, to align navigation to the right -->
                 <div class="mdl-layout-spacer"></div>
                 <img id="userimage"
-                class="mdl-button mdl-js-button mdl-button--fab mdl-button--mini-fab is-hidden"></img>
-                  </div>
+                    class="mdl-button mdl-js-button mdl-button--fab mdl-button--mini-fab is-hidden"></img>
+            </div>
         </header>
         <div class="mdl-layout__drawer">
             <span class="mdl-layout-title">Dr ToDo Little</span>
@@ -33,30 +33,21 @@
         </div>
         <main class="mdl-layout__content">
             <form action="javascript:document.activeElement.blur();">
-                <!--<div class="mdl-grid">
-                    <div class="mdl-cell mdl-cell--2-col"></div>
-                    <div class="mdl-cell mdl-cell--8-col">
-                        <div class="mdl-textfield mdl-js-textfield">
+                <div class="mdl-grid">
+                    <div
+                        class="mdl-cell mdl-cell--2-offset-desktop mdl-cell--1-offset-tablet mdl-cell--8-col mdl-cell--4-col-phone">
+                        <div class="mdl-textfield mdl-js-textfield drtodolittle-textfield">
                             <input class="mdl-textfield__input" type="text" id="newtodo">
                             <label class="mdl-textfield__label" for="newtodo">Enter new todo...</label>
                         </div>
+                        <button type="submit" id="bt_new"
+                            class="mdl-button mdl-js-button mdl-button--fab mdl-button--mini-fab">
+                            <i class="material-icons">add</i>
+                        </button>
+                        <div class="mdl-tooltip" for="bt_new">Add</div>
                     </div>
-                    <div class="mdl-cell mdl-cell--2-col">
-                    </div>
-                </div>-->
-                <div class="drtodolittle-create-todo">
-                    <div class="mdl-textfield mdl-js-textfield drtodolittle-textfield">
-                        <input class="mdl-textfield__input" type="text" id="newtodo">
-                        <label class="mdl-textfield__label" for="newtodo">Enter new todo...</label>
-                    </div>
-                    <button type="submit" id="bt_new"
-                    class="mdl-button mdl-js-button mdl-button--fab mdl-button--mini-fab">
-                    <i class="material-icons">add</i>
-                </button>
-                <div class="mdl-tooltip" for="bt_new">Add</div>
-
                 </div>
-                </form>
+            </form>
             <div class="page-content">
                 <ul id="todolist" class="mdl-list">
                 </ul>
@@ -85,7 +76,6 @@
         </template>
         <footer class="mdl-mini-footer">
             <div class="mdl-mini-footer__left-section">
-                <div class="mdl-logo">Dr ToDo Little</div>
                 <ul class="mdl-mini-footer__link-list">
                     <li><a href="https://www.cloud57.de/?showImp">Privacy & Terms</a></li>
                 </ul>

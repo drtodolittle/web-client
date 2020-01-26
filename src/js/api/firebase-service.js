@@ -1,7 +1,8 @@
 import * as firebase from "firebase/app";
 import "firebase/auth";
 import "firebase/firestore";
-import { loadToDo } from './service';
+import { loadToDo, setUserImage } from './service';
+
 
 
 export function initFirebase() {
@@ -27,7 +28,8 @@ export function login() {
         }
         var user = result.user;
         if (user) {
-            window.localStorage.setItem("lastUserEmail", user.email);
+            window.localStorage.setItem("lastUserEmail", user.email); 
+            setUserImage();           
             loadToDos();
         }
         else {
@@ -35,14 +37,14 @@ export function login() {
             var provider = new firebase.auth.GoogleAuthProvider();
             provider.addScope('profile');
             if (window.localStorage.getItem("lastUserEmail")) {
-            provider.setCustomParameters({
-                'login_hint': window.localStorage.getItem("lastUserEmail")
-              });
+                provider.setCustomParameters({
+                    'login_hint': window.localStorage.getItem("lastUserEmail")
+                });
             }
             firebase.auth().signInWithRedirect(provider);
         }
     }, function (error) {
-        console.log("Error in RedirectResult");
+        console.log("Error in RedirectResult: " + error);
     });
 }
 

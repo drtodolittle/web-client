@@ -3,7 +3,8 @@ import {
     EDIT_TODO,
     DELETE_TODO,
     COMPLETION_TODO,
-    LOAD_TODO
+    LOAD_TODO,
+    LOGIN
 } from "./action";
 
 import { Map, List } from 'immutable';
@@ -39,7 +40,8 @@ function ToDoApp(state = initialState, action) {
             newState = state.set('todoList', newList);
             newState = newState.set('currenttodo', model);
             break;
-
+        case LOGIN: 
+            newState = state.set('loggedin', true);
         default:
             break;
     }

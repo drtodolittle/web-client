@@ -4,7 +4,8 @@ import {
     createEditToDoAction,
     createSetCompletionStateToDoAction,
     createUncompleteToDoAction,
-    createLoadToDoAction
+    createLoadToDoAction,
+    createLoginAction
 } from '../redux/action';
 import { store } from '../redux/store';
 
@@ -46,3 +47,6 @@ export function loadToDo(model) {
     store.dispatch(loadToDoAction);
 }
 
+export function setUserImage() {
+    store.dispatch(createLoginAction());
+}

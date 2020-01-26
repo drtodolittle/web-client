@@ -27,12 +27,18 @@ export function login() {
         }
         var user = result.user;
         if (user) {
+            window.localStorage.setItem("lastUserEmail", user.email);
             loadToDos();
         }
         else {
             // Start a sign in process for an unauthenticated user.
             var provider = new firebase.auth.GoogleAuthProvider();
             provider.addScope('profile');
+            if (window.localStorage.getItem("lastUserEmail")) {
+            provider.setCustomParameters({
+                'login_hint': window.localStorage.getItem("lastUserEmail")
+              });
+            }
             firebase.auth().signInWithRedirect(provider);
         }
     }, function (error) {

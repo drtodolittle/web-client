@@ -27,7 +27,8 @@ function ToDoApp(state = initialState, action) {
             newState = state.update('todoList', (list) => list.push(action.model));
             newState = newState.set('currenttodo', action.model);
             break;
-        case EDIT_TODO, COMPLETION_TODO:
+        case EDIT_TODO:
+        case COMPLETION_TODO:
             var index = todoList.findKey(model => model.id == action.model.id);
             var newList = todoList.set(index, action.model);
             newState = state.set('todoList', newList);

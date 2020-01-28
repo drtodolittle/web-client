@@ -25,12 +25,11 @@ export function initUI() {
             setCompletionState(e.target.parentElement.parentElement.id, false);
         }
         else if (e.target.classList.contains("deletebutton")) {
-            deleteToDo(e.target.parentElement.parentElement.id);
+            deleteToDo(e.target.parentElement.parentElement.parentElement.id);
         }
         else if (e.target.classList.contains("editbutton")) {
-            switchEditMode(e.target.parentElement.parentElement.id, e.target);
+            switchEditMode(e.target.parentElement.parentElement.parentElement.id, e.target);
         }
-
     });
     
 }
@@ -42,20 +41,10 @@ export function switchEditMode(id, editButton) {
         editArea.setAttribute("contentEditable", "true");
         editArea.classList.add("editmode");
         editButton.classList.add("editmode");
-        editArea.addEventListener("keydown", (e) => {
-            if (e.code === "Enter") {
-                switchEditMode(id, editButton);
-            }
-        });
         editArea.focus();
     }
     else {
         editArea.setAttribute("contentEditable", "false");
-        editArea.removeEventListener("keydown", (e) => {
-            if (e.code === "Enter") {
-                switchEditMode(id, editButton);
-            }
-        });
         editArea.classList.remove("editmode");
         editButton.classList.remove("editmode");
         let model = getToDo(id);
@@ -64,6 +53,9 @@ export function switchEditMode(id, editButton) {
     }
 }
 
+export function setFocus() {
+    document.querySelector("#newtodo").focus();    
+}
 
 export function showToDo(newItem) {
     let newElement = document.createElement("div");
@@ -71,7 +63,6 @@ export function showToDo(newItem) {
     document.querySelector('#todolist').appendChild(newElement.firstElementChild);
     document.querySelector("#newtodo").value = "";
     document.querySelector("#newtodo").parentElement.classList.remove("is-dirty");
-    document.querySelector("#newtodo").focus();
     showCompletionState(newItem);
 }
 

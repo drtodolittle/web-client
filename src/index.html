@@ -49,8 +49,13 @@
                 </div>
             </form>
             <div class="page-content">
-                <ul id="todolist" class="mdl-list">
-                </ul>
+                <div class="mdl-grid">
+                    <div
+                        class="mdl-cell mdl-cell--1-offset-desktop mdl-cell--1-offset-tablet mdl-cell--9-col mdl-cell--4-col-phone">
+                        <ul id="todolist" class="mdl-list">
+                        </ul>
+                    </div>
+                </div>
             </div>
         </main>
 
@@ -67,10 +72,15 @@
                     {{!it.todo}}
                 </span>
                 <span class="mdl-list__item-secondary-action">
+                    <button class="mdl-button mdl-js-button mdl-button--fab mdl-button--mini-fab">
                     <i class="editbutton material-icons">edit</i>
+                </button>
                 </span>
+                <span class="spacer"></span>
                 <span class="mdl-list__item-secondary-action">
+                    <button class="mdl-button mdl-js-button mdl-button--fab mdl-button--mini-fab">
                     <i class="deletebutton material-icons">delete</i>
+                </button>
                 </span>
             </li>
         </template>

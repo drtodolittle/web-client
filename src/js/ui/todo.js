@@ -34,18 +34,29 @@ export function initUI() {
     
 }
 
+let eventHandler = function(event) {
+    if (event.code === "Enter") {
+        event.preventDefault();
+        let id = event.target.parentElement.id;
+        let editButton = event.target.parentElement.getElementsByClassName("editbutton")[0];
+        switchEditMode(id, editButton);
+    }
+}
+
 export function switchEditMode(id, editButton) {
-    
+
     let editArea = document.getElementById(id).getElementsByClassName("mdl-list__item-primary-content").item(0);
     if (editArea.getAttribute("contentEditable") == "false") {
         editArea.setAttribute("contentEditable", "true");
         editArea.classList.add("editmode");
+        editArea.addEventListener("keydown", eventHandler);
         editButton.classList.add("editmode");
         editArea.focus();
     }
     else {
         editArea.setAttribute("contentEditable", "false");
         editArea.classList.remove("editmode");
+        editArea.removeEventListener("keydown", eventHandler);
         editButton.classList.remove("editmode");
         let model = getToDo(id);
         model.todo = editArea.textContent;

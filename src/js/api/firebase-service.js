@@ -17,9 +17,20 @@ export function initFirebase() {
     };
     // Initialize Firebase
     firebase.initializeApp(firebaseConfig);
+    firebase.auth().onAuthStateChanged((user) => {
+        if (user) {
+            setUserImage();
+            loadToDos();
+        }
+        else {
+            login();
+            console.log("AuthStateChanged is signed out");
+        }
+    });
 }
 
 export function login() {
+
     // Using a redirect.
     firebase.auth().getRedirectResult().then(function (result) {
         if (result.credential) {
@@ -28,9 +39,7 @@ export function login() {
         }
         var user = result.user;
         if (user) {
-            window.localStorage.setItem("lastUserEmail", user.email); 
-            setUserImage();           
-            loadToDos();
+            window.localStorage.setItem("lastUserEmail", user.email);
         }
         else {
             // Start a sign in process for an unauthenticated user.
@@ -46,6 +55,8 @@ export function login() {
     }, function (error) {
         console.log("Error in RedirectResult: " + error);
     });
+
+
 }
 
 export function loadToDos() {

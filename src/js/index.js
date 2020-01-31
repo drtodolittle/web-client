@@ -9,15 +9,6 @@ import { showUserImage } from './ui/userimage';
 initFirebase();
 initUI();
 
-
-if (getUser() == null) {
-    login();
-}
-else {
-    console.log("User: " + getUser().displayName);
-}
-
-
 let processFlowListener = () => {
     let state = store.getState();
     let actionType = state.get('actionType');

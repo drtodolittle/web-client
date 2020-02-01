@@ -6,6 +6,9 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>Dr ToDo Little</title>
+	<!-- Favicon -->
+    <link rel="shortcut icon" href="/favicon.ico" type="image/x-icon">
+    <link rel="icon" href="/favicon.ico" type="image/x-icon">
 
     <link rel="stylesheet" href="../node_modules/material-design-lite/material.min.css">
     <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons" crossorigin='anonymous'>
@@ -50,7 +53,14 @@
             </form>
             <div class="page-content">
                 <div class="mdl-grid">
-                    <div
+<!--                    <div
+                        class="mdl-cell mdl-cell--1-offset-desktop mdl-cell--1-offset-tablet mdl-cell--9-col mdl-cell--4-col-phone">
+                        <span class="mdl-chip mdl-chip--deletable">
+                            <span class="mdl-chip__text">not completed</span>
+                            <button type="button" class="mdl-chip__action"><i class="material-icons">cancel</i></button>
+                        </span>
+                    </div>
+-->                    <div
                         class="mdl-cell mdl-cell--1-offset-desktop mdl-cell--1-offset-tablet mdl-cell--9-col mdl-cell--4-col-phone">
                         <ul id="todolist" class="mdl-list">
                         </ul>
@@ -60,7 +70,7 @@
         </main>
 
         <template id="todo-template">
-            <li id="{{=it.id}}" class="mdl-list__item">
+            <li id="{{=it.id}}" class="mdl-list__item drtodolittle-listitem">
                 <span class="mdl-list__item-primary-action">
                     <i class="uncompleted material-icons">check_box_outline_blank</i>
                 </span>
@@ -84,7 +94,7 @@
                 </span>
             </li>
         </template>
-        <footer class="mdl-mini-footer">
+        <footer class="mdl-mini-footer drtodolittle-footer">
             <div class="mdl-mini-footer__left-section">
                 <ul class="mdl-mini-footer__link-list">
                     <li><a href="https://www.cloud57.de/?showImp">Privacy & Terms</a></li>

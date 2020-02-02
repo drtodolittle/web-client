@@ -7,7 +7,11 @@ export const DELETE_TODO = 'DELETE_TODO';
 export const EDIT_TODO = 'EDIT_TODO';
 export const COMPLETION_TODO = 'COMPLETION_TODO';
 export const LOAD_TODO = 'LOAD_TODO';
-export const LOGIN = '';
+export const LOGIN = 'LOGIN';
+export const ADD_FILTER = "ADD_FILTER";
+export const REMOVE_FILTER = "REMOVE_FILTER";
+export const TOGGLE_SHOW_COMPLETED = "TOGGLE_SHOW_COMPLETED";
+
 
 
 /*
@@ -36,4 +40,16 @@ export function createLoadToDoAction(model) {
 
 export function createLoginAction() {
   return { type: LOGIN }
+}
+
+export function createAddFilterAction(filtername) {
+  return { type: ADD_FILTER, filtername }
+}
+
+export function createRemoveFilterAction(filtername) {
+  return { type: REMOVE_FILTER, filtername }
+}
+
+export function createToggleShowCompletedAction(showCompleted) {
+  return { type: TOGGLE_SHOW_COMPLETED, showCompleted }
 }

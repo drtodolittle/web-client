@@ -6,7 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>Dr ToDo Little</title>
-	<!-- Favicon -->
+    <!-- Favicon -->
     <link rel="shortcut icon" href="/favicon.ico" type="image/x-icon">
     <link rel="icon" href="/favicon.ico" type="image/x-icon">
 
@@ -53,14 +53,15 @@
             </form>
             <div class="page-content">
                 <div class="mdl-grid">
-<!--                    <div
-                        class="mdl-cell mdl-cell--1-offset-desktop mdl-cell--1-offset-tablet mdl-cell--9-col mdl-cell--4-col-phone">
-                        <span class="mdl-chip mdl-chip--deletable">
-                            <span class="mdl-chip__text">not completed</span>
-                            <button type="button" class="mdl-chip__action"><i class="material-icons">cancel</i></button>
-                        </span>
+                    <div class="mdl-cell mdl-cell--1-offset-desktop mdl-cell--1-offset-tablet mdl-cell--8-col mdl-cell--2-col-phone">
                     </div>
--->                    <div
+                    <div class="mdl-cell--2-col mdl-cell--2-col-phone">
+                        <label class="mdl-switch mdl-js-switch mdl-js-ripple-effect" for="switch-show-completed">
+                            <input type="checkbox" id="switch-show-completed" class="mdl-switch__input">
+                            <span class="mdl-switch__label">completed</span>
+                        </label>
+                    </div>
+                    <div
                         class="mdl-cell mdl-cell--1-offset-desktop mdl-cell--1-offset-tablet mdl-cell--9-col mdl-cell--4-col-phone">
                         <ul id="todolist" class="mdl-list">
                         </ul>
@@ -83,14 +84,14 @@
                 </span>
                 <span class="mdl-list__item-secondary-action">
                     <button class="mdl-button mdl-js-button mdl-button--fab mdl-button--mini-fab">
-                    <i class="editbutton material-icons">edit</i>
-                </button>
+                        <i class="editbutton material-icons">edit</i>
+                    </button>
                 </span>
                 <span class="spacer"></span>
                 <span class="mdl-list__item-secondary-action">
                     <button class="mdl-button mdl-js-button mdl-button--fab mdl-button--mini-fab">
-                    <i class="deletebutton material-icons">delete</i>
-                </button>
+                        <i class="deletebutton material-icons">delete</i>
+                    </button>
                 </span>
             </li>
         </template>

@@ -5,7 +5,8 @@ import {
     createSetCompletionStateToDoAction,
     createUncompleteToDoAction,
     createLoadToDoAction,
-    createLoginAction
+    createLoginAction,
+    createToggleShowCompletedAction
 } from '../redux/action';
 import { store } from '../redux/store';
 
@@ -49,4 +50,8 @@ export function loadToDo(model) {
 
 export function setUserImage() {
     store.dispatch(createLoginAction());
+}
+
+export function toggleShowCompleted(isCompleted) {
+    store.dispatch(createToggleShowCompletedAction(isCompleted));
 }

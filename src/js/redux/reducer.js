@@ -4,7 +4,8 @@ import {
     DELETE_TODO,
     COMPLETION_TODO,
     LOAD_TODO,
-    LOGIN
+    LOGIN,
+    TOGGLE_SHOW_COMPLETED
 } from "./action";
 
 import { Map, List } from 'immutable';
@@ -14,7 +15,8 @@ export const initialState = Map({
     status: "uninitialized",
     todoList: List(),
     actionType: '',
-    currenttodo: ''
+    currenttodo: '',
+    showCompleted: false
 });
 
 function ToDoApp(state = initialState, action) {
@@ -43,6 +45,10 @@ function ToDoApp(state = initialState, action) {
             break;
         case LOGIN: 
             newState = state.set('loggedin', true);
+            break;
+        case TOGGLE_SHOW_COMPLETED:
+            newState = state.set('showCompleted', action.showCompleted);
+            break;
         default:
             break;
     }

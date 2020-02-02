@@ -2,8 +2,8 @@ import MaterialDesign from 'material-design-lite';
 import { initFirebase, getUser,login, storeToDo, deleteToDo } from './api/firebase-service';
 import { initUI } from './ui/todo';
 import { store } from './redux/store';
-import { ADD_TODO, DELETE_TODO, COMPLETION_TODO, EDIT_TODO, LOAD_TODO, LOGIN } from './redux/action';
-import { showToDo, removeToDo, showCompletionState, setFocus } from './ui/todo';
+import { ADD_TODO, DELETE_TODO, COMPLETION_TODO, EDIT_TODO, LOAD_TODO, LOGIN, TOGGLE_SHOW_COMPLETED } from './redux/action';
+import { showToDo, removeToDo, setFocus, showCompleted, showInProgress } from './ui/todo';
 import { showUserImage } from './ui/userimage';
 
 initFirebase();
@@ -19,14 +19,19 @@ let processFlowListener = () => {
         showToDo(state.get('currenttodo'));
         setFocus();
     }
-    else if (actionType === DELETE_TODO) {
-        removeToDo(state.get('currenttodo'));
-    }
-    else if (actionType === COMPLETION_TODO) {
-        showCompletionState(state.get('currenttodo'));
+    else if (actionType === DELETE_TODO || actionType === COMPLETION_TODO) {
+        removeToDo(state.get('currenttodo').id);
     }
     else if (actionType === EDIT_TODO) {
         setFocus();
+    }
+    else if (actionType === TOGGLE_SHOW_COMPLETED) {
+        if (state.get('showCompleted')) {
+            showCompleted(state.get('todoList'));
+        }
+        else {
+            showInProgress(state.get('todoList'));
+        }
     }
 }
 store.subscribe(processFlowListener);

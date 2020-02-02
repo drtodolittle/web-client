@@ -1,6 +1,7 @@
-import { addToDo, deleteToDo, getToDo, editToDo, setCompletionState } from '../api/service';
+import { addToDo, deleteToDo, getToDo, editToDo, setCompletionState, toggleShowCompleted } from '../api/service';
 import doT from 'dot';
 import uuid from 'uuid';
+
 
 let todoTemplate = doT.template(document.getElementById("todo-template").innerHTML);
 
@@ -13,6 +14,10 @@ export function initUI() {
         data.todo = todo;
         data.completed = false;
         addToDo(data);
+    });
+
+    document.getElementById("switch-show-completed").addEventListener('click', (e) => {
+            toggleShowCompleted(e.target.checked);
     });
     
     document.querySelector("#newtodo").focus();
@@ -77,12 +82,12 @@ export function showToDo(newItem) {
     showCompletionState(newItem);
 }
 
-export function removeToDo(item) {
-    let toDoElement = document.getElementById(item.id);
+export function removeToDo(id) {
+    let toDoElement = document.getElementById(id);
     toDoElement.remove();
 }
 
-export function showCompletionState(item) {
+function showCompletionState(item) {
     let toDoElement = document.getElementById(item.id);
     if (item.completed) {
         toDoElement.getElementsByClassName("completed").item(0).parentElement.classList.remove('hidden');
@@ -97,4 +102,29 @@ export function showCompletionState(item) {
 export function updateToDo(model) {
     let toDoElement = document.getElementById(model.id);
     toDoElement.getElementsByClassName('show').item(0).textContent = model.todo;
+}
+
+export function showCompleted(todolist) {
+    clearToDoListElement();
+    todolist.forEach((model) => {
+        if (model.completed) {
+            showToDo(model);
+        }
+    });
+}
+
+export function showInProgress(todolist) {
+    clearToDoListElement();
+    todolist.forEach((model) => {
+        if (!model.completed) {
+            showToDo(model);
+        }
+    });
+}
+
+function clearToDoListElement() {
+    let todoListElement = document.getElementById("todolist")
+    while (todoListElement.lastChild) {
+        todoListElement.removeChild(todoListElement.lastChild);
+    }
 }

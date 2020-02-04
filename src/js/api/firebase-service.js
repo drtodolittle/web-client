@@ -113,7 +113,9 @@ export function loadTags() {
     let user = getUser();
 
     let userDocRef = firestore.collection("users").doc(user.email);
-    addFilters(userDocRef.data().tags);
+    userDocRef.get().then((doc) => {
+        addFilters(doc.data().tags);
+    });
 }
 
 export function storeTagList(tagList) {

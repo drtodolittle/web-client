@@ -11,6 +11,7 @@ export const LOGIN = 'LOGIN';
 export const ADD_FILTER = "ADD_FILTER";
 export const REMOVE_FILTER = "REMOVE_FILTER";
 export const TOGGLE_SHOW_COMPLETED = "TOGGLE_SHOW_COMPLETED";
+export const ADD_TAG = "ADD_TAG";
 
 
 
@@ -42,14 +43,18 @@ export function createLoginAction() {
   return { type: LOGIN }
 }
 
-export function createAddFilterAction(filtername) {
-  return { type: ADD_FILTER, filtername }
+export function createAddFilterAction(filterName) {
+  return { type: ADD_FILTER, filterName }
 }
 
-export function createRemoveFilterAction(filtername) {
-  return { type: REMOVE_FILTER, filtername }
+export function createRemoveFilterAction(filterName) {
+  return { type: REMOVE_FILTER, filterName }
 }
 
 export function createToggleShowCompletedAction(showCompleted) {
   return { type: TOGGLE_SHOW_COMPLETED, showCompleted }
+}
+
+export function createAddTagAction(tagName) {
+  return { type: ADD_TAG, tagName}
 }

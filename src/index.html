@@ -53,7 +53,19 @@
             </form>
             <div class="page-content">
                 <div class="mdl-grid">
-                    <div class="mdl-cell mdl-cell--1-offset-desktop mdl-cell--1-offset-tablet mdl-cell--8-col mdl-cell--2-col-phone">
+                    <div id="filter-menu-div" class="mdl-cell mdl-cell--1-offset-desktop mdl-cell--1-offset-tablet mdl-cell--1-col mdl-cell--1-col-phone">
+                        <!-- Left aligned menu below button -->
+                        <button id="filter-menu-button" class="mdl-button mdl-js-button mdl-button--icon">
+                            <i class="material-icons">filter_list</i>
+                        </button>
+
+                        <ul id="filter-menu" class="mdl-menu mdl-menu--bottom-left mdl-js-menu mdl-js-ripple-effect"
+                            for="filter-menu-button">
+                            <li class="mdl-menu__item">#privat</li>
+                        </ul>
+
+                    </div>
+                    <div id="filter" class="mdl-cell--7-col mdl-cell--1-col-phone">
                     </div>
                     <div class="mdl-cell--2-col mdl-cell--2-col-phone">
                         <label class="mdl-switch mdl-js-switch mdl-js-ripple-effect" for="switch-show-completed">
@@ -61,8 +73,7 @@
                             <span class="mdl-switch__label">completed</span>
                         </label>
                     </div>
-                    <div
-                        class="mdl-cell mdl-cell--1-offset-desktop mdl-cell--1-offset-tablet mdl-cell--9-col mdl-cell--4-col-phone">
+                    <div class="mdl-cell mdl-cell--1-offset-desktop mdl-cell--1-offset-tablet mdl-cell--9-col mdl-cell--4-col-phone">
                         <ul id="todolist" class="mdl-list">
                         </ul>
                     </div>
@@ -94,6 +105,22 @@
                     </button>
                 </span>
             </li>
+        </template>
+        <template id="filter-chip">
+            <span id="filter_{{=it}}" class="mdl-chip mdl-chip--deletable">
+                <span class="mdl-chip__text">{{!it}}</span>
+                <button type="button" class="mdl-chip__action"><i class="material-icons">cancel</i></button>
+            </span>
+        </template>
+        <template id="filter-menu-template">
+            <button id="filter-menu-button" class="mdl-button mdl-js-button mdl-button--icon">
+                <i class="material-icons">filter_list</i>
+            </button>
+
+            <ul id="filter-menu" class="mdl-menu mdl-menu--bottom-left mdl-js-menu mdl-js-ripple-effect"
+                for="filter-menu-button">
+                {{~it:tag}}<li class="mdl-menu__item">{{=tag}}</li>{{~}}
+            </ul>
         </template>
         <footer class="mdl-mini-footer drtodolittle-footer">
             <div class="mdl-mini-footer__left-section">

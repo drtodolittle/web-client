@@ -5,10 +5,13 @@ import {
     COMPLETION_TODO,
     LOAD_TODO,
     LOGIN,
-    TOGGLE_SHOW_COMPLETED
+    TOGGLE_SHOW_COMPLETED,
+    ADD_FILTER,
+    REMOVE_FILTER,
+    ADD_TAG
 } from "./action";
 
-import { Map, List } from 'immutable';
+import { Map, List, Set } from 'immutable';
 
 
 export const initialState = Map({
@@ -16,7 +19,9 @@ export const initialState = Map({
     todoList: List(),
     actionType: '',
     currenttodo: '',
-    showCompleted: false
+    showCompleted: false,
+    filterSet: Set(),
+    tags: Set()
 });
 
 function ToDoApp(state = initialState, action) {
@@ -49,6 +54,16 @@ function ToDoApp(state = initialState, action) {
         case TOGGLE_SHOW_COMPLETED:
             newState = state.set('showCompleted', action.showCompleted);
             break;
+        case ADD_FILTER:
+            newState = state.update('filterSet', (set) => set.add(action.filterName));
+            break;
+        case REMOVE_FILTER:
+            newState = state.update('filterSet', (set) => set.remove(action.filterName));
+            break;
+        case ADD_TAG:
+            newState = state.update('tags', (set) => set.add(action.tagName));
+            break;
+
         default:
             break;
     }

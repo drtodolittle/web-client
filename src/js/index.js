@@ -1,9 +1,8 @@
 import MaterialDesign from 'material-design-lite';
-import { initFirebase, getUser,login, storeToDo, deleteToDo } from './api/firebase-service';
-import { initUI } from './ui/todo';
+import { initFirebase, storeToDo, deleteToDo} from './api/firebase-service';
 import { store } from './redux/store';
-import { ADD_TODO, DELETE_TODO, COMPLETION_TODO, EDIT_TODO, LOAD_TODO, LOGIN, TOGGLE_SHOW_COMPLETED } from './redux/action';
-import { showToDo, removeToDo, setFocus, showCompleted, showInProgress } from './ui/todo';
+import { ADD_TODO, DELETE_TODO, COMPLETION_TODO, EDIT_TODO, LOAD_TODO, LOGIN, TOGGLE_SHOW_COMPLETED, ADD_FILTER, REMOVE_FILTER, ADD_TAG } from './redux/action';
+import { initUI, showToDos, showToDo, removeToDo, setFocus, showFilterChips, addFilterMenu } from './ui/todo';
 import { showUserImage } from './ui/userimage';
 
 initFirebase();
@@ -16,7 +15,7 @@ let processFlowListener = () => {
         showUserImage();
     }
     if (actionType === ADD_TODO || actionType === LOAD_TODO) {
-        showToDo(state.get('currenttodo'));
+        showToDo(state.get('currenttodo'), state.get('filterSet'), state.get('showCompleted'));
         setFocus();
     }
     else if (actionType === DELETE_TODO || actionType === COMPLETION_TODO) {
@@ -26,12 +25,14 @@ let processFlowListener = () => {
         setFocus();
     }
     else if (actionType === TOGGLE_SHOW_COMPLETED) {
-        if (state.get('showCompleted')) {
-            showCompleted(state.get('todoList'));
-        }
-        else {
-            showInProgress(state.get('todoList'));
-        }
+        showToDos(state.get('todoList'), state.get('filterSet'), state.get('showCompleted'));
+    }
+    else if (actionType === ADD_FILTER || actionType === REMOVE_FILTER) {
+        showToDos(state.get('todoList'), state.get('filterSet'), state.get('showCompleted'));
+        showFilterChips(state.get('filterSet'));
+    }
+    else if (actionType === ADD_TAG) {
+        addFilterMenu(state.get("tags"));
     }
 }
 store.subscribe(processFlowListener);

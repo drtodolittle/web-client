@@ -1,7 +1,7 @@
 import * as firebase from "firebase/app";
 import "firebase/auth";
 import "firebase/firestore";
-import { loadToDo, setUserImage } from './service';
+import { loadToDo, setUserImage, addFilters } from './service';
 
 
 
@@ -21,6 +21,7 @@ export function initFirebase() {
         if (user) {
             setUserImage();
             loadToDos();
+            loadTags();
         }
         else {
             login();
@@ -59,6 +60,11 @@ export function login() {
 
 }
 
+
+export function getUser() {
+    return firebase.auth().currentUser;
+}
+
 export function loadToDos() {
     let firestore = firebase.firestore();
     let user = getUser();
@@ -69,12 +75,6 @@ export function loadToDos() {
             loadToDo(doc.data());
         })
     });
-
-
-}
-
-export function getUser() {
-    return firebase.auth().currentUser;
 }
 
 export function storeToDo(model) {
@@ -106,4 +106,27 @@ export function deleteToDo(id) {
             console.error("Error deleting document: ", error);
         });
 
+}
+
+export function loadTags() {
+    let firestore = firebase.firestore();
+    let user = getUser();
+
+    let userDocRef = firestore.collection("users").doc(user.email);
+    addFilters(userDocRef.data().tags);
+}
+
+export function storeTagList(tagList) {
+    let firestore = firebase.firestore();
+    let user = getUser();
+    console.log("Current user is " + user.email);
+
+    let userDocRef = firestore.collection("users").doc(user.email);
+    userDocRef.collection("/todos").doc(model.id).set(model)
+        .then(function () {
+            console.log("Document successfully written!");
+        })
+        .catch(function (error) {
+            console.error("Error writing document: ", error);
+        });
 }

@@ -1,7 +1,7 @@
 import * as firebase from "firebase/app";
 import "firebase/auth";
 import "firebase/firestore";
-import { loadToDo, setUserImage } from './service';
+import { loadToDo, setUserImage, addFilters } from './service';
 
 
 
@@ -21,6 +21,7 @@ export function initFirebase() {
         if (user) {
             setUserImage();
             loadToDos();
+            loadTags();
         }
         else {
             login();
@@ -112,9 +113,7 @@ export function loadTags() {
     let user = getUser();
 
     let userDocRef = firestore.collection("users").doc(user.email);
-    todosRef.data().tags;
-
-
+    addFilters(userDocRef.data().tags);
 }
 
 export function storeTagList(tagList) {

@@ -74,6 +74,12 @@ function addTags(todo) {
     }
 }
 
+export function addFilters(tags) {
+    tags.forEach((tag) => {
+        store.dispatch(createAddTagAction(tag));
+    });
+}
+
 export function toggleShowCompleted(isCompleted) {
     store.dispatch(createToggleShowCompletedAction(isCompleted));
 }

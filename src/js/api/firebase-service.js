@@ -70,7 +70,7 @@ export function loadToDos() {
     let user = getUser();
 
     let userDocRef = firestore.collection("users").doc(user.email);
-    let todosRef = userDocRef.collection("/todos").get().then(querySnapshot => {
+    userDocRef.collection("/todos").get().then(querySnapshot => {
         querySnapshot.forEach(doc => {
             loadToDo(doc.data());
         })
@@ -80,7 +80,6 @@ export function loadToDos() {
 export function storeToDo(model) {
     let firestore = firebase.firestore();
     let user = getUser();
-    console.log("Current user is " + user.email);
 
     let userDocRef = firestore.collection("users").doc(user.email);
     userDocRef.collection("/todos").doc(model.id).set(model)
@@ -95,7 +94,6 @@ export function storeToDo(model) {
 export function deleteToDo(id) {
     let firestore = firebase.firestore();
     let user = getUser();
-    console.log("Current user is " + user.email);
 
     let userDocRef = firestore.collection("users").doc(user.email);
     userDocRef.collection("/todos").doc(id).delete()

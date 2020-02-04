@@ -26,3 +26,7 @@
 .drtodolittle-listitem {
     padding: 10px;
 }
+
+.drtodolittle-chip {
+    margin-inline-end: 4px;
+}

@@ -89,7 +89,7 @@ export function setFocus() {
 
 export function showToDo(model, filterSet, showCompleted) {
     let filtered = filterSet.every((filter) => {
-        let matches = model.todo.match(/#\w+/i);
+        let matches = model.todo.match(/#\w+/ig);
         if (matches == null) {
             return false;
         }

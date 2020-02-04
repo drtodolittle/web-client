@@ -89,7 +89,7 @@ export function setFocus() {
 
 export function showToDo(model, filterSet, showCompleted) {
     let filtered = filterSet.every((filter) => {
-        let matches = model.todo.match(/#\w+/i);
+        let matches = model.todo.match(/#\w+/ig);
         if (matches == null) {
             return false;
         }
@@ -142,19 +142,11 @@ export function showToDos(todoList, filterSet, showCompleted) {
 }
 
 export function addFilterMenu(tags) {
-    clearTagListElement();
     let newMenu = document.createElement("div");
     newMenu.innerHTML = filterMenuTemplate(tags.toArray());
     let filterParent = document.getElementById("filter-menu-div");
     filterParent.innerHTML = newMenu.innerHTML;
     componentHandler.upgradeDom();
-}
-
-function clearTagListElement() {
-    let tagListElement = document.getElementById("filter-menu")
-    while (tagListElement.lastChild) {
-        tagListElement.removeChild(tagListElement.lastChild);
-    }
 }
 
 function clearToDoListElement() {

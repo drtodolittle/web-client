@@ -121,14 +121,7 @@ export function loadTags() {
 export function storeTagList(tagList) {
     let firestore = firebase.firestore();
     let user = getUser();
-    console.log("Current user is " + user.email);
 
     let userDocRef = firestore.collection("users").doc(user.email);
-    userDocRef.collection("/todos").doc(model.id).set(model)
-        .then(function () {
-            console.log("Document successfully written!");
-        })
-        .catch(function (error) {
-            console.error("Error writing document: ", error);
-        });
+    userDocRef.set({tags: tagList.toArray()});
 }

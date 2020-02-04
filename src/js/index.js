@@ -1,5 +1,5 @@
 import MaterialDesign from 'material-design-lite';
-import { initFirebase, storeToDo, deleteToDo} from './api/firebase-service';
+import { initFirebase, storeToDo, deleteToDo, storeTagList} from './api/firebase-service';
 import { store } from './redux/store';
 import { ADD_TODO, DELETE_TODO, COMPLETION_TODO, EDIT_TODO, LOAD_TODO, LOGIN, TOGGLE_SHOW_COMPLETED, ADD_FILTER, REMOVE_FILTER, ADD_TAG } from './redux/action';
 import { initUI, showToDos, showToDo, removeToDo, setFocus, showFilterChips, addFilterMenu } from './ui/todo';
@@ -43,8 +43,11 @@ let firebaseListener = () => {
     if (actionType === ADD_TODO || actionType === COMPLETION_TODO || actionType === EDIT_TODO) {
         storeToDo(state.get('currenttodo'));
     }
-    if (actionType === DELETE_TODO) {
+    else if (actionType === DELETE_TODO) {
         deleteToDo(state.get('currenttodo').id);
+    }
+    else if (actionType === ADD_TAG) {
+        storeTagList(state.get('tags'));
     }
 }
 store.subscribe(firebaseListener);

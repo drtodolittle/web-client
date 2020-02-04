@@ -75,7 +75,9 @@ function addTags(todo) {
 }
 
 export function addFilters(tags) {
+    console.log("Tags: " + tags);
     tags.forEach((tag) => {
+        console.log("tag: " + tag); 
         store.dispatch(createAddTagAction(tag));
     });
 }

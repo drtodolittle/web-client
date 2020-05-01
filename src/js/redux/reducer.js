@@ -63,7 +63,6 @@ function ToDoApp(state = initialState, action) {
         case ADD_TAG:
             newState = state.update('tags', (set) => set.add(action.tagName));
             break;
-
         default:
             break;
     }

@@ -1,20 +1,19 @@
 import { addToDo, deleteToDo, getToDo, editToDo, setCompletionState, toggleShowCompleted, addFilter, removeFilter } from '../api/service';
 import doT from 'dot';
-import uuid from 'uuid';
+import { v4 as uuidv4 } from 'uuid';
 import { store } from '../redux/store';
 
 
 let todoTemplate = doT.template(document.getElementById("todo-template").innerHTML);
 let filterChipTemplate = doT.template(document.getElementById("filter-chip").innerHTML);
 let filterMenuTemplate = doT.template(document.getElementById("filter-menu-template").innerHTML);
-let tagListTemplate = doT.template(document.getElementById("tag-list-template").innerHTML);
 
 export function initUI() {
 
     document.getElementById("bt_new").addEventListener('click', (e) => {
         let todo = document.getElementById("newtodo").value;
         let data = new Object();
-        data.id = uuid.v4();
+        data.id = uuidv4();
         data.todo = todo;
         data.completed = false;
         addToDo(data);

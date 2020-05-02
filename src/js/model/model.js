@@ -81,7 +81,7 @@ export class ToDoList {
 
 export class ToDoModel {
 
-    constructor(todo, completed) {
+    constructor(todo, completed, tags) {
         this.id = uuid.v4();
         this.todo = todo;
         this.completed = completed;

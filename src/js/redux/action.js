@@ -14,7 +14,6 @@ export const TOGGLE_SHOW_COMPLETED = "TOGGLE_SHOW_COMPLETED";
 export const ADD_TAG = "ADD_TAG";
 
 
-
 /*
  * action creators
  */

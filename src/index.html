@@ -48,6 +48,7 @@
                             <i class="material-icons">add</i>
                         </button>
                         <div class="mdl-tooltip" for="bt_new">Add</div>
+
                     </div>
                 </div>
             </form>
@@ -110,6 +111,11 @@
 
             <ul id="filter-menu" class="mdl-menu mdl-menu--bottom-left mdl-js-menu mdl-js-ripple-effect"
                 for="filter-menu-button">
+                {{~it:tag}}<li class="mdl-menu__item">{{=tag}}</li>{{~}}
+            </ul>
+        </template>
+        <template id="tag-list-template">
+            <ul id="tag-list" class="mdl-menu mdl-menu--bottom-left mdl-js-menu mdl-js-ripple-effect">
                 {{~it:tag}}<li class="mdl-menu__item">{{=tag}}</li>{{~}}
             </ul>
         </template>

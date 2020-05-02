@@ -1,6 +1,7 @@
 import { addToDo, deleteToDo, getToDo, editToDo, setCompletionState, toggleShowCompleted, addFilter, removeFilter } from '../api/service';
 import doT from 'dot';
-import uuid from 'uuid';
+import { v4 as uuidv4 } from 'uuid';
+import { store } from '../redux/store';
 
 
 let todoTemplate = doT.template(document.getElementById("todo-template").innerHTML);
@@ -12,10 +13,18 @@ export function initUI() {
     document.getElementById("bt_new").addEventListener('click', (e) => {
         let todo = document.getElementById("newtodo").value;
         let data = new Object();
-        data.id = uuid.v4();
+        data.id = uuidv4();
         data.todo = todo;
         data.completed = false;
         addToDo(data);
+    });
+
+
+    document.getElementById("newtodo").addEventListener('keypress', (e) => {
+        if (e.key == "#") {
+            let tags = store.getState().get('tags');
+        }
+        
     });
 
     document.getElementById("switch-show-completed").addEventListener('click', (e) => {
@@ -98,10 +107,10 @@ export function showToDo(model, filterSet, showCompleted) {
         });
     });
     if (!filtered) {
-        return;
+        return false;
     }
     if (model.completed != showCompleted) {
-        return;
+        return false;
     }
 
     let newElement = document.createElement("div");
@@ -110,6 +119,7 @@ export function showToDo(model, filterSet, showCompleted) {
     showCompletionState(model);
     document.getElementById("newtodo").value = "";
     document.getElementById("newtodo").parentElement.classList.remove("is-dirty");
+    return true;
 }
 
 export function removeToDo(id) {
@@ -136,17 +146,26 @@ export function updateToDo(model) {
 
 export function showToDos(todoList, filterSet, showCompleted) {
     clearToDoListElement();
+    let tags = new Set();
     todoList.forEach((model) => {
-        showToDo(model, filterSet, showCompleted);
+        if (showToDo(model, filterSet, showCompleted)) {
+            let toDotags = model.todo.match(/#\w+/ig);
+            if (toDotags != null) {
+                toDotags.forEach((tag) => {
+                    tags.add(tag);
+                });
+            }
+        }
     });
+    addFilterMenu(tags);
 }
 
 export function addFilterMenu(tags) {
     let newMenu = document.createElement("div");
-    newMenu.innerHTML = filterMenuTemplate(tags.toArray());
+    newMenu.innerHTML = filterMenuTemplate(Array.from(tags));
     let filterParent = document.getElementById("filter-menu-div");
     filterParent.innerHTML = newMenu.innerHTML;
-    componentHandler.upgradeDom();
+    componentHandler.upgradeDom(); 
 }
 
 function clearToDoListElement() {

@@ -15,7 +15,7 @@ let processFlowListener = () => {
         showUserImage();
     }
     if (actionType === ADD_TODO || actionType === LOAD_TODO) {
-        showToDo(state.get('currenttodo'), state.get('filterSet'), state.get('showCompleted'));
+        showToDos(state.get('todoList'), state.get('filterSet'), state.get('showCompleted'));
         setFocus();
     }
     else if (actionType === DELETE_TODO || actionType === COMPLETION_TODO) {
@@ -30,9 +30,6 @@ let processFlowListener = () => {
     else if (actionType === ADD_FILTER || actionType === REMOVE_FILTER) {
         showToDos(state.get('todoList'), state.get('filterSet'), state.get('showCompleted'));
         showFilterChips(state.get('filterSet'));
-    }
-    else if (actionType === ADD_TAG) {
-        addFilterMenu(state.get("tags"));
     }
 }
 store.subscribe(processFlowListener);

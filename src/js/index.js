@@ -5,6 +5,13 @@ import { ADD_TODO, DELETE_TODO, COMPLETION_TODO, EDIT_TODO, LOAD_TODO, LOGIN, TO
 import { initUI, showToDos, showToDo, removeToDo, setFocus, showFilterChips, addFilterMenu } from './ui/todo';
 import { showUserImage } from './ui/userimage';
 
+if ('serviceWorker' in navigator) {
+    // Use the window load event to keep the page load performant
+    window.addEventListener('load', () => {
+      navigator.serviceWorker.register('/js/service-worker.js');
+    });
+}
+
 initFirebase();
 initUI();
 

@@ -2,6 +2,7 @@
     width: 85%;
 }
 
+
 .page-content {
     padding-left: 0em;
     padding-right: 0em;
@@ -29,4 +30,8 @@
 
 .drtodolittle-chip {
     margin-inline-end: 4px;
+}
+
+#doneswitch {
+    padding: 20px;
 }

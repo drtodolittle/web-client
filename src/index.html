@@ -23,15 +23,14 @@
                 <!-- Title -->
                 <span class="mdl-layout-title mdl-layout--large-screen-only">Dr ToDo Little</span>
                 <!-- Add spacer, to align navigation to the right -->
-                <div class="mdl-layout-spacer"></div>
-                <form action="javascript:document.activeElement.blur();"></form>
+                <div class="mdl-layout-spacer mdl-layout--large-screen-only"></div>
+                <form action="javascript:submitAddToDo();"></form>
                 
-                    <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
+                    <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label drtodolittle-textfield">
                         <input class="mdl-textfield__input" type="text" id="newtodo">
                         <label class="mdl-textfield__label" for="newtodo">Enter new todo...</label>
                     </div>
-                    <button type="submit" id="bt_new"
-                        class="mdl-button mdl-js-button mdl-button--fab mdl-button--mini-fab">
+                    <button type="submit" id="bt_new" class="mdl-button mdl-js-button mdl-button--fab mdl-button--mini-fab">
                         <i class="material-icons">add</i>
                     </button>
                     <div class="mdl-tooltip" for="bt_new">Add</div>
@@ -51,8 +50,8 @@
         <main class="mdl-layout__content">
             
                 <div class="mdl-grid">
-                    <div id="filter-menu-div" class="mdl-cell mdl-cell--1-offset-desktop mdl-cell--1-offset-tablet mdl-cell--1-col"></div>
-                    <div id="filter" class="mdl-cell mdl-cell--8-col mdl-cell--2-col-phone"></div>
+                    <div id="filter-menu-div" class="mdl-cell mdl-cell--1-offset-desktop mdl-cell--1-offset-tablet mdl-cell--1-col mdl-cell--1-col-phone"></div>
+                    <div id="filter" class="mdl-cell mdl-cell--8-col mdl-cell--1-col-phone"></div>
                     <div id="doneswitch" class="mdl-cell mdl-cell--2-col mdl-cell--1-col-phone">
                         <label class="mdl-switch mdl-js-switch mdl-js-ripple-effect" for="switch-show-completed">
                             <input type="checkbox" id="switch-show-completed" class="mdl-switch__input">

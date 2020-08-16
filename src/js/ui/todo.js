@@ -11,18 +11,16 @@ let filterMenuTemplate = doT.template(document.getElementById("filter-menu-templ
 export function initUI() {
 
     document.getElementById("bt_new").addEventListener('click', (e) => {
-        let todo = document.getElementById("newtodo").value;
-        let data = new Object();
-        data.id = uuidv4();
-        data.todo = todo;
-        data.completed = false;
-        addToDo(data);
+        newToDo();
     });
 
 
     document.getElementById("newtodo").addEventListener('keypress', (e) => {
         if (e.key == "#") {
             let tags = store.getState().get('tags');
+        }
+        else if (e.key == 'Enter') {
+            newToDo();
         }
         
     });
@@ -60,6 +58,15 @@ export function initUI() {
         }
     });
 
+}
+
+function newToDo() {
+    let todo = document.getElementById("newtodo").value;
+    let data = new Object();
+    data.id = uuidv4();
+    data.todo = todo;
+    data.completed = false;
+    addToDo(data);
 }
 
 let eventHandler = function (event) {

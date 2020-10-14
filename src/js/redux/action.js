@@ -12,6 +12,7 @@ export const ADD_FILTER = "ADD_FILTER";
 export const REMOVE_FILTER = "REMOVE_FILTER";
 export const TOGGLE_SHOW_COMPLETED = "TOGGLE_SHOW_COMPLETED";
 export const ADD_TAG = "ADD_TAG";
+export const MOVE_TODO = "MOVE_TODO";
 
 
 /*
@@ -56,4 +57,8 @@ export function createToggleShowCompletedAction(showCompleted) {
 
 export function createAddTagAction(tagName) {
   return { type: ADD_TAG, tagName}
+}
+
+export function createMoveTodoAction(model) {
+  return { type: MOVE_TODO, model}
 }

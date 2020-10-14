@@ -1,4 +1,4 @@
-import { addToDo, deleteToDo, getToDo, editToDo, setCompletionState, toggleShowCompleted, addFilter, removeFilter } from '../api/service';
+import { addToDo, deleteToDo, getToDo, editToDo, setCompletionState, toggleShowCompleted, addFilter, removeFilter, moveToDo } from '../api/service';
 import doT from 'dot';
 import { v4 as uuidv4 } from 'uuid';
 import { store } from '../redux/store';
@@ -43,7 +43,9 @@ export function initUI() {
 
     document.getElementById("newtodo").focus();
 
-    document.getElementById("todolist").addEventListener('click', (e) => {
+    let todoList = document.getElementById("todolist");
+
+    todoList.addEventListener('click', (e) => {
         if (e.target.classList.contains("uncompleted")) {
             setCompletionState(e.target.parentElement.parentElement.id, true);
         }
@@ -58,6 +60,31 @@ export function initUI() {
         }
     });
 
+    todoList.addEventListener('dragstart', (e) => { 
+        
+        e.dataTransfer.effectAllowed = 'move';
+        e.dataTransfer.setData('text/plain', e.target.getAttribute('id'));
+    }, false);
+    todoList.addEventListener('dragenter', (e) => { 
+        if (e.target.classList.contains('droparea')) {
+            e.target.style.borderBottom = '5px dashed #1C6EA4';
+        }
+    }, false);
+    todoList.addEventListener('dragleave', (e) => { 
+        if (e.target.classList.contains('droparea')) {
+            e.target.style.borderBottom = '';
+        }
+    }, false);
+    todoList.addEventListener('dragexit', (e) => { e.target.style.opacity = ""; }, false);
+    todoList.addEventListener('dragover', (e) => { e.preventDefault();}, false);
+    todoList.addEventListener('drop', (e) => { 
+        e.preventDefault();
+        if (e.target.classList.contains('droparea')) {
+            let srcId = e.dataTransfer.getData("text/plain"); 
+            moveToDo(srcId, e.target.getAttribute('id'));
+        }
+    }, false);
+
 }
 
 function newToDo() {
@@ -66,6 +93,7 @@ function newToDo() {
     data.id = uuidv4();
     data.todo = todo;
     data.completed = false;
+    data.priority = 10000
     addToDo(data);
 }
 
@@ -154,6 +182,7 @@ export function updateToDo(model) {
 export function showToDos(todoList, filterSet, showCompleted) {
     clearToDoListElement();
     let tags = new Set();
+    
     todoList.forEach((model) => {
         if (showToDo(model, filterSet, showCompleted)) {
             let toDotags = model.todo.match(/#\w+/ig);
@@ -197,3 +226,4 @@ export function showFilterChips(filterSet) {
         document.getElementById("filter").appendChild(newElement.firstElementChild);
     });
 }
+

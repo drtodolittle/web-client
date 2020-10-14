@@ -9,7 +9,7 @@ import {
     createToggleShowCompletedAction,
     createAddFilterAction,
     createRemoveFilterAction,
-    createAddTagAction
+    createAddTagAction, createMoveTodoAction
 } from '../redux/action';
 import { store } from '../redux/store';
 
@@ -83,4 +83,21 @@ export function addFilters(tags) {
 
 export function toggleShowCompleted(isCompleted) {
     store.dispatch(createToggleShowCompletedAction(isCompleted));
+}
+
+export function moveToDo(srcId, destId) {
+    let todoList = store.getState().get('todoList');
+    var srcIndex = todoList.findIndex(model => model.id == srcId);
+    var srcModel = todoList.get(srcIndex);
+    
+    var destIndex = todoList.findIndex(model => model.id == destId);
+    var destModel1 = todoList.get(destIndex);
+    if (destIndex + 1 == todoList.size) {
+        srcModel.priority = destModel1.priority + 10000
+    }
+    else {
+        var destModel2 = todoList.get(destIndex + 1);
+        srcModel.priority = (destModel2.priority + destModel1.priority) / 2
+    }
+    store.dispatch(createMoveTodoAction(srcModel));
 }

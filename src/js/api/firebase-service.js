@@ -70,11 +70,32 @@ export function loadToDos() {
     let user = getUser();
 
     let userDocRef = firestore.collection("users").doc(user.email);
-    userDocRef.collection("/todos").get().then(querySnapshot => {
+    userDocRef.get().then((doc) => {
+        if (!(doc.data().modelversion && doc.data().modelversion === 'v2.0.0')) {
+            migration(userDocRef, doc.data());
+        }
+    });
+    userDocRef.collection("/todos").orderBy('priority').get().then(querySnapshot => {
         querySnapshot.forEach(doc => {
             loadToDo(doc.data());
         })
     });
+}
+
+function migration(userDocRef, data) {
+    console.log("Migration");
+    data.modelversion = 'v2.0.0';
+    userDocRef.set(data);
+    userDocRef.collection("/todos").get().then(querySnapshot => {
+        let priority = 10000;
+        querySnapshot.forEach(doc => {
+            let model = doc.data();
+            model.priority = priority;
+            priority += 10000;
+            storeToDo(model);
+        })
+    });
+
 }
 
 export function storeToDo(model) {

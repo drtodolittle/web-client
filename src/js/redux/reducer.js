@@ -8,7 +8,8 @@ import {
     TOGGLE_SHOW_COMPLETED,
     ADD_FILTER,
     REMOVE_FILTER,
-    ADD_TAG
+    ADD_TAG,
+    MOVE_TODO
 } from "./action";
 
 import { Map, List, Set } from 'immutable';
@@ -36,8 +37,9 @@ function ToDoApp(state = initialState, action) {
             break;
         case EDIT_TODO:
         case COMPLETION_TODO:
+        case MOVE_TODO:
             var index = todoList.findKey(model => model.id == action.model.id);
-            var newList = todoList.set(index, action.model);
+            var newList = todoList.set(index, action.model).sortBy(model => model.priority);;
             newState = state.set('todoList', newList);
             newState = newState.set('currenttodo', action.model);
             break;
@@ -66,6 +68,7 @@ function ToDoApp(state = initialState, action) {
         default:
             break;
     }
+
     return newState.set('actionType', action.type);
 }
 

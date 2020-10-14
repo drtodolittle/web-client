@@ -1,6 +1,26 @@
-.drtodolittle-textfield {
-    width: 85%;
-}
+
+@media (min-width: 950px) {
+    /* breite Browserfenster */
+    .drtodolittle-textfield {
+        width: 300px;
+    }    
+  }
+  @media (min-width: 450px) and 
+   (max-width: 950px) {
+    /* Darstellung auf Netbooks */ 
+    .drtodolittle-textfield {
+        width: 200px;
+    }
+    
+    } 
+  @media (max-width: 450px) {
+      /* mobile Geräte */ 
+      .drtodolittle-textfield {
+        width: 130px;
+    }
+        
+    }
+ 
 
 .page-content {
     padding-left: 0em;
